@@ -1,12 +1,4 @@
-# IMPORTANT UPDATE (6/29/2024)
-## The original code has an unintential bug in evaluation that causes an inaccurate assessment of the model’s true capability. We thank Yiqian Yang and Hyejeong Jo, et al for spotting and investigating the problem! Please read https://arxiv.org/pdf/2405.06459 for more details.
 
-**Please refer to https://github.com/NeuSpeech/EEG-To-Text for the corrected code and detailed experiments.** To avoid further confusion, we archived this repo.
-
-
----
-# Please read https://arxiv.org/pdf/2405.06459 before proceeding!
-# [(AAAI 2022) Open Vocabulary EEG-To-Text Decoding and Zero-shot sentiment classification](https://arxiv.org/abs/2112.02690) 
 ## Create Environment
 run `conda env create -f environment.yml` to create the conda environment (named "EEGToText") used in our experiments.
 ## Download ZuCo datasets
@@ -38,15 +30,6 @@ To run the whole training and evaluation process, run `bash ./scripts/train_eval
 
 For detailed configuration of the available arguments, please refer to function `get_config(case = 'eval_sentiment')` in `/config.py`
 
-## Citation
-```
-@inproceedings{wang2022open,
-  title={Open vocabulary electroencephalography-to-text decoding and zero-shot sentiment classification},
-  author={Wang, Zhenhailong and Ji, Heng},
-  booktitle={Proceedings of the AAAI Conference on Artificial Intelligence},
-  volume={36},
-  number={5},
-  pages={5350--5358},
-  year={2022}
+
 }
 ```
