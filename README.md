@@ -15,8 +15,8 @@ Sentiment dataset for ZuCo (`sentiment_labels.json`) will be stored in `~/datase
 
 Sentiment dataset for filtered Stanford Sentiment Treebank will be stored in `~/datasets/stanfordsentiment/ternary_dataset.json`
 
-## Usage Example
-### Open vocabulary EEG-To-Text Decoding
+
+## EEG-To-Text Decoding
 To train an EEG-To-Text decoding model, run `bash ./scripts/train_decoding.sh`.
 
 To evaluate the trained EEG-To-Text decoding model from above, run `bash ./scripts/eval_decoding.sh`.
@@ -30,6 +30,3 @@ To run the whole training and evaluation process, run `bash ./scripts/train_eval
 
 For detailed configuration of the available arguments, please refer to function `get_config(case = 'eval_sentiment')` in `/config.py`
 
-
-}
-```
