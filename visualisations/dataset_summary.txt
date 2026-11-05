@@ -1,0 +1,62 @@
+INPUT FILE: predicted_states.csv
+TOTAL ROWS / OBSERVATIONS: 3,600
+TOTAL COLUMNS: 19
+NUMBER OF PATIENTS: 12
+
+ROWS PER PATIENT:
+patient_id
+resultsZAB    300
+resultsZDM    300
+resultsZDN    300
+resultsZGW    300
+resultsZJM    300
+resultsZJN    300
+resultsZJS    300
+resultsZKB    300
+resultsZKH    300
+resultsZKW    300
+resultsZMG    300
+resultsZPH    300
+
+FEATURES USED FOR VISUALISATION: ['EEI', 'FMT', 'ASM', 'GD', 'TRT', 'FFD', 'PupilSize', 'FixationCount']
+
+MISSING VALUES PER COLUMN:
+EEI                    0
+FMT                    0
+ASM                    0
+GD                     0
+TRT                    0
+FFD                    0
+PupilSize              0
+FixationCount          0
+patient_id             0
+cluster_id             0
+cluster_name           0
+cluster_probability    0
+prediction_status      0
+prob_cluster_0         0
+prob_cluster_1         0
+prob_cluster_2         0
+prob_cluster_3         0
+prob_cluster_4         0
+prob_cluster_5         0
+
+CLUSTER COLUMN: cluster_name
+
+CLUSTER COUNTS:
+cluster_name
+Cognitive State 4    1162
+Cognitive State 2     705
+Cognitive State 6     571
+Cognitive State 1     472
+Cognitive State 5     437
+Cognitive State 3     253
+
+CLUSTER PERCENTAGES:
+cluster_name
+Cognitive State 4    32.28%
+Cognitive State 2    19.58%
+Cognitive State 6    15.86%
+Cognitive State 1    13.11%
+Cognitive State 5    12.14%
+Cognitive State 3     7.03%

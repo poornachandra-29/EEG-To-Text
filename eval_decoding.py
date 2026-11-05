@@ -19,7 +19,8 @@ from model_decoding import BrainTranslator, BrainTranslatorNaive
 from metrics import compute_metrics
 from config import get_config
 
-
+from model_decoding_claude import BrainTranslatorGemma
+from transformers import GemmaTokenizer, Gemma2ForCausalLM
 import sys
 import numpy
 import numpy.core
@@ -142,7 +143,7 @@ def eval_model(dataloaders, device, tokenizer, criterion, model, output_all_resu
             target_ids_batch[target_ids_batch == tokenizer.pad_token_id] = -100
             if not teacher_forcing:
                 predictions = model.generate(input_embeddings_batch, input_masks_batch, input_mask_invert_batch,
-                                             target_ids_batch,
+                                             target_ids_batch_converted=None,
                                              max_length=100,
                                              num_beams=5, do_sample=False, repetition_penalty=5.0,
 

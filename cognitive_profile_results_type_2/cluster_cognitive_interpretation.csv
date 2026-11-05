@@ -1,0 +1,6 @@
+patient_id,cluster_id,cluster_name,sentence_count,percentage,heuristic_cluster_interpretation,interpretation_reason,focus_like_evidence,fatigue_compatible_evidence,attention_instability_evidence,workload_evidence
+resultsZPH_NR,0,Cluster 0,120,48.0,Mixed / indeterminate pattern,No evidence score reached heuristic threshold,-0.049288671649027394,0.3077610917170431,-0.0028156318509442915,0.08432895518685453
+resultsZPH_NR,1,Cluster 1,33,13.2,Mixed / indeterminate pattern,No evidence score reached heuristic threshold,-0.045421477218233884,0.11585972709885545,0.018534919710031763,-0.4781290443217527
+resultsZPH_NR,2,Cluster 2,1,0.4,Too few sentences for interpretation,Cluster has fewer than 10 sentences; profile is unstable,0.041505579769502296,,-0.09672152096686859,0.2418984781617123
+resultsZPH_NR,4,Cluster 4,7,2.8,Too few sentences for interpretation,Cluster has fewer than 10 sentences; profile is unstable,0.5184422548315316,-0.8693182479163575,-0.2991611562260457,-0.9735605882184403
+resultsZPH_NR,5,Cluster 5,89,35.6,High cognitive-workload-like pattern,Highest score: workload_evidence=0.68 robust-z units,-0.3367670782577667,-0.1514907659897935,0.2016527179392622,0.683478222446342

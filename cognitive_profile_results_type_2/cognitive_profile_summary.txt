@@ -1,0 +1,251 @@
+ZUCO COGNITIVE PROFILE REPORT
+============================================================================
+Sentence rows: 250
+Participants: 1
+
+WHAT EACH INDEX MEANS
+----------------------------------------------------------------------------
+1. SAI - Engagement-Stability Evidence Proxy:
+   Engagement-related EEG evidence minus local signal/reading variability.
+   It describes relative stability; it does not measure sustained attention directly.
+
+2. REI - Engagement-Related Signal Index:
+   Combines EEI, theta-related activity and pupil size as exploratory cues.
+   It is not a direct measure of reading engagement or concentration.
+
+3. MWLI_proxy - Attention-Instability Evidence Proxy:
+   Combines inverse EEI-related evidence and local reading/fixation variability.
+   It does not identify distraction or confirm mind wandering.
+
+4. CWI - Cognitive Workload Evidence Index:
+   Combines theta-related features, pupil size, gaze duration and total reading
+   time. High workload can occur during focused reading too.
+
+5. VSI_proxy - Signal-Stability Proxy:
+   Describes consistency of available EEG/eye features. It is not a validated
+   vigilance, fatigue or alertness measure.
+
+OVERALL SESSION VALUES
+----------------------------------------------------------------------------
+Index                                          Mean raw     Mean pct
+----------------------------------------------------------------------------
+Engagement-Stability Evidence Proxy              -0.140         50.2
+Engagement-Related Signal Index                   0.039         50.2
+Attention-Instability Evidence Proxy              0.213         50.2
+Cognitive Workload Evidence Index                 0.194         50.2
+Signal-Stability Proxy (not a vigilance measure)       -0.170         50.2
+
+Mean percentile is within-participant session rank, NOT a concentration percentage.
+
+RELATIVE CATEGORY COUNTS
+----------------------------------------------------------------------------
+
+Engagement-Stability Evidence Proxy:
+  Higher relative stability: 83 sentences (33.2%)
+  Lower relative stability: 83 sentences (33.2%)
+  Moderate relative stability: 82 sentences (32.8%)
+  Insufficient data: 2 sentences (0.8%)
+
+Engagement-Related Signal Index:
+  Higher engagement-related evidence: 84 sentences (33.6%)
+  Moderate engagement-related evidence: 83 sentences (33.2%)
+  Lower engagement-related evidence: 83 sentences (33.2%)
+
+Attention-Instability Evidence Proxy:
+  Lower drift-like evidence: 82 sentences (32.8%)
+  Higher drift-like evidence: 82 sentences (32.8%)
+  Moderate drift-like evidence: 81 sentences (32.4%)
+  Insufficient data: 5 sentences (2.0%)
+
+Cognitive Workload Evidence Index:
+  Higher workload-related evidence: 84 sentences (33.6%)
+  Lower workload-related evidence: 83 sentences (33.2%)
+  Moderate workload-related evidence: 83 sentences (33.2%)
+
+Signal-Stability Proxy (not a vigilance measure):
+  Lower signal stability: 83 sentences (33.2%)
+  Higher signal stability: 83 sentences (33.2%)
+  Moderate signal stability: 82 sentences (32.8%)
+  Insufficient data: 2 sentences (0.8%)
+
+HEURISTIC COGNITIVE-PATTERN INTERPRETATION
+----------------------------------------------------------------------------
+The following are cautious pattern labels derived from participant-relative
+robust-z feature scores. They are not supervised predictions or validated states.
+Evidence threshold: 0.50 robust-z units; stronger evidence: 1.00.
+Ambiguity margin: 0.25; close competing scores are labelled mixed.
+
+Score formulas (equal-weight mean of available components):
+  Focus-like = mean(EEI_z, -local_FFD_variability_z, -local_TRT_variability_z).
+  Fatigue-compatible = mean(Theta_z, Alpha_z, -EEI_z).
+  Attention-instability = mean(-EEI_z, local_EEI_variability_z,
+      local_FFD_variability_z, local_TRT_variability_z).
+  Workload-like = mean(Theta_z, Pupil_z, GD_z, TRT_z).
+FMT is not counted separately because in the supplied CSV it duplicates ThetaPower.
+These scores are heuristic and overlapping; they are not probabilities.
+
+SENTENCE-LEVEL COGNITIVE PATTERN COUNTS
+----------------------------------------------------------------------------
+  Mixed / indeterminate: 77 sentences (30.8%)
+  Engagement-supported / focused-like: 47 sentences (18.8%)
+  Mixed / overlapping evidence: 34 sentences (13.6%)
+  Fatigue-compatible EEG pattern: 34 sentences (13.6%)
+  High cognitive-workload-like pattern: 33 sentences (13.2%)
+  Attention-instability / disengagement-like: 25 sentences (10.0%)
+
+PERSONAL REFERENCE RANGES FOR INPUT FEATURES
+----------------------------------------------------------------------------
+These describe typical values in this participant's current session.
+They are NOT optimal, healthy or clinical ranges.
+
+Participant            Feature                  Median        Lower        Upper
+resultsZPH_NR          EEI                      0.5177       0.4017       0.6337
+resultsZPH_NR          FMT                      2.3498       1.7726       2.9270
+resultsZPH_NR          ASM                      0.0000      -0.3392       0.3392
+resultsZPH_NR          GD                     135.1842     101.3809     168.9875
+resultsZPH_NR          TRT                    192.7750     124.1770     261.3730
+resultsZPH_NR          FFD                    107.0395      90.9888     123.0902
+resultsZPH_NR          PupilSize              281.4277     243.3588     319.4967
+resultsZPH_NR          FixationCount            1.6821       1.2108       2.1534
+resultsZPH_NR          ThetaPower               2.3498       1.7726       2.9270
+resultsZPH_NR          AlphaPower               2.4372       1.6104       3.2640
+resultsZPH_NR          BetaPower                2.5104       2.0748       2.9461
+
+OPTIMAL VALUES / TARGETS
+----------------------------------------------------------------------------
+No universal optimal values can be responsibly assigned from this CSV.
+EEG values depend on electrodes, reference, preprocessing and units.
+Eye measures depend on participant, lighting, text difficulty and task.
+Personal ranges are descriptive baselines, not targets or abnormality limits.
+
+CLUSTER ASSIGNMENT AND FEATURE-BASED INTERPRETATION
+----------------------------------------------------------------------------
+Cluster membership tells which statistical pattern each sentence resembles.
+Cluster IDs are arbitrary; they do not inherently mean focus, fatigue or distraction.
+
+PARTICIPANT: resultsZPH_NR
+DOMINANT CLUSTER: 0 (120 sentences; 48.0% of session)
+Cluster name: Cluster 0
+
+Cluster-by-cluster profile:
+
+Cluster 0 (Cluster 0): 120 sentences (48.0%)
+  HEURISTIC INTERPRETATION: Mixed / indeterminate pattern
+  Reason: No evidence score reached heuristic threshold
+  Evidence scores (robust-z units; not probabilities): focus_like_evidence=-0.05, fatigue_compatible_evidence=0.31, attention_instability_evidence=-0.00, workload_evidence=0.08
+  Strongest feature differences from participant median:
+    FMT: 0.68 robust SD above median
+    ThetaPower: 0.68 robust SD above median
+    GD: 0.28 robust SD below median
+    BetaPower: 0.19 robust SD above median
+    FFD: 0.17 robust SD below median
+  Possible interpretation of feature pattern:
+    EEG engagement-ratio feature is near the session level.
+    Higher theta-related feature; may reflect cognitive effort or other state/task effects.
+    The heuristic label above is a feature-pattern description only. It is not a verified mental state; fatigue and mind-wandering evidence is especially limited by missing blink/PERCLOS/thought-probe measures.
+
+Cluster 5 (Cluster 5): 89 sentences (35.6%)
+  HEURISTIC INTERPRETATION: High cognitive-workload-like pattern
+  Reason: Highest score: workload_evidence=0.68 robust-z units
+  Evidence scores (robust-z units; not probabilities): focus_like_evidence=-0.34, fatigue_compatible_evidence=-0.15, attention_instability_evidence=0.20, workload_evidence=0.68
+  Strongest feature differences from participant median:
+    GD: 1.61 robust SD above median
+    TRT: 1.35 robust SD above median
+    FFD: 1.34 robust SD above median
+    FixationCount: 0.98 robust SD above median
+    EEI: 0.26 robust SD above median
+  Possible interpretation of feature pattern:
+    EEG engagement-ratio feature is near the session level.
+    Longer gaze and total reading times; may reflect rereading or greater processing demand.
+    The heuristic label above is a feature-pattern description only. It is not a verified mental state; fatigue and mind-wandering evidence is especially limited by missing blink/PERCLOS/thought-probe measures.
+
+Cluster 1 (Cluster 1): 33 sentences (13.2%)
+  HEURISTIC INTERPRETATION: Mixed / indeterminate pattern
+  Reason: No evidence score reached heuristic threshold
+  Evidence scores (robust-z units; not probabilities): focus_like_evidence=-0.05, fatigue_compatible_evidence=0.12, attention_instability_evidence=0.02, workload_evidence=-0.48
+  Strongest feature differences from participant median:
+    ASM: 0.89 robust SD below median
+    AlphaPower: 0.89 robust SD above median
+    FMT: 0.62 robust SD below median
+    ThetaPower: 0.62 robust SD below median
+    GD: 0.58 robust SD below median
+  Possible interpretation of feature pattern:
+    EEG engagement-ratio feature is near the session level.
+    The heuristic label above is a feature-pattern description only. It is not a verified mental state; fatigue and mind-wandering evidence is especially limited by missing blink/PERCLOS/thought-probe measures.
+
+Cluster 4 (Cluster 4): 7 sentences (2.8%)
+  HEURISTIC INTERPRETATION: Too few sentences for interpretation
+  Reason: Cluster has fewer than 10 sentences; profile is unstable
+  Evidence scores (robust-z units; not probabilities): focus_like_evidence=0.52, fatigue_compatible_evidence=-0.87, attention_instability_evidence=-0.30, workload_evidence=-0.97
+  Strongest feature differences from participant median:
+    EEI: 1.45 robust SD above median
+    FMT: 1.27 robust SD below median
+    ThetaPower: 1.27 robust SD below median
+    PupilSize: 0.96 robust SD below median
+    GD: 0.90 robust SD below median
+  Possible interpretation of feature pattern:
+    Higher-than-usual EEG engagement-ratio feature. This may be consistent with stronger engagement-related activity.
+    The heuristic label above is a feature-pattern description only. It is not a verified mental state; fatigue and mind-wandering evidence is especially limited by missing blink/PERCLOS/thought-probe measures.
+
+Cluster 2 (Cluster 2): 1 sentences (0.4%)
+  HEURISTIC INTERPRETATION: Too few sentences for interpretation
+  Reason: Cluster has fewer than 10 sentences; profile is unstable
+  Evidence scores (robust-z units; not probabilities): focus_like_evidence=0.04, attention_instability_evidence=-0.10, workload_evidence=0.24
+  Strongest feature differences from participant median:
+    FFD: 1.44 robust SD above median
+    GD: 1.30 robust SD above median
+    FixationCount: 0.47 robust SD below median
+    PupilSize: 0.36 robust SD below median
+    TRT: 0.22 robust SD below median
+  Possible interpretation of feature pattern:
+    EEG engagement-ratio feature is near the session level.
+    The heuristic label above is a feature-pattern description only. It is not a verified mental state; fatigue and mind-wandering evidence is especially limited by missing blink/PERCLOS/thought-probe measures.
+
+
+OVERALL SESSION CONCLUSION
+----------------------------------------------------------------------------
+This is a descriptive interpretation of the available signals, not a diagnosis.
+
+Participant: resultsZPH_NR
+Most frequent GMM pattern: Cluster 0 (120 sentences, 48.0%)
+Heuristic cognitive-pattern distribution:
+  Mixed / indeterminate: 77 sentences (30.8%)
+  Engagement-supported / focused-like: 47 sentences (18.8%)
+  Mixed / overlapping evidence: 34 sentences (13.6%)
+  Fatigue-compatible EEG pattern: 34 sentences (13.6%)
+  High cognitive-workload-like pattern: 33 sentences (13.2%)
+  Attention-instability / disengagement-like: 25 sentences (10.0%)
+Most frequent heuristic pattern: Mixed / indeterminate (descriptive evidence label, not a verified mental state)
+Session-relative index averages: SAI=50.2/100 percentile, REI=50.2/100 percentile, MWLI_proxy=50.2/100 percentile, CWI=50.2/100 percentile, VSI_proxy=50.2/100 percentile
+Interpretation: mixed engagement/stability profile; cannot conclude focused or unfocused.
+
+A true focus/fatigue classification requires independent labels such as
+thought probes, comprehension/task performance, and appropriate fatigue
+measures. Do not convert GMM cluster IDs directly into cognitive states.
+
+DATA AND MODEL LIMITATIONS
+----------------------------------------------------------------------------
+- FMT may be whole-scalp theta proxy, not channel-specific frontal-midline theta.
+- FixationCount may be mean word-level nFixations, not total sentence fixations.
+- CSV may lack regression counts, skipping, blink rate, PERCLOS and baseline-corrected pupil response.
+- GMM cluster IDs/names are arbitrary statistical groups.
+- cluster_probability is GMM membership strength, not probability of concentration.
+- Sentence index is sequence order, not clock time.
+- All proposed composite indices require validation against independent labels.
+- Focus-like evidence is based on EEI and short-window stability, not direct attention measurement.
+- Fatigue-compatible score uses theta/alpha/EEI only; blink rate, PERCLOS, eyelid closure,
+  and time-on-task trend are absent, so do not report a definitive fatigue classification.
+- Mind-wandering research reports heterogeneous eye-movement effects; GD/TRT/FFD alone
+  cannot identify distraction. Thought probes and skipping/regression/saccade features help.
+- Pupil size is sensitive to luminance and baseline; it is treated only as a workload cue.
+- Workload and fatigue overlap physiologically; high workload may occur during focused effort.
+- Thresholds 0.50 and 1.00 are transparent engineering heuristics in robust-z units,
+  not thresholds established by clinical or cognitive neuroscience studies.
+
+SELECTED RESEARCH BASIS
+- EEG fatigue meta-analysis: https://pubmed.ncbi.nlm.nih.gov/32108954/
+- Mental-fatigue physiological-index review: https://pmc.ncbi.nlm.nih.gov/articles/PMC11865143/
+- Mind-wandering eye-movement meta-analysis: https://pmc.ncbi.nlm.nih.gov/articles/PMC13132886/
+- EEG workload meta-analysis: https://pubmed.ncbi.nlm.nih.gov/35128686/
+- EEG + eye-tracking systematic review: https://pmc.ncbi.nlm.nih.gov/articles/PMC12895110/
+- ZuCo 2.0 dataset description: https://aclanthology.org/2020.lrec-1.18/

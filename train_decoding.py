@@ -6,6 +6,18 @@ import torch.optim as optim
 from torch.optim import lr_scheduler
 from torch.utils.data import Dataset, DataLoader, RandomSampler, SequentialSampler
 import pickle
+import pickle
+import sys
+import numpy as np
+
+class NumPyFixUnpickler(pickle.Unpickler):
+    def find_class(self, module, name):
+        if module.startswith('numpy._core'):
+            module = module.replace('numpy._core', 'numpy.core')
+        return super().find_class(module, name)
+
+def safe_pickle_load(file_handle):
+    return NumPyFixUnpickler(file_handle).load()
 import json
 import matplotlib.pyplot as plt
 from glob import glob
@@ -14,12 +26,13 @@ import copy
 from tqdm import tqdm
 from transformers import BertLMHeadModel, BartTokenizer, BartForConditionalGeneration, BartConfig, \
     BartForSequenceClassification, BertTokenizer, BertConfig, BertForSequenceClassification, RobertaTokenizer, \
-    RobertaForSequenceClassification
+    RobertaForSequenceClassification, GemmaTokenizer, GemmaForCausalLM
 
 from data import ZuCo_dataset
 from model_decoding import BrainTranslator, BrainTranslatorNaive
 from config import get_config
-
+from model_decoding_claude import BrainTranslatorGemma
+#from transformers import GemmaTokenizer, Gemma2ForCausalLM
 
 def train_model(dataloaders, device, model, criterion, optimizer, scheduler, num_epochs=25,
                 checkpoint_path_best='./checkpoints/decoding/best/temp_decoding.pt',
@@ -229,22 +242,22 @@ if __name__ == '__main__':
         dataset_path_task1 = 'dataset/ZuCo/task1-SR/pickle/task1-SR-dataset.pickle'
         dataset_path_task1=os.path.join(home_directory,dataset_path_task1)
         with open(dataset_path_task1, 'rb') as handle:
-            whole_dataset_dicts.append(pickle.load(handle))
+            whole_dataset_dicts.append(safe_pickle_load(handle))
     if 'task2' in task_name:
         dataset_path_task2 = 'dataset/ZuCo/task2-NR/pickle/task2-NR-dataset.pickle'
         dataset_path_task2=os.path.join(home_directory,dataset_path_task2)
         with open(dataset_path_task2, 'rb') as handle:
-            whole_dataset_dicts.append(pickle.load(handle))
+            whole_dataset_dicts.append(safe_pickle_load(handle))
     if 'task3' in task_name:
         dataset_path_task3 = 'dataset/ZuCo/task3-TSR/pickle/task3-TSR-dataset.pickle'
         dataset_path_task3=os.path.join(home_directory,dataset_path_task3)
         with open(dataset_path_task3, 'rb') as handle:
-            whole_dataset_dicts.append(pickle.load(handle))
+            whole_dataset_dicts.append(safe_pickle_load(handle))
     if 'taskNRv2' in task_name:
         dataset_path_taskNRv2 = 'dataset/ZuCo/task2-NR-2.0/pickle/task2-NR-2.0-dataset.pickle'
         dataset_path_taskNRv2=os.path.join(home_directory,dataset_path_taskNRv2)
         with open(dataset_path_taskNRv2, 'rb') as handle:
-            whole_dataset_dicts.append(pickle.load(handle))
+            whole_dataset_dicts.append(safe_pickle_load(handle))
 
     print()
 
@@ -257,8 +270,10 @@ if __name__ == '__main__':
     with open(os.path.join(cfg_dir,f'{save_name}.json'), 'w') as out_config:
         json.dump(args, out_config, indent = 4)
 
-    if model_name in ['BrainTranslator','BrainTranslatorNaive']:
-        tokenizer = BartTokenizer.from_pretrained('facebook/bart-large')
+    if model_name in ['BrainTranslator','BrainTranslatorNaive','BrainTranslatorGemma']:
+        tokenizer = GemmaTokenizer.from_pretrained('google/gemma-2-9b')
+        tokenizer.pad_token = tokenizer.eos_token
+        #tokenizer = BartTokenizer.from_pretrained('facebook/bart-large')
     elif model_name == 'BertGeneration':
         tokenizer = BertTokenizer.from_pretrained('bert-base-cased')
         config = BertConfig.from_pretrained("bert-base-cased")
@@ -288,16 +303,26 @@ if __name__ == '__main__':
             config = BartConfig.from_pretrained('facebook/bart-large')
             pretrained = BartForConditionalGeneration(config)
         else:
-            pretrained = BartForConditionalGeneration.from_pretrained('facebook/bart-large')
+            #pretrained = BartForConditionalGeneration.from_pretrained('facebook/bart-large')
+            pretrained = Gemma2ForCausalLM.from_pretrained('google/gemma-2-9b', torch_dtype=torch.float16)
     
-        model = BrainTranslator(pretrained, in_feature = 105*len(bands_choice), decoder_embedding_size = 1024, additional_encoder_nhead=8, additional_encoder_dim_feedforward = 2048)
-    
-    elif model_name == 'BertGeneration':
-        pretrained = BertLMHeadModel.from_pretrained('bert-base-cased', config=config)
-        model = BrainTranslator(pretrained, in_feature = 105*len(bands_choice), decoder_embedding_size = 768, additional_encoder_nhead=8, additional_encoder_dim_feedforward = 2048)
-    elif model_name == 'BrainTranslatorNaive':
-        pretrained = BartForConditionalGeneration.from_pretrained('facebook/bart-large')
-        model = BrainTranslatorNaive(pretrained, in_feature = 105*len(bands_choice), decoder_embedding_size = 1024, additional_encoder_nhead=8, additional_encoder_dim_feedforward = 2048)
+        #model = BrainTranslator(pretrained, in_feature = 105*len(bands_choice), decoder_embedding_size = 1024, additional_encoder_nhead=8, additional_encoder_dim_feedforward = 2048)
+        model = BrainTranslatorGemma(
+            pretrained,
+            in_feature=105 * len(bands_choice),
+            decoder_embedding_size=2304,  # Gemma 2-9B hidden size
+            additional_encoder_nhead=8,
+            additional_encoder_dim_feedforward=2048
+        )
+    elif model_name == 'BrainTranslatorGemma':
+        pretrained = GemmaForCausalLM.from_pretrained('google/gemma-2-9b', torch_dtype=torch.float16)
+        model = BrainTranslatorGemma(pretrained, in_feature = 105*len(bands_choice), decoder_embedding_size = 2304, additional_encoder_nhead=8, additional_encoder_dim_feedforward = 2048)
+    # elif model_name == 'BertGeneration':
+    #     pretrained = BertLMHeadModel.from_pretrained('bert-base-cased', config=config)
+    #     model = BrainTranslator(pretrained, in_feature = 105*len(bands_choice), decoder_embedding_size = 768, additional_encoder_nhead=8, additional_encoder_dim_feedforward = 2048)
+    # elif model_name == 'BrainTranslatorNaive':
+    #     pretrained = BartForConditionalGeneration.from_pretrained('facebook/bart-large')
+    #     model = BrainTranslatorNaive(pretrained, in_feature = 105*len(bands_choice), decoder_embedding_size = 1024, additional_encoder_nhead=8, additional_encoder_dim_feedforward = 2048)
 
     model.to(device)
     

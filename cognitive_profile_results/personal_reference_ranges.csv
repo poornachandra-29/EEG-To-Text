@@ -1,0 +1,12 @@
+patient_id,feature,session_median,personal_reference_lower,personal_reference_upper,meaning
+resultsZPH_NR,EEI,0.5176995726717838,0.40165745841007156,0.633741686933496,"Typical session range, NOT optimal range"
+resultsZPH_NR,FMT,2.349774516955979,1.772569675329291,2.926979358582667,"Typical session range, NOT optimal range"
+resultsZPH_NR,ASM,0.0,-0.3392482349523162,0.3392482349523162,"Typical session range, NOT optimal range"
+resultsZPH_NR,GD,135.18421052631578,101.38093052631578,168.98749052631578,"Typical session range, NOT optimal range"
+resultsZPH_NR,TRT,192.775,124.17695125000002,261.37304875,"Typical session range, NOT optimal range"
+resultsZPH_NR,FFD,107.03947368421052,90.98879056174088,123.09015680668016,"Typical session range, NOT optimal range"
+resultsZPH_NR,PupilSize,281.4277389277389,243.35877324422893,319.4967046112489,"Typical session range, NOT optimal range"
+resultsZPH_NR,FixationCount,1.6821052631578945,1.2107945263157895,2.1534159999999996,"Typical session range, NOT optimal range"
+resultsZPH_NR,ThetaPower,2.349774516955979,1.772569675329291,2.926979358582667,"Typical session range, NOT optimal range"
+resultsZPH_NR,AlphaPower,2.4372243332793717,1.6104002766390257,3.2640483899197177,"Typical session range, NOT optimal range"
+resultsZPH_NR,BetaPower,2.510421523069536,2.0747759031567226,2.9460671429823497,"Typical session range, NOT optimal range"
