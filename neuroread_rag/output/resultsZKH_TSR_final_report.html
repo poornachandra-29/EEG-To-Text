@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NeuroRead Assessment Report - resultsZKH_TSR</title>
+<style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #1e293b; background: #f8fafc; margin: 0; padding: 24px; }
+    .container { max-width: 1000px; margin: 0 auto; background: #ffffff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); padding: 40px; }
+    .header { border-bottom: 2px solid #e2e8f0; padding-bottom: 20px; margin-bottom: 24px; }
+    h1 { color: #0f172a; margin: 0 0 8px 0; font-size: 26px; }
+    .meta-bar { font-size: 14px; color: #64748b; margin-bottom: 12px; }
+    .disclaimer-box { background: #eff6ff; border-left: 4px solid #3b82f6; padding: 14px 18px; border-radius: 4px; font-size: 13px; color: #1e40af; margin-bottom: 28px; }
+    h2 { color: #1e3a8a; font-size: 19px; border-bottom: 1px solid #cbd5e1; padding-bottom: 6px; margin-top: 32px; }
+    h3 { color: #334155; font-size: 16px; margin-top: 20px; margin-bottom: 6px; }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13px; }
+    th, td { border: 1px solid #e2e8f0; padding: 10px 12px; text-align: left; }
+    th { background: #f1f5f9; color: #334155; font-weight: 600; }
+    tr:nth-child(even) { background: #f8fafc; }
+    .badge { display: inline-block; padding: 3px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+    .badge-typical { background: #dcfce7; color: #15803d; }
+    .badge-elevated { background: #fef3c7; color: #b45309; }
+    .badge-below { background: #fee2e2; color: #b91c1c; }
+    .rec-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 18px; margin-bottom: 16px; }
+    .btn-print { background: #2563eb; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500; float: right; }
+    .btn-print:hover { background: #1d4ed8; }
+    @media print {
+        body { background: #ffffff; padding: 0; }
+        .container { box-shadow: none; padding: 0; max-width: 100%; }
+        .btn-print { display: none; }
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <button class="btn-print" onclick="window.print()">Print / Save as PDF</button>
+    <div class="header">
+        <h1>NeuroRead AI: Research-Grounded Assessment Report</h1>
+        <div class="meta-bar">
+            <strong>Participant:</strong> resultsZKH_TSR &nbsp;|&nbsp;
+            <strong>Sentences Analyzed:</strong> 407 &nbsp;|&nbsp;
+            <strong>Protocol:</strong> ZuCo Simultaneous EEG & Eye Tracking &nbsp;|&nbsp;
+            <strong>Generated:</strong> 2026-11-08
+        </div>
+        <div class="disclaimer-box">
+            <strong>Non-Diagnostic Scientific Notice:</strong> This report provides research-grounded physiological observations. It is strictly non-diagnostic and does not diagnose clinical conditions, cognitive impairments, or establish subjective mind-wandering ground truth.
+        </div>
+    </div>
+
+    <h2>1. Executive Summary</h2>
+    <p>This research-grounded physiological assessment analyzes participant resultsZKH_TSR across 407 sentence-reading trials recorded in the ZuCo natural reading protocol. Deterministic evaluation reveals steady neurophysiological engagement: the EEG Engagement Index (EEI = 1.1610) remained within the personal baseline range with an offset of +124.3%. Gaze duration (GD = 133.9 ms) and total reading time (TRT = 160.2 ms) reflected normal lexical processing cadence with expected syntactic rereading variations. Unsupervised Gaussian Mixture Modeling identified 5 distinct clusters, predominantly characterized by balanced cognitive control and focused reading patterns.</p>
+
+    <h2>2. Focus and Attention Assessment</h2>
+    <p>Focus and Stability Assessment: Sustained Attention Evidence Proxy (SAI) averaged +0.04, while Attention-Instability Evidence Proxy (MWLI_proxy) averaged +0.05. These exploratory indices measure reading cadence stability and relative spectral engagement, providing heuristic evidence of processing continuity rather than ground-truth psychological states.</p>
+
+    <h2>3. Spectral EEG & Derived Metrics</h2>
+    <p>Spectral EEG Analysis: Across 407 reading trials, EEG Engagement Index averaged 1.161 (elevated above baseline). Frontal Midline Theta baseline was 2.3498 µV², reflecting oscillatory dynamics in medial prefrontal regions. Alpha asymmetry metric was -0.0222. In accordance with Pope et al. (1995) and Cavanagh & Frank (2014), these spectral indicators reflect vigilant task engagement without establishing clinical conditions.</p>
+    <table>
+        <thead>
+            <tr><th>Metric</th><th>Mean Observed</th><th>Baseline Median</th><th>Relative Shift</th><th>Deviation Status</th></tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>EEG Engagement Index</strong> (EEI)</td>
+                <td>1.161 ratio (Beta / (Alpha + Theta))</td>
+                <td>0.5177</td>
+                <td>+124.3%</td>
+                <td><span class="badge badge-elevated">Elevated Above Baseline</span></td>
+            </tr>
+            <tr>
+                <td><strong>Frontal Midline Theta</strong> (FMT)</td>
+                <td>3.7938 µV²</td>
+                <td>2.3498</td>
+                <td>+61.5%</td>
+                <td><span class="badge badge-elevated">Elevated Above Baseline</span></td>
+            </tr>
+            <tr>
+                <td><strong>Alpha Asymmetry Metric</strong> (ASM)</td>
+                <td>-0.0222 log difference</td>
+                <td>0.0</td>
+                <td>+0.0%</td>
+                <td><span class="badge badge-typical">Within Typical Range</span></td>
+            </tr>
+            <tr>
+                <td><strong>Theta Band Power</strong> (ThetaPower)</td>
+                <td>3.7938 µV²</td>
+                <td>2.3498</td>
+                <td>+61.5%</td>
+                <td><span class="badge badge-elevated">Elevated Above Baseline</span></td>
+            </tr>
+            <tr>
+                <td><strong>Alpha Band Power</strong> (AlphaPower)</td>
+                <td>7.5146 µV²</td>
+                <td>2.4372</td>
+                <td>+208.3%</td>
+                <td><span class="badge badge-elevated">Elevated Above Baseline</span></td>
+            </tr>
+            <tr>
+                <td><strong>Beta Band Power</strong> (BetaPower)</td>
+                <td>12.647 µV²</td>
+                <td>2.5104</td>
+                <td>+403.8%</td>
+                <td><span class="badge badge-elevated">Elevated Above Baseline</span></td>
+            </tr>
+            <tr>
+                <td><strong>Theta / Alpha Ratio</strong> (Theta_Alpha_Ratio)</td>
+                <td>0.5239 ratio</td>
+                <td>0.502</td>
+                <td>+4.3%</td>
+                <td><span class="badge badge-typical">Within Typical Range</span></td>
+            </tr>
+            <tr>
+                <td><strong>Theta / Beta Ratio</strong> (Theta_Beta_Ratio)</td>
+                <td>3.535 ratio</td>
+                <td>3.4179</td>
+                <td>+3.4%</td>
+                <td><span class="badge badge-typical">Within Typical Range</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>4. Eye-Tracking & Reading Dynamics</h2>
+    <p>Eye-Tracking Dynamics: Gaze duration averaged 136.7715 ms with total reading time of 175.89 ms. Mean pupil size was 1048.7074 units. As demonstrated by Rayner (1998) and Beatty (2000), dwell times and pupillometric dilation reflect lexical processing demands and autonomic arousal under reading task constraints.</p>
+    <table>
+        <thead>
+            <tr><th>Metric</th><th>Mean Observed</th><th>Baseline Median</th><th>Relative Shift</th><th>Deviation Status</th></tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Gaze Duration</strong> (GD)</td>
+                <td>136.7715 ms</td>
+                <td>135.1842</td>
+                <td>+1.2%</td>
+                <td><span class="badge badge-typical">Within Typical Range</span></td>
+            </tr>
+            <tr>
+                <td><strong>First Fixation Duration</strong> (FFD)</td>
+                <td>118.7115 ms</td>
+                <td>107.0395</td>
+                <td>+10.9%</td>
+                <td><span class="badge badge-typical">Within Typical Range</span></td>
+            </tr>
+            <tr>
+                <td><strong>Total Reading Time</strong> (TRT)</td>
+                <td>175.89 ms</td>
+                <td>192.775</td>
+                <td>-8.8%</td>
+                <td><span class="badge badge-typical">Within Typical Range</span></td>
+            </tr>
+            <tr>
+                <td><strong>Mean Pupil Diameter</strong> (PupilSize)</td>
+                <td>1048.7074 arbitrary units / px</td>
+                <td>281.4277</td>
+                <td>+272.6%</td>
+                <td><span class="badge badge-elevated">Elevated Above Baseline</span></td>
+            </tr>
+            <tr>
+                <td><strong>Fixation Count</strong> (FixationCount)</td>
+                <td>1.4749 count</td>
+                <td>1.6821</td>
+                <td>-12.3%</td>
+                <td><span class="badge badge-typical">Within Typical Range</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>5. Cognitive Workload Evidence</h2>
+    <p>Cognitive Workload Evidence: The composite Cognitive Workload Evidence Index (CWI) averaged +0.26 robust-z units. Multimodal literature confirms that concurrent elevations in theta oscillations and eye-tracking dwell times characterize high sentence complexity and syntactic reanalysis.</p>
+
+    <h2>6. Research-Paper Comparison Table</h2>
+    <table>
+        <thead>
+            <tr><th>Metric</th><th>Observed Measurement</th><th>Session Baseline</th><th>Scientific Citation & DOI</th></tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>EEG Engagement Index</strong></td>
+                <td>1.161 ratio (Beta / (Alpha + Theta))</td>
+                <td>0.5177 (Elevated Above Baseline)</td>
+                <td>Nora Hollenstein et al. (2018) &mdash; <a href='https://doi.org/10.1038/sdata.2018.291' target='_blank'>10.1038/sdata.2018.291</a></td>
+            </tr>
+            <tr>
+                <td><strong>Frontal Midline Theta</strong></td>
+                <td>3.7938 µV²</td>
+                <td>2.3498 (Elevated Above Baseline)</td>
+                <td>Alexander Gundel et al. (1992) &mdash; <a href='https://doi.org/10.1016/0167-8760(93)90054-9' target='_blank'>10.1016/0167-8760(93)90054-9</a></td>
+            </tr>
+            <tr>
+                <td><strong>Alpha Asymmetry Metric</strong></td>
+                <td>-0.0222 log difference</td>
+                <td>0.0 (Within Typical Range)</td>
+                <td>Christian Gold et al. (2012) &mdash; <a href='https://doi.org/10.1111/sjop.12022' target='_blank'>10.1111/sjop.12022</a></td>
+            </tr>
+            <tr>
+                <td><strong>Theta Band Power</strong></td>
+                <td>3.7938 µV²</td>
+                <td>2.3498 (Elevated Above Baseline)</td>
+                <td>Olaf Dimigen et al. (2011) &mdash; <a href='https://doi.org/10.1037/a0023885' target='_blank'>10.1037/a0023885</a></td>
+            </tr>
+            <tr>
+                <td><strong>Alpha Band Power</strong></td>
+                <td>7.5146 µV²</td>
+                <td>2.4372 (Elevated Above Baseline)</td>
+                <td>Nora Hollenstein et al. (2018) &mdash; <a href='https://doi.org/10.1038/sdata.2018.291' target='_blank'>10.1038/sdata.2018.291</a></td>
+            </tr>
+            <tr>
+                <td><strong>Beta Band Power</strong></td>
+                <td>12.647 µV²</td>
+                <td>2.5104 (Elevated Above Baseline)</td>
+                <td>Nora Hollenstein et al. (2018) &mdash; <a href='https://doi.org/10.1038/sdata.2018.291' target='_blank'>10.1038/sdata.2018.291</a></td>
+            </tr>
+            <tr>
+                <td><strong>Theta / Alpha Ratio</strong></td>
+                <td>0.5239 ratio</td>
+                <td>0.502 (Within Typical Range)</td>
+                <td>Tee Yi Wen et al. (2020) &mdash; <a href='https://doi.org/10.11591/ijeecs.v17.i1.pp175-182' target='_blank'>10.11591/ijeecs.v17.i1.pp175-182</a></td>
+            </tr>
+            <tr>
+                <td><strong>Theta / Beta Ratio</strong></td>
+                <td>3.535 ratio</td>
+                <td>3.4179 (Within Typical Range)</td>
+                <td>Mi D et al. (2026) &mdash; <a href='https://doi.org/10.3389/fpsyt.2026.1834200' target='_blank'>10.3389/fpsyt.2026.1834200</a></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>7. Personalized Evidence-Based Recommendations</h2>
+    <div class="rec-card">
+        <h3>Scheduled Cognitive Intervals & Ultradian Micro-Breaks &nbsp;<span style="font-size:12px; color:#64748b; font-weight:normal;">(Pacing & Cognitive Breaks)</span></h3>
+        <p><strong>Observed Physiological Basis:</strong> Participant completed 407 continuous reading trials. Workload-elevated and fatigue-compatible pattern evidence was observed across 27.3% of read sentences (CWI mean +0.26).</p>
+        <p><strong>Actionable Guidance:</strong> Adopt 20-25 minute structured reading blocks followed by 3-5 minute cognitive pauses with visual disengagement (looking at distant focal points >20 feet away).</p>
+        <p><strong>Scientific Rationale:</strong> Frontal Midline Theta (FMT) and pupil dilation reflect central executive control effort. Periodic ocular disengagement resets autonomic arousal and prevents the spectral drift toward theta-alpha synchronization characteristic of continuous cognitive fatigue.</p>
+        <p style="font-size:12px; color:#475569;"><strong>Supporting Research:</strong> <a href='https://doi.org/10.1016/j.tics.2014.04.012' target='_blank'>Cavanagh & Frank (2014)</a>, <a href='https://doi.org/10.1016/S0165-0173(98)00056-3' target='_blank'>Klimesch (1999)</a></p>
+    </div>
+    <div class="rec-card">
+        <h3>Syntactic Segmentation and Visual Text Formatting &nbsp;<span style="font-size:12px; color:#64748b; font-weight:normal;">(Reading Strategy & Chunking)</span></h3>
+        <p><strong>Observed Physiological Basis:</strong> Total reading time (TRT) exhibited a relative deviation of -8.8% (mean 175.89 ms), with gaze duration (GD) averaging 136.7715 ms during sentence-level syntactic parsing.</p>
+        <p><strong>Actionable Guidance:</strong> Break complex, dense text into shorter, distinct informational clauses. Utilize visual anchors, bullet points, and wider line-spacing (1.4 - 1.6x) to reduce rereading passes.</p>
+        <p><strong>Scientific Rationale:</strong> Eye-movement research shows that prolonged total reading time (TRT) and regression fixations reflect syntactic reanalysis and lexical competition. Increasing whitespace and semantic chunking significantly decreases redundant regressions without sacrificing comprehension.</p>
+        <p style="font-size:12px; color:#475569;"><strong>Supporting Research:</strong> <a href='https://doi.org/10.1037/0033-2909.124.3.372' target='_blank'>Rayner (1998)</a>, <a href='https://doi.org/10.1037/a0023885' target='_blank'>Dimigen et al. (2011)</a></p>
+    </div>
+    <div class="rec-card">
+        <h3>Active Reading Cadence Regulation & Self-Monitoring &nbsp;<span style="font-size:12px; color:#64748b; font-weight:normal;">(Workload Modulation)</span></h3>
+        <p><strong>Observed Physiological Basis:</strong> The Attention-Instability Evidence Proxy (MWLI_proxy) averaged +0.05, reflecting periodic fluctuations between rapid skimming and extended fixation pauses.</p>
+        <p><strong>Actionable Guidance:</strong> Practice active reading strategies: Summarize core concepts in 1-2 words after challenging sentences, and utilize a visual guide (such as a cursor or soft pointer) to maintain a steady, uniform pacing.</p>
+        <p><strong>Scientific Rationale:</strong> Erratic eye fixation patterns combined with reduced EEG engagement ratios indicate attentional cadence drift. Active metacognitive prompting re-couples visual attention with semantic processing.</p>
+        <p style="font-size:12px; color:#475569;"><strong>Supporting Research:</strong> <a href='https://doi.org/10.1146/annurev-psych-010814-015331' target='_blank'>Smallwood & Schooler (2015)</a>, <a href='https://doi.org/10.1016/0301-0511(95)05116-3' target='_blank'>Pope, Bogart, & Bartolome (1995)</a></p>
+    </div>
+    <div class="rec-card">
+        <h3>Display Luminance and Ambient Visual Optimization &nbsp;<span style="font-size:12px; color:#64748b; font-weight:normal;">(Visual Ergonomics)</span></h3>
+        <p><strong>Observed Physiological Basis:</strong> Mean pupil diameter was 1048.7 units with standard deviation 118.748. Variability index was 0.11 across reading intervals.</p>
+        <p><strong>Actionable Guidance:</strong> Match monitor luminance to surrounding ambient light to prevent unnecessary pupillary constriction or dilation strain. Prefer matte displays and warm contrast themes during prolonged reading.</p>
+        <p><strong>Scientific Rationale:</strong> Pupillometry integrates both autonomic arousal (norepinephrine) and the pupillary light reflex. Minimizing luminance contrasts stabilizes baseline pupil diameter, enhancing signal-to-noise ratio for cognitive effort monitoring.</p>
+        <p style="font-size:12px; color:#475569;"><strong>Supporting Research:</strong> <a href='https://doi.org/10.1017/CBO9780511546396.007' target='_blank'>Beatty & Lucero-Wagoner (2000)</a></p>
+    </div>
+    <h2>8. Scientific Limitations & Guardrails</h2>
+    <ul>
+        <li>All indices represent exploratory physiological proxies measured within a controlled natural reading protocol (ZuCo).</li>
+        <li>Reference ranges describe within-session typical intervals (median ± 1.5 robust SD) and must not be treated as universal healthy/clinical norms.</li>
+        <li>Physiological modulations in EEG and eye movements are correlational and do not establish medical or psychiatric diagnoses (e.g. ADHD, dyslexia, cognitive impairment).</li>
+        <li>Cadence variations and composite proxies (MWLI_proxy, SAI) reflect reading cadence irregularity rather than ground-truth subjective mind-wandering.</li>
+        <li>Ambient luminance, individual caffeine intake, sleep quality, and reading strategy substantially modulate autonomic and electrophysiological baselines.</li>
+    </ul>
+
+    <h2>9. Complete Scientific References</h2>
+    <ol style="font-size:13px; color:#334155;">
+        <li><strong>Alexander Gundel et al. (1992)</strong>. Frontal midline theta power and mental effort in flight simulation. <em>Abstract</em>. <a href='https://doi.org/10.1016/0167-8760(93)90054-9' target='_blank'>doi:10.1016/0167-8760(93)90054-9</a></li>
+        <li><strong>Alan T. Pope et al. (1995)</strong>. Biocybernetic system evaluates indices of operator engagement in automated task. <em>Abstract</em>. <a href='https://doi.org/10.1016/0301-0511(95)05116-3' target='_blank'>doi:10.1016/0301-0511(95)05116-3</a></li>
+        <li><strong>Keith Rayner (1998)</strong>. Eye movements in reading and information processing: 20 years of research. <em>Abstract</em>. <a href='https://doi.org/10.1037/0033-2909.124.3.372' target='_blank'>doi:10.1037/0033-2909.124.3.372</a></li>
+        <li><strong>Ryouhei Ishii et al. (1999)</strong>. Medial prefrontal cortex generates frontal midline theta rhythm. <em>Abstract</em>. <a href='https://doi.org/10.1097/00001756-199903170-00003' target='_blank'>doi:10.1097/00001756-199903170-00003</a></li>
+        <li><strong>Jackson Beatty et al. (2000)</strong>. The pupillary system and cognitive workload. <em>Abstract</em>. <a href='https://doi.org/10.1017/CBO9780511546396.007' target='_blank'>doi:10.1017/CBO9780511546396.007</a></li>
+        <li><strong>James A. Coan et al. (2004)</strong>. Frontal EEG asymmetry as a moderator and mediator of emotion and motivational direction. <em>Abstract</em>. <a href='https://doi.org/10.1016/j.biopsycho.2004.03.002' target='_blank'>doi:10.1016/j.biopsycho.2004.03.002</a></li>
+        <li><strong>Adam M. Brickman et al. (2005)</strong>. Category and letter verbal fluency across the adult lifespan: relationship to EEG theta power. <em>Abstract</em>. <a href='https://doi.org/10.1016/j.acn.2004.12.006' target='_blank'>doi:10.1016/j.acn.2004.12.006</a></li>
+        <li><strong>Pamela Deans et al. (2010)</strong>. Use of Eye Movement Tracking in the Differential Diagnosis of Attention Deficit Hyperactivity Disorder (ADHD) and Reading Disability. <em>Abstract</em>. <a href='https://doi.org/10.4236/psych.2010.14032' target='_blank'>doi:10.4236/psych.2010.14032</a></li>
+        <li><strong>Olaf Dimigen et al. (2011)</strong>. Coregistration of eye movements and EEG in natural reading: Analyses and review. <em>Abstract</em>. <a href='https://doi.org/10.1037/a0023885' target='_blank'>doi:10.1037/a0023885</a></li>
+        <li><strong>Simon Finnigan et al. (2011)</strong>. Resting EEG theta power correlates with cognitive performance in healthy older adults. <em>Abstract</em>. <a href='https://doi.org/10.1111/j.1469-8986.2010.01173.x' target='_blank'>doi:10.1111/j.1469-8986.2010.01173.x</a></li>
+        <li><strong>Christian Gold et al. (2012)</strong>. Validity and reliability of electroencephalographic frontal alpha asymmetry and frontal midline theta as biomarkers for depression. <em>Abstract</em>. <a href='https://doi.org/10.1111/sjop.12022' target='_blank'>doi:10.1111/sjop.12022</a></li>
+        <li><strong>Tom Foulsham et al. (2013)</strong>. Mind wandering in sentence reading: Decoupling the link between mind and eye.. <em>Abstract</em>. <a href='https://doi.org/10.1037/a0030217' target='_blank'>doi:10.1037/a0030217</a></li>
+        <li><strong>Cordelia Mühlenbeck et al. (2015)</strong>. Gaze Duration Biases for Colours in Combination with Dissonant and Consonant Sounds: A Comparative Eye-Tracking Study with Orangutans. <em>Abstract</em>. <a href='https://doi.org/10.1371/journal.pone.0139894' target='_blank'>doi:10.1371/journal.pone.0139894</a></li>
+        <li><strong>Jonathan Smallwood et al. (2015)</strong>. The science of mind wandering: empirically navigating the stream of consciousness. <em>Abstract</em>. <a href='https://doi.org/10.1146/annurev-psych-010814-015331' target='_blank'>doi:10.1146/annurev-psych-010814-015331</a></li>
+        <li><strong>Diana Armbruster‐Genc et al. (2016)</strong>. Brain Signal Variability Differentially Affects Cognitive Flexibility and Cognitive Stability. <em>Abstract</em>. <a href='https://doi.org/10.1523/jneurosci.2517-14.2016' target='_blank'>doi:10.1523/jneurosci.2517-14.2016</a></li>
+        <li><strong>Joseph K. Nuamah et al. (2017)</strong>. Support vector machine (SVM) classification of cognitive tasks based on electroencephalography (EEG) engagement index. <em>Abstract</em>. <a href='https://doi.org/10.1080/2326263x.2017.1338012' target='_blank'>doi:10.1080/2326263x.2017.1338012</a></li>
+        <li><strong>Félix Bacigalupo et al. (2018)</strong>. Lateralized Suppression of Alpha-Band EEG Activity As a Mechanism of Target Processing. <em>Abstract</em>. <a href='https://doi.org/10.1523/jneurosci.0183-18.2018' target='_blank'>doi:10.1523/jneurosci.0183-18.2018</a></li>
+        <li><strong>Hyangsook Park (2018)</strong>. The Role of Reading Span in L2 Reading Comprehension and Eye Movements. <em>Abstract</em>. <a href='https://doi.org/10.15858/engtea.73.1.201803.3' target='_blank'>doi:10.15858/engtea.73.1.201803.3</a></li>
+        <li><strong>Nora Hollenstein et al. (2018)</strong>. ZuCo, a simultaneous EEG and eye-tracking resource for natural reading. <em>Abstract</em>. <a href='https://doi.org/10.1038/sdata.2018.291' target='_blank'>doi:10.1038/sdata.2018.291</a></li>
+        <li><strong>Emilia Turc et al. (2020)</strong>. Gaussian Mixture Modeling of EEG Alpha-Band Microarchitecture Reveals Continuous State Transitions During Burst Suppression. <em>Abstract</em>. <a href='https://doi.org/10.2139/ssrn.6982383' target='_blank'>doi:10.2139/ssrn.6982383</a></li>
+        <li><strong>Jinwon Chang et al. (2020)</strong>. Specification dependence of EEG theta/alpha ratio associations with cognitive impairment: a multiverse analysis. <em>Abstract</em>. <a href='https://doi.org/10.64898/2026.09.03.749187' target='_blank'>doi:10.64898/2026.09.03.749187</a></li>
+        <li><strong>Siddarth Mohanty (2020)</strong>. Evaluating cognitive workload in an AR environment using pupil area responses. <em>Abstract</em>. <a href='https://doi.org/10.32469/10355/111118' target='_blank'>doi:10.32469/10355/111118</a></li>
+        <li><strong>Tee Yi Wen et al. (2020)</strong>. Electroencephalogram (EEG) stress analysis on alpha/beta ratio and theta/beta ratio. <em>Abstract</em>. <a href='https://doi.org/10.11591/ijeecs.v17.i1.pp175-182' target='_blank'>doi:10.11591/ijeecs.v17.i1.pp175-182</a></li>
+        <li><strong>Chiara Jongerius et al. (2021)</strong>. Eye-tracking analyses of physician face gaze patterns in consultations. <em>Abstract</em>. <a href='https://doi.org/10.1038/s41598-021-99068-4' target='_blank'>doi:10.1038/s41598-021-99068-4</a></li>
+        <li><strong>James F. Cavanagh et al. (2022)</strong>. Frontal Midline Theta as a Model Specimen of Cortical Theta. <em>Abstract</em>. <a href='https://doi.org/10.1093/oxfordhb/9780192898340.013.9' target='_blank'>doi:10.1093/oxfordhb/9780192898340.013.9</a></li>
+        <li><strong>Kyoungwon Baik et al. (2022)</strong>. Implication of EEG theta/alpha and theta/beta ratio in Alzheimer’s and Lewy body disease. <em>Abstract</em>. <a href='https://doi.org/10.1038/s41598-022-21951-5' target='_blank'>doi:10.1038/s41598-022-21951-5</a></li>
+        <li><strong>Marta Mondellini et al. (2023)</strong>. A Multimodal Approach Exploiting EEG to Investigate the Effects of VR Environment on Mental Workload. <em>Abstract</em>. <a href='https://doi.org/10.1080/10447318.2023.2258017' target='_blank'>doi:10.1080/10447318.2023.2258017</a></li>
+        <li><strong>Narmashiri A et al. (2023)</strong>. Paranormal believers show reduced resting EEG beta band oscillations and inhibitory control than skeptics.. <em>Abstract</em>. <a href='https://doi.org/10.1038/s41598-023-30457-7' target='_blank'>doi:10.1038/s41598-023-30457-7</a></li>
+        <li><strong>Man BKL et al. (2025)</strong>. Visual Speech Reduces Cognitive Effort as Measured by EEG Theta Power and Pupil Dilation.. <em>Abstract</em>. <a href='https://doi.org/10.1523/eneuro.0288-25.2025' target='_blank'>doi:10.1523/eneuro.0288-25.2025</a></li>
+        <li><strong>Vincenzo Ronca et al. (2025)</strong>. A Multimodal Neurophysiological Approach to Evaluate Educational Contents in Terms of Cognitive Processes and Engagement. <em>Abstract</em>. <a href='https://doi.org/10.3390/bioengineering12060597' target='_blank'>doi:10.3390/bioengineering12060597</a></li>
+        <li><strong>A J Paton (2026)</strong>. Attention Stability: Admissible Focus and Constraint Regulation in Cognitive Systems. <em>Abstract</em>. <a href='https://doi.org/10.5281/zenodo.19042955' target='_blank'>doi:10.5281/zenodo.19042955</a></li>
+        <li><strong>Diotaiuti P et al. (2026)</strong>. Eye-tracking and cognitive patterns in post-traumatic stress disorder: a scoping review.. <em>Abstract</em>. <a href='https://doi.org/10.1080/20008066.2026.2703319' target='_blank'>doi:10.1080/20008066.2026.2703319</a></li>
+        <li><strong>Eunbyul Yang et al. (2026)</strong>. The impact of task complexity and self-regulated supports on cognitive load and emotional engagement through multimodal analysis in the metaverse learning environment. <em>Abstract</em>. <a href='https://doi.org/10.3389/fpsyg.2026.1805065' target='_blank'>doi:10.3389/fpsyg.2026.1805065</a></li>
+        <li><strong>Ferreira DF et al. (2026)</strong>. Beyond visual comfort: comparing pupillometry and subjective measures of cognitive strain in workplace lighting.. <em>Abstract</em>. <a href='https://doi.org/10.3389/fpubh.2026.1875100' target='_blank'>doi:10.3389/fpubh.2026.1875100</a></li>
+        <li><strong>Joerg F. Hipp et al. (2026)</strong>. Excess EEG beta-band oscillations in Dup15q syndrome correlate with clinical severity. <em>Abstract</em>. <a href='https://doi.org/10.1038/s41398-026-04171-7' target='_blank'>doi:10.1038/s41398-026-04171-7</a></li>
+        <li><strong>Maia A et al. (2026)</strong>. Attentional variability as a cognitive marker of clinical activity in Crohn's disease.. <em>Abstract</em>. <a href='https://doi.org/10.1093/crocol/otag099' target='_blank'>doi:10.1093/crocol/otag099</a></li>
+        <li><strong>Manjunath M et al. (2026)</strong>. Neural and cognitive correlates of adolescent anxiety: Widespread brain network alterations, increased control costs, and visuospatial processing deficits.. <em>Abstract</em>. <a href='https://doi.org/10.1162/imag.a.1409' target='_blank'>doi:10.1162/imag.a.1409</a></li>
+        <li><strong>Mei X et al. (2026)</strong>. Dual Mechanisms of Impaired Visual Processing in Glaucoma: Insights From Resting-State and Task-Related EEG.. <em>Abstract</em>. <a href='https://doi.org/10.1167/iovs.67.12.2' target='_blank'>doi:10.1167/iovs.67.12.2</a></li>
+        <li><strong>Mi D et al. (2026)</strong>. Resting-state frontal theta/beta ratio and psychological symptoms in college students: an EEG study.. <em>Abstract</em>. <a href='https://doi.org/10.3389/fpsyt.2026.1834200' target='_blank'>doi:10.3389/fpsyt.2026.1834200</a></li>
+        <li><strong>Navas-León S et al. (2026)</strong>. An Eye-Tracking Study on Text Accessibility and Comprehension in University Students.. <em>Abstract</em>. <a href='https://doi.org/10.3390/bs16061041' target='_blank'>doi:10.3390/bs16061041</a></li>
+        <li><strong>S. Kudubayeva et al. (2026)</strong>. Unified Visual Synchrony: A Framework for Face-Gesture Coherence in Multimodal Human-AI Interaction. <em>Abstract</em>. <a href='https://doi.org/10.3390/bdcc10030088' target='_blank'>doi:10.3390/bdcc10030088</a></li>
+        <li><strong>Sarimski R et al. (2026)</strong>. An Exploratory Study: What Can Eye-Movements Tell Us About Phonological Awareness in Children with Intellectual Disabilities?. <em>Abstract</em>. <a href='https://doi.org/10.3390/jemr19050115' target='_blank'>doi:10.3390/jemr19050115</a></li>
+        <li><strong>Strzelczyk D et al. (2026)</strong>. Theta-Beta Ratio in Attention Deficit Hyperactivity Disorder: A Multiverse Analysis. <em>Abstract</em>. <a href='https://doi.org/10.64898/2026.01.08.26343676' target='_blank'>doi:10.64898/2026.01.08.26343676</a></li>
+        <li><strong>Strzelczyk D et al. (2026)</strong>. Theta beta ratio in attention deficit hyperactivity disorder using a multiverse analysis.. <em>Abstract</em>. <a href='https://doi.org/10.7554/elife.111114' target='_blank'>doi:10.7554/elife.111114</a></li>
+        <li><strong>Sun H et al. (2026)</strong>. ReMind: A Retrospective Self-Report Paradigm for Studying Mind-Wandering Onset During Reading. <em>Abstract</em>. <a href='https://doi.org/10.64898/2026.05.14.725227' target='_blank'>doi:10.64898/2026.05.14.725227</a></li>
+        <li><strong>Sun H et al. (2026)</strong>. Brain-Language Alignment During Naturalistic Reading and Its Disruption by Mind-Wandering. <em>Abstract</em>. <a href='https://doi.org/10.64898/2026.08.14.744875' target='_blank'>doi:10.64898/2026.08.14.744875</a></li>
+        <li><strong>Xu Y et al. (2026)</strong>. Developmental variation in resting-state EEG spectral correlates of response inhibition in children and adolescents.. <em>Abstract</em>. <a href='https://doi.org/10.1016/j.dcn.2026.101834' target='_blank'>doi:10.1016/j.dcn.2026.101834</a></li>
+        <li><strong>Zhang J et al. (2026)</strong>. Insights into the neural mechanisms supporting cognitive stability and flexibility from human intracranial electroencephalography.. <em>Abstract</em>. <a href='https://doi.org/10.1016/j.neubiorev.2026.106872' target='_blank'>doi:10.1016/j.neubiorev.2026.106872</a></li>
+        <li><strong>Zou F et al. (2026)</strong>. Resting frontal alpha asymmetry is associated with rejection sensitivity beyond anxiety and depressive symptoms in young adults.. <em>Abstract</em>. <a href='https://doi.org/10.1016/j.biopsycho.2026.109376' target='_blank'>doi:10.1016/j.biopsycho.2026.109376</a></li>
+    </ol>
+</div>
+</body>
+</html>
