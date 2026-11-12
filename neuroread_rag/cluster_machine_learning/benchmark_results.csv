@@ -1,0 +1,8 @@
+algorithm,n_clusters,fit_time_sec,train_silhouette,train_davies_bouldin,train_calinski_harabasz,train_ari,train_nmi,train_v_measure,train_accuracy,train_precision,train_recall,train_f1,test_pred_time_sec,test_silhouette,test_davies_bouldin,test_calinski_harabasz,test_ari,test_nmi,test_v_measure,test_accuracy,test_precision,test_recall,test_f1
+GMM (Full Covariance) [Baseline System],6,0.3739,0.1105,1.8482,419.0,0.0438,0.086,0.086,27.91,38.11,27.91,29.94,0.0002,-0.0357,2.6677,14.4,0.039,0.1083,0.1083,31.6,33.33,31.6,30.33
+GMM (Tied Covariance),6,0.1743,0.1537,1.5037,391.5,0.0313,0.0498,0.0498,31.3,32.58,31.3,26.11,0.0001,0.1205,1.7158,30.5,0.095,0.1478,0.1478,38.0,41.24,38.0,30.61
+GMM (Diag Covariance),6,0.0889,0.1236,2.1898,426.2,0.046,0.0721,0.0721,27.44,33.03,27.44,29.29,0.0001,0.0302,2.4402,26.4,0.0702,0.1471,0.1471,32.8,37.05,32.8,33.0
+K-Means (k-means++),6,0.0362,0.2,1.436,656.5,0.072,0.092,0.092,31.64,36.84,31.64,33.07,0.0002,0.1151,1.7002,37.8,0.1724,0.2689,0.2689,38.4,41.74,38.4,38.92
+Agglomerative Clustering (Ward),6,0.1077,0.1523,1.5712,515.8,0.0482,0.0625,0.0625,26.77,30.46,26.77,27.9,,,,,,,,,,,
+Spectral Clustering (RBF),6,0.7095,0.5149,0.872,32.6,0.0011,0.0097,0.0097,31.61,39.68,31.61,15.55,,,,,,,,,,,
+DBSCAN (Density-Based),1,0.1066,,,,0.0274,0.0416,0.0416,34.41,15.52,34.41,19.93,,,,,,,,,,,

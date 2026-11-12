@@ -38,6 +38,12 @@ PERSONAL_RANGES_CSV = PROJECT_ROOT / "cognitive_profile_results_type_2" / "perso
 CLUSTER_INTERPRETATION_CSV = PROJECT_ROOT / "cognitive_profile_results_type_2" / "cluster_cognitive_interpretation.csv"
 LATEST_PARTICIPANT_FILE = OUTPUT_DIR / "latest_participant.txt"
 
+# 8 Core Multimodal Feature Dimensions
+MODEL_FEATURES = [
+    "EEI", "FMT", "ASM", "GD", "TRT", "FFD",
+    "PupilSize", "FixationCount"
+]
+
 
 def list_zuco_tasks() -> List[Dict[str, Any]]:
     """
