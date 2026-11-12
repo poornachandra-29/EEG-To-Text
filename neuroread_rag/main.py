@@ -14,6 +14,11 @@ import argparse
 import sys
 from pathlib import Path
 
+# Enable running both as `python -m neuroread_rag.main` and as `python main.py` directly
+_pkg_parent = Path(__file__).resolve().parent.parent
+if str(_pkg_parent) not in sys.path:
+    sys.path.insert(0, str(_pkg_parent))
+
 from neuroread_rag.participant_analysis.analyzer import ParticipantAnalyzer
 from neuroread_rag.participant_analysis.mat_processor import process_mat_file
 from neuroread_rag.ingestion.vector_store import HybridVectorStore
@@ -85,11 +90,17 @@ def main():
     parser.add_argument("--mat", type=str, default=None, help="Path to input participant MATLAB .mat file (e.g. resultsZJS_TSR.mat)")
     parser.add_argument("--patient", "--participant", type=str, default=None, help="Select participant ID (e.g. resultsZJS_TSR or resultsZPH_NR)")
     parser.add_argument("--generate-report", action="store_true", help="Generate 10-section report in MD, HTML, and JSON")
+    parser.add_argument("--precompute-all", action="store_true", help="Precompute all patient CSVs across Task 1 (SR), Task 2 (NR), and Task 3 (TSR)")
     parser.add_argument("--server", action="store_true", help="Launch interactive web dashboard server")
     parser.add_argument("--port", type=int, default=8080, help="Port for dashboard server (default: 8080)")
     parser.add_argument("--host", type=str, default="127.0.0.1", help="Host address for dashboard server (default: 127.0.0.1)")
 
     args = parser.parse_args()
+
+    if args.precompute_all:
+        from neuroread_rag.precompute_all import main as run_precompute
+        run_precompute()
+        return
 
     # If user ran `python -m neuroread_rag.main` with no args or --interactive:
     is_bare_run = not any([args.mat, args.csv, args.patient, args.server, args.generate_report])

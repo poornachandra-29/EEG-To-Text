@@ -13,6 +13,22 @@ OUTPUT_DIR = BASE_DIR / "output"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 CSV_DIR = OUTPUT_DIR / "csv_features"
 CSV_DIR.mkdir(parents=True, exist_ok=True)
+
+# Self-contained Data and Artifact Directories
+DATA_DIR = BASE_DIR / "data"
+DATA_DIR.mkdir(parents=True, exist_ok=True)
+PRECOMPUTED_CSVS_DIR = DATA_DIR / "precomputed_csvs"
+PRECOMPUTED_CSVS_DIR.mkdir(parents=True, exist_ok=True)
+
+TASK_FOLDERS = {
+    "task1_SR": PRECOMPUTED_CSVS_DIR / "task1_SR",
+    "task2_NR": PRECOMPUTED_CSVS_DIR / "task2_NR",
+    "task3_TSR": PRECOMPUTED_CSVS_DIR / "task3_TSR",
+}
+for p in TASK_FOLDERS.values():
+    p.mkdir(parents=True, exist_ok=True)
+
+ARTIFACTS_DIR = BASE_DIR / "artifacts"
 ZUCO_ROOT = PROJECT_ROOT / "dataset" / "ZuCo" / "q3zws" / "osfstorage"
 
 # Input CSV Paths from Existing Pipeline
@@ -24,46 +40,111 @@ LATEST_PARTICIPANT_FILE = OUTPUT_DIR / "latest_participant.txt"
 
 
 def list_zuco_tasks() -> List[Dict[str, Any]]:
-    """Scan ZuCo directory and return available study reading tasks and student .mat files."""
-    task_order = ["task3 - TSR", "task2 - NR", "task1- SR"]
+    """
+    Return available study reading tasks and student datasets.
+    Prioritizes self-contained precomputed CSVs in neuroread_rag/data/precomputed_csvs/
+    so the system runs completely independent of external .mat files and datasets.
+    """
+    task_order = ["task3_TSR", "task2_NR", "task1_SR"]
     task_labels = {
-        "task3 - TSR": "Study Material 3: Task-Specific Reading (TSR)",
-        "task2 - NR": "Study Material 2: Natural Reading (NR)",
-        "task1- SR": "Study Material 1: Semantic Reading (SR)"
+        "task3_TSR": "Study Material 3: Task-Specific Reading (TSR)",
+        "task2_NR": "Study Material 2: Natural Reading (NR)",
+        "task1_SR": "Study Material 1: Semantic Reading (SR)"
     }
+    task_dir_aliases = {
+        "task3 - TSR": "task3_TSR",
+        "task2 - NR": "task2_NR",
+        "task1- SR": "task1_SR",
+        "task1 - SR": "task1_SR"
+    }
+
     tasks = []
-    if not ZUCO_ROOT.exists():
-        return tasks
+    seen_tasks = set()
 
-    def sort_key(d: Path) -> int:
-        return task_order.index(d.name) if d.name in task_order else 99
+    # 1. First scan self-contained precomputed CSV folders inside neuroread_rag/data/precomputed_csvs/
+    for t_key in task_order:
+        t_folder = TASK_FOLDERS.get(t_key, PRECOMPUTED_CSVS_DIR / t_key)
+        csv_files = []
+        if t_folder.is_dir():
+            # Filter to canonical files (prefer features_*.csv, ignore duplicate symlinks)
+            all_csvs = sorted(t_folder.glob("*.csv"), key=lambda p: p.name.lower())
+            feature_csvs = [f for f in all_csvs if f.name.startswith("features_")]
+            csv_files = feature_csvs if feature_csvs else [f for f in all_csvs if not f.is_symlink()]
 
-    for t_dir in sorted(ZUCO_ROOT.glob("task*"), key=sort_key):
-        mat_folder = t_dir / "Matlab files"
-        if not mat_folder.is_dir():
-            continue
-        mat_files = sorted(mat_folder.glob("*.mat"), key=lambda p: p.name.lower())
-        patients = []
-        for mf in mat_files:
-            stem = mf.stem  # e.g. resultsZJS_TSR
-            code = stem.replace("results", "").split("_")[0]
-            patients.append({
-                "filename": mf.name,
-                "patient_id": stem,
-                "student_id": stem,
-                "patient_code": code,
-                "student_code": code,
-                "full_path": str(mf.resolve())
+        if csv_files:
+            patients = []
+            for cf in csv_files:
+                stem = cf.stem
+                # Clean patient code from filename
+                # formats: features_task3_TSR_ZJS.csv, resultsZJS_TSR.csv, ZJS.csv
+                code = stem
+                for prefix in [f"features_{t_key}_", "features_", "results"]:
+                    if code.startswith(prefix):
+                        code = code[len(prefix):]
+                code = code.split("_")[0]
+                patients.append({
+                    "filename": cf.name,
+                    "patient_id": f"results{code}_{t_key.split('_')[-1]}",
+                    "student_id": f"results{code}_{t_key.split('_')[-1]}",
+                    "patient_code": code,
+                    "student_code": code,
+                    "csv_path": str(cf.resolve()),
+                    "full_path": str(cf.resolve()),
+                    "is_precomputed": True
+                })
+            tasks.append({
+                "task_id": t_key,
+                "task_name": task_labels.get(t_key, t_key),
+                "folder": str(t_folder.resolve()),
+                "patient_count": len(patients),
+                "student_count": len(patients),
+                "patients": patients,
+                "source_type": "precomputed_csv"
             })
-        tasks.append({
-            "task_id": t_dir.name,
-            "task_name": task_labels.get(t_dir.name, t_dir.name),
-            "mat_folder": str(mat_folder.resolve()),
-            "patient_count": len(patients),
-            "student_count": len(patients),
-            "patients": patients
-        })
-    return tasks
+            seen_tasks.add(t_key)
+
+    # 2. If raw ZuCo .mat folder exists, incorporate any tasks or uncomputed patients
+    if ZUCO_ROOT.exists():
+        for t_dir in sorted(ZUCO_ROOT.glob("task*")):
+            norm_key = task_dir_aliases.get(t_dir.name, t_dir.name.replace(" ", "").replace("-", "_").strip("_"))
+            mat_folder = t_dir / "Matlab files"
+            if not mat_folder.is_dir():
+                continue
+
+            mat_files = sorted(mat_folder.glob("*.mat"), key=lambda p: p.name.lower())
+            
+            # If task not seen or missing precomputed patients, add/supplement
+            existing_task = next((t for t in tasks if t["task_id"] == norm_key), None)
+            if existing_task is None:
+                patients = []
+                for mf in mat_files:
+                    stem = mf.stem
+                    code = stem.replace("results", "").split("_")[0]
+                    patients.append({
+                        "filename": mf.name,
+                        "patient_id": stem,
+                        "student_id": stem,
+                        "patient_code": code,
+                        "student_code": code,
+                        "full_path": str(mf.resolve()),
+                        "is_precomputed": False
+                    })
+                tasks.append({
+                    "task_id": norm_key,
+                    "task_name": task_labels.get(norm_key, t_dir.name),
+                    "folder": str(mat_folder.resolve()),
+                    "patient_count": len(patients),
+                    "student_count": len(patients),
+                    "patients": patients,
+                    "source_type": "matlab_raw"
+                })
+
+    # Sort tasks according to canonical order
+    def task_sort(t):
+        tid = t["task_id"]
+        return task_order.index(tid) if tid in task_order else 99
+
+    return sorted(tasks, key=task_sort)
 
 
 def set_active_participant_csv(csv_path: Path) -> None:
@@ -78,9 +159,10 @@ def get_active_participant_csv() -> Path:
     """
     Get the active participant CSV:
     1. Returns latest recorded in latest_participant.txt if valid.
-    2. Otherwise, returns the most recently modified *.csv in CSV_DIR (separate folder).
-    3. Otherwise, returns the most recently modified *_features.csv in OUTPUT_DIR.
-    4. Otherwise, falls back to DEFAULT_PROFILE_CSV or FALLBACK_PREDICTIONS_CSV.
+    2. Otherwise, returns the most recently modified *.csv in PRECOMPUTED_CSVS_DIR subfolders.
+    3. Otherwise, returns the most recently modified *.csv in CSV_DIR.
+    4. Otherwise, returns the most recently modified *_features.csv in OUTPUT_DIR.
+    5. Otherwise, falls back to DEFAULT_PROFILE_CSV or FALLBACK_PREDICTIONS_CSV.
     """
     if LATEST_PARTICIPANT_FILE.exists():
         try:
@@ -90,6 +172,16 @@ def get_active_participant_csv() -> Path:
                 return saved_path
         except Exception:
             pass
+
+    # Check for CSVs in PRECOMPUTED_CSVS_DIR
+    if PRECOMPUTED_CSVS_DIR.exists():
+        precomputed_csvs = sorted(
+            PRECOMPUTED_CSVS_DIR.rglob("*.csv"),
+            key=lambda p: p.stat().st_mtime,
+            reverse=True
+        )
+        if precomputed_csvs:
+            return precomputed_csvs[0]
 
     # Check for recent CSVs in dedicated CSV_DIR
     if CSV_DIR.exists():
@@ -120,26 +212,39 @@ def get_active_participant_csv() -> Path:
 
 def find_participant_csv(identifier: str) -> Optional[Path]:
     """
-    Find existing CSV for a participant by ID, code, or task name in CSV_DIR or OUTPUT_DIR.
+    Find existing CSV for a participant by ID, code, or task name.
+    Searches in PRECOMPUTED_CSVS_DIR (task1_SR, task2_NR, task3_TSR), CSV_DIR, or OUTPUT_DIR.
     Matches e.g. 'ZJS', 'resultsZJS_TSR', 'task3_TSR_ZJS', etc.
     """
     if not identifier:
         return None
     clean_id = identifier.replace(".mat", "").replace(".csv", "").strip().lower()
-    
-    # 1. Search in dedicated CSV_DIR
+
+    # 1. Search in PRECOMPUTED_CSVS_DIR subfolders (task1_SR, task2_NR, task3_TSR)
+    if PRECOMPUTED_CSVS_DIR.exists():
+        # Exact stem match first
+        for f in sorted(PRECOMPUTED_CSVS_DIR.rglob("*.csv")):
+            stem_lower = f.stem.lower()
+            if clean_id == stem_lower or clean_id == stem_lower.replace("features_", ""):
+                return f
+        # Substring match
+        for f in sorted(PRECOMPUTED_CSVS_DIR.rglob("*.csv")):
+            if clean_id in f.stem.lower():
+                return f
+
+    # 2. Search in dedicated CSV_DIR
     if CSV_DIR.exists():
         for f in sorted(CSV_DIR.glob("*.csv"), key=lambda p: p.stat().st_mtime, reverse=True):
             f_stem_lower = f.stem.lower()
             if clean_id in f_stem_lower:
                 return f
-                
-    # 2. Search in OUTPUT_DIR
+
+    # 3. Search in OUTPUT_DIR
     for f in sorted(OUTPUT_DIR.glob("*.csv"), key=lambda p: p.stat().st_mtime, reverse=True):
         f_stem_lower = f.stem.lower()
         if clean_id in f_stem_lower:
             return f
-            
+
     return None
 
 # Metric Definitions and Metadata

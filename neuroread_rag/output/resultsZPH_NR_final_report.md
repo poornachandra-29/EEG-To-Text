@@ -1,6 +1,6 @@
 # NeuroRead AI: Student Cognitive Learning Assessment Report
 
-**Student ID:** `resultsZPH_NR` | **Sentences Analyzed:** 250 | **Generated:** 2026-11-08
+**Student ID:** `resultsZPH_NR` | **Sentences Analyzed:** 250 | **Generated:** 2026-11-12
 
 > **IMPORTANT NOTICE**: This document provides research-grounded cognitive intake observations derived from simultaneous EEG and eye tracking. It evaluates learning cadence, working memory load, and attentional stamina to optimize personal study habits.
 
@@ -120,11 +120,11 @@ Out of 250 read sentences, **67 sentences (26.8%)** exhibited marked physiologic
 
 | # | Sentence | Words | Fixations | Brain Engagement | Grade Lvl | Linguistic Root Cause |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1 | "Keynes was educated at Oundle School." | 6 | 3.40 | 0.4339 (Low) | 8.4 | Smooth Fluent Processing |
-| 2 | "Her works include Cold Comfort Farm." | 6 | 3.00 | 0.4319 (Low) | 2.5 | Smooth Fluent Processing |
-| 3 | "King married Coretta Scott on June 18, 1953." | 8 | 3.71 | 0.4534 (Low) | 1.0 | Smooth Fluent Processing |
-| 4 | "He was voted to five American Football League All-Star teams..." | 12 | 3.80 | 0.4569 (Low) | 5.8 | Smooth Fluent Processing |
-| 5 | "Winthrop died at St. Briac Sur Mer, Ille-et-Vilaine, France." | 9 | 2.67 | 0.4251 (Low) | 5.0 | Smooth Fluent Processing |
+| 1 | "Keynes was educated at Oundle School." | 6 | 3.40 | 0.4339 (Low) | 8.4 | Focal Stagnation (Re-reading Named Entities / Facts) |
+| 2 | "Her works include Cold Comfort Farm." | 6 | 3.00 | 0.4319 (Low) | 2.5 | Focal Stagnation (Re-reading Named Entities / Facts) |
+| 3 | "King married Coretta Scott on June 18, 1953." | 8 | 3.71 | 0.4534 (Low) | 1.0 | Focal Stagnation (Re-reading Named Entities / Facts) |
+| 4 | "He was voted to five American Football League All-Star teams..." | 12 | 3.80 | 0.4569 (Low) | 5.8 | Focal Stagnation (Re-reading Named Entities / Facts) |
+| 5 | "Winthrop died at St. Briac Sur Mer, Ille-et-Vilaine, France." | 9 | 2.67 | 0.4251 (Low) | 5.0 | Focal Stagnation (Re-reading Named Entities / Facts) |
 
 ### 💡 Key Insight
 

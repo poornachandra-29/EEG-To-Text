@@ -5,15 +5,23 @@ Provides REST API endpoints and serves the HTML/CSS/JS frontend dashboard.
 """
 
 import json
+import sys
 import urllib.parse
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 from pathlib import Path
 from typing import Optional, Any, Dict
 
+# Enable running both as module and directly as python server.py
+_pkg_parent = Path(__file__).resolve().parent.parent
+if str(_pkg_parent) not in sys.path:
+    sys.path.insert(0, str(_pkg_parent))
+
 from neuroread_rag.config import (
     BASE_DIR,
     OUTPUT_DIR,
     CSV_DIR,
+    PRECOMPUTED_CSVS_DIR,
+    TASK_FOLDERS,
     METRIC_DEFINITIONS,
     DEFAULT_PROFILE_CSV,
     FALLBACK_PREDICTIONS_CSV,
@@ -102,7 +110,7 @@ class NeuroReadRequestHandler(SimpleHTTPRequestHandler):
             })
             return
 
-        elif path == "/api/zuco/tasks":
+        elif path in ["/api/zuco/tasks", "/api/tasks"]:
             tasks = list_zuco_tasks()
             self._send_json({"tasks": tasks})
             return
@@ -223,48 +231,98 @@ class NeuroReadRequestHandler(SimpleHTTPRequestHandler):
             task_name = data.get("task")
             patient_file = data.get("patient_mat") or data.get("patient") or data.get("filename")
             mat_path_str = data.get("mat_path")
+            csv_path_str = data.get("csv_path")
 
-            target_mat: Optional[Path] = None
-            if mat_path_str and Path(mat_path_str).exists():
-                target_mat = Path(mat_path_str).resolve()
-            elif task_name and patient_file:
-                candidate = ZUCO_ROOT / task_name / "Matlab files" / patient_file
-                if candidate.exists():
-                    target_mat = candidate.resolve()
+            # 1. First, search for an existing precomputed CSV
+            target_csv: Optional[Path] = None
+            if csv_path_str and Path(csv_path_str).exists():
+                target_csv = Path(csv_path_str).resolve()
             elif patient_file:
-                for candidate in ZUCO_ROOT.glob(f"task*/Matlab files/{patient_file}"):
+                clean_name = patient_file.replace(".mat", "").replace(".csv", "").strip()
+                if task_name:
+                    norm_task = task_name.replace(" ", "").replace("-", "_").strip("_")
+                    t_dir = TASK_FOLDERS.get(norm_task) or (PRECOMPUTED_CSVS_DIR / norm_task)
+                    if t_dir.exists():
+                        for cand in [
+                            t_dir / f"features_{norm_task}_{clean_name}.csv",
+                            t_dir / f"features_{norm_task}_{clean_name.replace('results', '')}.csv",
+                            t_dir / f"{clean_name}.csv",
+                            t_dir / f"{patient_file}.csv"
+                        ]:
+                            if cand.exists():
+                                target_csv = cand
+                                break
+                if not target_csv:
+                    target_csv = find_participant_csv(clean_name)
+
+            # 2. Second, search for raw .mat file if precomputed CSV is not found
+            target_mat: Optional[Path] = None
+            if not target_csv:
+                if mat_path_str and Path(mat_path_str).exists():
+                    target_mat = Path(mat_path_str).resolve()
+                elif task_name and patient_file and ZUCO_ROOT.exists():
+                    candidate = ZUCO_ROOT / task_name / "Matlab files" / patient_file
                     if candidate.exists():
                         target_mat = candidate.resolve()
-                        break
+                elif patient_file and ZUCO_ROOT.exists():
+                    for candidate in ZUCO_ROOT.glob(f"task*/Matlab files/{patient_file}"):
+                        if candidate.exists():
+                            target_mat = candidate.resolve()
+                            break
 
-            if not target_mat or not target_mat.is_file():
-                self._send_json({"error": f"MAT file not found for task='{task_name}', patient='{patient_file}'"}, status=404)
+            if not target_csv and not target_mat:
+                self._send_json({
+                    "error": f"Neither precomputed CSV nor MAT file found for task='{task_name}', patient='{patient_file}'"
+                }, status=404)
                 return
 
-            print(f"\n[Server] Triggered pipeline on selected MAT file: {target_mat.name} ({target_mat.parent.parent.name})...")
             try:
-                # 1. Process MAT -> CSV (Feature extraction, RobustScaler, GMM predictions, indices)
-                csv_path = process_mat_file(target_mat)
-                set_active_participant_csv(csv_path)
+                if target_csv:
+                    print(f"\n[Server] Using precomputed CSV: {target_csv.name} ({target_csv.parent.name}) - Instant Execution!")
+                    csv_path = target_csv
+                    set_active_participant_csv(csv_path)
+                else:
+                    print(f"\n[Server] Computing from raw MAT file: {target_mat.name} ({target_mat.parent.parent.name})...")
+                    csv_path = process_mat_file(target_mat)
+                    set_active_participant_csv(csv_path)
 
-                # 2. Deterministic Participant Analysis
+                # Check if pre-compiled report JSON already exists for instant serving
+                participant_stem = target_csv.stem if target_csv else target_mat.stem
+                clean_pid = participant_stem.replace("features_", "")
+                cached_report_file = OUTPUT_DIR / f"{clean_pid}_final_report.json"
+                cached_analysis_file = OUTPUT_DIR / f"{clean_pid}_analysis.json"
+
+                if cached_report_file.exists() and cached_analysis_file.exists():
+                    print(f"[Server] Loading cached pre-compiled analysis and report for: {clean_pid} (0.01s)")
+                    report_data = json.loads(cached_report_file.read_text(encoding="utf-8"))
+                    participant_data = json.loads(cached_analysis_file.read_text(encoding="utf-8"))
+                    NeuroReadRequestHandler.report_data = report_data
+                    NeuroReadRequestHandler.participant_data = participant_data
+                    self._send_json({
+                        "status": "success",
+                        "participant_id": clean_pid,
+                        "sentences_count": participant_data.get("total_sentences", 0),
+                        "task": task_name or (target_csv.parent.name if target_csv else target_mat.parent.parent.name),
+                        "filename": (target_csv.name if target_csv else target_mat.name),
+                        "report": report_data
+                    })
+                    return
+
+                # Otherwise, execute deterministic Participant Analysis & Grounding
                 analyzer = ParticipantAnalyzer(csv_path=csv_path)
                 analysis_result = analyzer.analyze()
                 analyzer.save_analysis()
 
-                # 3. Hybrid RAG Research Grounding
                 vector_store = HybridVectorStore()
                 synthesizer = EvidenceSynthesizer(vector_store)
                 engine = ResearchGroundingEngine(synthesizer)
                 grounded_report = engine.ground_participant_profile(analysis_result)
                 engine.save_grounded_report(grounded_report)
 
-                # 4. 10-Section Report Generation
                 report_gen = FinalReportGenerator()
                 report_data = report_gen.generate_full_report(grounded_report, analysis_result)
                 report_gen.save_reports(grounded_report, analysis_result)
 
-                # Update in-memory state
                 NeuroReadRequestHandler.analyzer = analyzer
                 NeuroReadRequestHandler.synthesizer = synthesizer
                 NeuroReadRequestHandler.participant_data = analysis_result.to_dict()
@@ -275,8 +333,8 @@ class NeuroReadRequestHandler(SimpleHTTPRequestHandler):
                     "status": "success",
                     "participant_id": analysis_result.participant_id,
                     "sentences_count": analysis_result.total_sentences,
-                    "task": target_mat.parent.parent.name,
-                    "filename": target_mat.name,
+                    "task": task_name or (target_csv.parent.name if target_csv else target_mat.parent.parent.name),
+                    "filename": (target_csv.name if target_csv else target_mat.name),
                     "report": report_data
                 })
             except Exception as e:

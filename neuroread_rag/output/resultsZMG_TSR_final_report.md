@@ -1,12 +1,21 @@
-# NeuroRead AI: Research-Grounded Physiological Assessment Report
+# NeuroRead AI: Student Cognitive Learning Assessment Report
 
-**Participant ID:** `resultsZMG_TSR` | **Sentences Analyzed:** 406 | **Generated:** 2026-11-08
+**Student ID:** `resultsZMG_TSR` | **Sentences Analyzed:** 406 | **Generated:** 2026-11-12
 
-> **IMPORTANT NOTICE**: This document provides research-grounded physiological observations derived from simultaneous EEG and eye tracking. It is strictly non-diagnostic and does NOT establish clinical disorders or subjective mind-wandering ground-truth.
+> **IMPORTANT NOTICE**: This document provides research-grounded cognitive intake observations derived from simultaneous EEG and eye tracking. It evaluates learning cadence, working memory load, and attentional stamina to optimize personal study habits.
 
 ## 1. Executive Summary
 
-This research-grounded physiological assessment analyzes participant resultsZMG_TSR across 406 sentence-reading trials recorded in the ZuCo natural reading protocol. Deterministic evaluation reveals steady neurophysiological engagement: the EEG Engagement Index (EEI = 0.7918) remained within the personal baseline range with an offset of +52.9%. Gaze duration (GD = 110.1 ms) and total reading time (TRT = 130.3 ms) reflected normal lexical processing cadence with expected syntactic rereading variations. Unsupervised Gaussian Mixture Modeling identified 5 distinct clusters, predominantly characterized by balanced cognitive control and focused reading patterns.
+This student cognitive learning assessment analyzes student resultsZMG_TSR across 406 learning sentences recorded during natural study reading. Your composite Learning Efficiency Score (LES) reached 82.7% (Optimal Learning Zone (Deep Flow)). Smooth flow state reading occurred on 13.8% of sentences, while working memory saturation (comprehension friction) appeared on 5.9% of sentences. Deterministic evaluation reveals steady neurophysiological engagement: the EEG Engagement Index (EEI = 0.7918) remained within the personal baseline range with an offset of +52.9%. Gaze duration (GD = 110.1 ms) and total reading time (TRT = 130.3 ms) reflected normal lexical processing cadence with expected syntactic rereading variations. Unsupervised Gaussian Mixture Modeling identified 5 distinct clusters, predominantly characterized by balanced cognitive control and focused reading patterns.
+
+## 1b. Learning Efficiency Score (LES) & Study Stamina Profile
+
+- **Learning Efficiency Score (LES):** **82.7%** — *Optimal Learning Zone (Deep Flow)*
+- **Flow Factor:** 70.0% (effortless reading progression)
+- **Cadence Stability:** 91.0% (low ocular/EEG variance)
+- **Cognitive Ease Factor:** 91.6% (working memory margin)
+- **Attentive Stamina Horizon:** Sentences 1–50 (~6 min)
+- **Optimal Study Block:** 15 minutes (calibrated Pomodoro)
 
 ## 2. Focus and Attention Assessment
 
@@ -42,7 +51,7 @@ For consistent reading performance, your engagement signal ideally stays above 0
 | **Alpha Band Power (AlphaPower)** | EEG | 3.233 µV² | 2.4372 | +32.6% | Within Typical Range |
 | **Beta Band Power (BetaPower)** | EEG | 3.3253 µV² | 2.5104 | +32.5% | Elevated Above Baseline |
 | **Theta / Alpha Ratio (Theta_Alpha_Ratio)** | EEG | 0.5301 ratio | 0.4885 | +8.5% | Within Typical Range |
-| **Theta / Beta Ratio (Theta_Beta_Ratio)** | EEG | 2.5137 ratio | 2.3677 | +6.2% | Within Typical Range |
+| **Theta / Beta Ratio (Theta_Beta_Ratio)** | EEG | 0.4462 ratio | 0.4224 | +5.6% | Within Typical Range |
 
 ## 4. Eye-Tracking Analysis
 
@@ -99,27 +108,27 @@ Out of 406 read sentences, **119 sentences (29.3%)** exhibited marked physiologi
 
 ### 🟢 Your 5 Easiest Sentences (Flow State)
 
-| # | Sentence | Words | Fixations | Brain Engagement | Why It Worked |
-| --- | --- | --- | --- | --- | --- |
-| 1 | "He and his wife belonged to the Epiphany Catholic Church in ..." | 15 | 1.14 | 1.1430 (High) | Medium-length sentence with familiar structure — reading cadence stayed fluid. |
-| 2 | "He was born into a family of Swedish nobility." | 9 | 1.25 | 1.3440 (High) | Short, direct sentence — your eyes processed this in one smooth pass. |
-| 3 | "There he published tables of atmospheric refraction based on..." | 22 | 1.09 | 1.4330 (High) | Longer sentence, but familiar vocabulary kept the reading rhythm smooth. |
-| 4 | "Ferrer had previously been married to Uta Hagen (1938-1948),..." | 20 | 1.17 | 1.3500 (High) | Longer sentence, but familiar vocabulary kept the reading rhythm smooth. |
-| 5 | "After a few months, while working in a printing house, Frank..." | 35 | 1.10 | 1.1440 (High) | Longer sentence, but familiar vocabulary kept the reading rhythm smooth. |
+| # | Sentence | Words | Fixations | Brain Engagement | Grade Lvl | Why It Worked |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 | "There he published tables of atmospheric refraction based on..." | 22 | 1.09 | 1.4327 (High) | 13.4 | Longer sentence, but accessible vocabulary maintained reading rhythm. |
+| 2 | "As a managing partner of Brown Brothers Harriman, he sat on ..." | 17 | 1.10 | 1.4072 (High) | 12.6 | Medium length with familiar structure — fluid reading cadence. |
+| 3 | "His parents were both members of the Nazi party." | 9 | 1.00 | 1.3662 (High) | 5.0 | Short, direct sentence — processed in one smooth pass. |
+| 4 | "Ferrer had previously been married to Uta Hagen (1938-1948),..." | 20 | 1.17 | 1.3501 (High) | 7.6 | Longer sentence, but accessible vocabulary maintained reading rhythm. |
+| 5 | "He was born into a family of Swedish nobility." | 9 | 1.25 | 1.3442 (High) | 8.9 | Short, direct sentence — processed in one smooth pass. |
 
 ### 🔴 Your 5 Hardest Sentences (Comprehension Difficulty)
 
-| # | Sentence | Words | Fixations | Brain Engagement | Likely Difficulty |
-| --- | --- | --- | --- | --- | --- |
-| 1 | "Peter Sydney Lawford (September 7, 1923 - December 24, 1984)..." | 34 | 2.76 | 0.5920 (Low) | Very high re-fixation count suggests eye got stuck on specific words multiple times. |
-| 2 | "The same year, they were each awarded by one of the UN's own..." | 16 | 2.56 | 0.5710 (Low) | Very high re-fixation count suggests eye got stuck on specific words multiple times. |
-| 3 | "He spent the remainder of his life in private pursuits, such..." | 15 | 2.43 | 0.5760 (Low) | Very high re-fixation count suggests eye got stuck on specific words multiple times. |
-| 4 | "Clive Jay Davis (born April 4, 1934) is the founder of Arist..." | 26 | 2.17 | 0.0000 (Low) | Very high re-fixation count suggests eye got stuck on specific words multiple times. |
-| 5 | "She was the fifth of nine children." | 7 | 2.00 | 0.4260 (Low) | Unfamiliar vocabulary or dense factual content likely required extra decoding effort. |
+| # | Sentence | Words | Fixations | Brain Engagement | Grade Lvl | Linguistic Root Cause |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 | "He began to learn mathematics around age twelve." | 8 | 6.71 | 0.6322 (Low) | 6.7 | Focal Stagnation (Re-reading Named Entities / Facts) |
+| 2 | "She was the fifth of nine children." | 7 | 2.00 | 0.4262 (Low) | 1.0 | Focal Stagnation (Re-reading Named Entities / Facts) |
+| 3 | "His support abated as the United States entered WWII." | 9 | 1.60 | 0.5396 (Low) | 10.2 | Lexical Overload (Dense / Unfamiliar Words) |
+| 4 | "He spent the remainder of his life in private pursuits, such..." | 15 | 2.43 | 0.5755 (Low) | 6.8 | Focal Stagnation (Re-reading Named Entities / Facts) |
+| 5 | "The same year, they were each awarded by one of the UN's own..." | 16 | 2.56 | 0.5712 (Low) | 5.4 | Focal Stagnation (Re-reading Named Entities / Facts) |
 
 ### 💡 Key Insight
 
-Your reading was most effortless on shorter, direct sentences (average 20 words) where your eyes moved forward smoothly. Your biggest comprehension challenges came on sentences with 2.4× more refixations per word. The core pattern: when sentences exceed your personal complexity threshold, your eyes compensate with extra fixations but your brain engagement simultaneously drops — a reliable signal of content difficulty.
+Your reading cadence was most effortless on concise sentences (averaging 15 words) where ocular fixations progressed sequentially with minimal re-reading. In contrast, on challenging breakdown sentences, your eyes registered 2.7× more fixations per sentence, while brain engagement dropped sharply. Crucially, after each breakdown sentence, your EEG engagement surged by an average of +0.19 units on the very next sentence, confirming active cognitive resilience.
 
 ## 7. Research-Paper Comparison
 
@@ -132,7 +141,7 @@ Your reading was most effortless on shorter, direct sentences (average 20 words)
 | **Alpha Band Power** | 3.233 µV² (Within Typical Range) | 2.4372 | Nora Hollenstein et al. (2018) - [10.1038/sdata.2018.291](https://doi.org/10.1038/sdata.2018.291) |
 | **Beta Band Power** | 3.3253 µV² (Elevated Above Baseline) | 2.5104 | Nora Hollenstein et al. (2018) - [10.1038/sdata.2018.291](https://doi.org/10.1038/sdata.2018.291) |
 | **Theta / Alpha Ratio** | 0.5301 ratio (Within Typical Range) | 0.4885 | Tee Yi Wen et al. (2020) - [10.11591/ijeecs.v17.i1.pp175-182](https://doi.org/10.11591/ijeecs.v17.i1.pp175-182) |
-| **Theta / Beta Ratio** | 2.5137 ratio (Within Typical Range) | 2.3677 | Mi D et al. (2026) - [10.3389/fpsyt.2026.1834200](https://doi.org/10.3389/fpsyt.2026.1834200) |
+| **Theta / Beta Ratio** | 0.4462 ratio (Within Typical Range) | 0.4224 | Mi D et al. (2026) - [10.3389/fpsyt.2026.1834200](https://doi.org/10.3389/fpsyt.2026.1834200) |
 | **Gaze Duration** | 113.8326 ms (Within Typical Range) | 135.1842 | Nora Hollenstein et al. (2018) - [10.1038/sdata.2018.291](https://doi.org/10.1038/sdata.2018.291) |
 | **First Fixation Duration** | 103.4801 ms (Within Typical Range) | 107.0395 | Olaf Dimigen et al. (2011) - [10.1037/a0023885](https://doi.org/10.1037/a0023885) |
 | **Total Reading Time** | 143.9618 ms (Within Typical Range) | 192.775 | Nora Hollenstein et al. (2018) - [10.1038/sdata.2018.291](https://doi.org/10.1038/sdata.2018.291) |

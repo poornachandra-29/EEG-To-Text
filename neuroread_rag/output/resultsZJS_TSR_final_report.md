@@ -1,6 +1,6 @@
 # NeuroRead AI: Student Cognitive Learning Assessment Report
 
-**Student ID:** `resultsZJS_TSR` | **Sentences Analyzed:** 406 | **Generated:** 2026-11-08
+**Student ID:** `resultsZJS_TSR` | **Sentences Analyzed:** 406 | **Generated:** 2026-11-12
 
 > **IMPORTANT NOTICE**: This document provides research-grounded cognitive intake observations derived from simultaneous EEG and eye tracking. It evaluates learning cadence, working memory load, and attentional stamina to optimize personal study habits.
 
@@ -51,7 +51,7 @@ For consistent reading performance, your engagement signal ideally stays above 0
 | **Alpha Band Power (AlphaPower)** | EEG | 0.8936 µV² | 2.4372 | -63.3% | Below Baseline |
 | **Beta Band Power (BetaPower)** | EEG | 1.0909 µV² | 2.5104 | -56.5% | Below Baseline |
 | **Theta / Alpha Ratio (Theta_Alpha_Ratio)** | EEG | 0.5953 ratio | 0.5335 | +11.6% | Within Typical Range |
-| **Theta / Beta Ratio (Theta_Beta_Ratio)** | EEG | 2.6087 ratio | 2.2772 | +14.6% | Within Typical Range |
+| **Theta / Beta Ratio (Theta_Beta_Ratio)** | EEG | 0.4681 ratio | 0.4391 | +6.6% | Within Typical Range |
 
 ## 4. Eye-Tracking Analysis
 
@@ -141,7 +141,7 @@ Your reading cadence was most effortless on concise sentences (averaging 16 word
 | **Alpha Band Power** | 0.8936 µV² (Below Baseline) | 2.4372 | Nora Hollenstein et al. (2018) - [10.1038/sdata.2018.291](https://doi.org/10.1038/sdata.2018.291) |
 | **Beta Band Power** | 1.0909 µV² (Below Baseline) | 2.5104 | Nora Hollenstein et al. (2018) - [10.1038/sdata.2018.291](https://doi.org/10.1038/sdata.2018.291) |
 | **Theta / Alpha Ratio** | 0.5953 ratio (Within Typical Range) | 0.5335 | Tee Yi Wen et al. (2020) - [10.11591/ijeecs.v17.i1.pp175-182](https://doi.org/10.11591/ijeecs.v17.i1.pp175-182) |
-| **Theta / Beta Ratio** | 2.6087 ratio (Within Typical Range) | 2.2772 | Mi D et al. (2026) - [10.3389/fpsyt.2026.1834200](https://doi.org/10.3389/fpsyt.2026.1834200) |
+| **Theta / Beta Ratio** | 0.4681 ratio (Within Typical Range) | 0.4391 | Mi D et al. (2026) - [10.3389/fpsyt.2026.1834200](https://doi.org/10.3389/fpsyt.2026.1834200) |
 | **Gaze Duration** | 118.6655 ms (Within Typical Range) | 135.1842 | Nora Hollenstein et al. (2018) - [10.1038/sdata.2018.291](https://doi.org/10.1038/sdata.2018.291) |
 | **First Fixation Duration** | 107.7438 ms (Within Typical Range) | 107.0395 | Olaf Dimigen et al. (2011) - [10.1037/a0023885](https://doi.org/10.1037/a0023885) |
 | **Total Reading Time** | 138.8694 ms (Within Typical Range) | 192.775 | Nora Hollenstein et al. (2018) - [10.1038/sdata.2018.291](https://doi.org/10.1038/sdata.2018.291) |

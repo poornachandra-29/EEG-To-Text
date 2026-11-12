@@ -1,6 +1,6 @@
 # NeuroRead AI: Student Cognitive Learning Assessment Report
 
-**Student ID:** `resultsZGW_NR` | **Sentences Analyzed:** 300 | **Generated:** 2026-11-08
+**Student ID:** `resultsZGW_NR` | **Sentences Analyzed:** 300 | **Generated:** 2026-11-12
 
 > **IMPORTANT NOTICE**: This document provides research-grounded cognitive intake observations derived from simultaneous EEG and eye tracking. It evaluates learning cadence, working memory load, and attentional stamina to optimize personal study habits.
 
@@ -51,7 +51,7 @@ For consistent reading performance, your engagement signal ideally stays above 0
 | **Alpha Band Power (AlphaPower)** | EEG | 1.038 µV² | 2.4372 | -57.4% | Below Baseline |
 | **Beta Band Power (BetaPower)** | EEG | 2.0374 µV² | 2.5104 | -18.8% | Below Baseline |
 | **Theta / Alpha Ratio (Theta_Alpha_Ratio)** | EEG | 1.3917 ratio | 1.3504 | +3.1% | Within Typical Range |
-| **Theta / Beta Ratio (Theta_Beta_Ratio)** | EEG | 1.5168 ratio | 1.4539 | +4.3% | Within Typical Range |
+| **Theta / Beta Ratio (Theta_Beta_Ratio)** | EEG | 0.6915 ratio | 0.6878 | +0.5% | Within Typical Range |
 
 ## 4. Eye-Tracking Analysis
 
@@ -122,9 +122,9 @@ Out of 300 read sentences, **77 sentences (25.7%)** exhibited marked physiologic
 | --- | --- | --- | --- | --- | --- | --- |
 | 1 | "His cousin is actor George Clooney." | 6 | 2.60 | 0.7219 (Low) | 4.5 | Focal Stagnation (Re-reading Named Entities / Facts) |
 | 2 | "He was commissioned a Second Lieutenant on 5 February 1909." | 10 | 3.00 | 0.6405 (Low) | 7.2 | Lexical Overload (Dense / Unfamiliar Words) |
-| 3 | "He was voted to five American Football League All-Star teams..." | 12 | 2.50 | 0.6887 (Low) | 5.8 | Focal Stagnation (Re-reading Named Entities / Facts) |
+| 3 | "He resigned that position to become President of the World B..." | 12 | 2.50 | 0.6287 (Low) | 6.8 | Lexical Overload (Dense / Unfamiliar Words) |
 | 4 | "He also created the Defense Intelligence Agency and the Defe..." | 12 | 2.50 | 0.7159 (Low) | 12.7 | Lexical Overload (Dense / Unfamiliar Words) |
-| 5 | "He resigned that position to become President of the World B..." | 12 | 2.50 | 0.6287 (Low) | 6.8 | Lexical Overload (Dense / Unfamiliar Words) |
+| 5 | "He was voted to five American Football League All-Star teams..." | 12 | 2.50 | 0.6887 (Low) | 5.8 | Focal Stagnation (Re-reading Named Entities / Facts) |
 
 ### 💡 Key Insight
 
@@ -141,7 +141,7 @@ Your reading cadence was most effortless on concise sentences (averaging 14 word
 | **Alpha Band Power** | 1.038 µV² (Below Baseline) | 2.4372 | Nora Hollenstein et al. (2018) - [10.1038/sdata.2018.291](https://doi.org/10.1038/sdata.2018.291) |
 | **Beta Band Power** | 2.0374 µV² (Below Baseline) | 2.5104 | Nora Hollenstein et al. (2018) - [10.1038/sdata.2018.291](https://doi.org/10.1038/sdata.2018.291) |
 | **Theta / Alpha Ratio** | 1.3917 ratio (Within Typical Range) | 1.3504 | Tee Yi Wen et al. (2020) - [10.11591/ijeecs.v17.i1.pp175-182](https://doi.org/10.11591/ijeecs.v17.i1.pp175-182) |
-| **Theta / Beta Ratio** | 1.5168 ratio (Within Typical Range) | 1.4539 | Mi D et al. (2026) - [10.3389/fpsyt.2026.1834200](https://doi.org/10.3389/fpsyt.2026.1834200) |
+| **Theta / Beta Ratio** | 0.6915 ratio (Within Typical Range) | 0.6878 | Mi D et al. (2026) - [10.3389/fpsyt.2026.1834200](https://doi.org/10.3389/fpsyt.2026.1834200) |
 | **Gaze Duration** | 120.6367 ms (Within Typical Range) | 135.1842 | Nora Hollenstein et al. (2018) - [10.1038/sdata.2018.291](https://doi.org/10.1038/sdata.2018.291) |
 | **First Fixation Duration** | 104.3853 ms (Within Typical Range) | 107.0395 | Olaf Dimigen et al. (2011) - [10.1037/a0023885](https://doi.org/10.1037/a0023885) |
 | **Total Reading Time** | 220.3422 ms (Within Typical Range) | 192.775 | Nora Hollenstein et al. (2018) - [10.1038/sdata.2018.291](https://doi.org/10.1038/sdata.2018.291) |

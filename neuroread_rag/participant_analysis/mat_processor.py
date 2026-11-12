@@ -12,9 +12,25 @@ import joblib
 import numpy as np
 import pandas as pd
 
-from nrei_extractor import extract_patient_nrei, MODEL_FEATURES
-from preprocess import transform_with_saved_preprocessor
-from neuroread_rag.config import PROJECT_ROOT, OUTPUT_DIR, CSV_DIR
+try:
+    from neuroread_rag.participant_analysis.feature_extractor import (
+        extract_patient_nrei,
+        MODEL_FEATURES,
+        transform_with_saved_preprocessor
+    )
+except ImportError:
+    from nrei_extractor import extract_patient_nrei, MODEL_FEATURES
+    from preprocess import transform_with_saved_preprocessor
+
+from neuroread_rag.config import (
+    BASE_DIR,
+    PROJECT_ROOT,
+    OUTPUT_DIR,
+    CSV_DIR,
+    PRECOMPUTED_CSVS_DIR,
+    TASK_FOLDERS,
+    ARTIFACTS_DIR
+)
 
 EPS = 1e-9
 
@@ -87,7 +103,7 @@ def process_mat_file(
     if not mat_file.is_file():
         raise FileNotFoundError(f"MATLAB file not found: {mat_file}")
 
-    art_dir = Path(artifact_dir or (PROJECT_ROOT / "artifacts")).resolve()
+    art_dir = Path(artifact_dir or ARTIFACTS_DIR).resolve()
     out_dir = Path(output_dir or CSV_DIR).resolve()
     out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -144,7 +160,7 @@ def process_mat_file(
     if "ThetaPower" in result_df.columns and "AlphaPower" in result_df.columns:
         result_df["Theta_Alpha_Ratio"] = result_df["ThetaPower"] / (result_df["AlphaPower"].abs() + EPS)
     if "ThetaPower" in result_df.columns and "BetaPower" in result_df.columns:
-        result_df["Theta_Beta_Ratio"] = result_df["BetaPower"] / (result_df["ThetaPower"].abs() + EPS)
+        result_df["Theta_Beta_Ratio"] = result_df["ThetaPower"] / (result_df["BetaPower"].abs() + EPS)
 
     core_features = ["EEI", "FMT", "ASM", "GD", "TRT", "FFD", "PupilSize", "FixationCount", "ThetaPower", "AlphaPower", "BetaPower"]
     for col in core_features:
@@ -225,16 +241,32 @@ def process_mat_file(
     result_df["top_pattern_score"] = top_s
     result_df["second_pattern_score"] = sec_s
 
-    # 7. Save output CSV in separate folder ending by task name, patient name
+    # 7. Save output CSV in separate task folder ending by task name, patient name
     result_df["task_name"] = task_name
     result_df["patient_name"] = patient_name
 
     output_csv_filename = f"features_{task_name}_{patient_name}.csv"
+    
+    # Save into self-contained precomputed task folder (neuroread_rag/data/precomputed_csvs/<task>/)
+    task_folder = TASK_FOLDERS.get(task_name, PRECOMPUTED_CSVS_DIR / task_name)
+    task_folder.mkdir(parents=True, exist_ok=True)
+    task_csv_path = task_folder / output_csv_filename
+    result_df.to_csv(task_csv_path, index=False)
+
+    # Also save into out_dir (CSV_DIR) for backward compatibility
     output_csv_path = out_dir / output_csv_filename
-    result_df.to_csv(output_csv_path, index=False)
-    print(f"[MatProcessor] Successfully processed {len(result_df)} sentences -> Saved to: {output_csv_path}")
+    if output_csv_path != task_csv_path:
+        result_df.to_csv(output_csv_path, index=False)
+    print(f"[MatProcessor] Successfully processed {len(result_df)} sentences -> Saved to: {task_csv_path}")
 
     # Backward compatibility: link or mirror for stem lookups (e.g. resultsZJS_TSR_features.csv)
+    try:
+        compat_task = task_folder / f"{patient_id}.csv"
+        if not compat_task.exists() and compat_task != task_csv_path:
+            compat_task.symlink_to(output_csv_filename)
+    except Exception:
+        pass
+
     try:
         compat_local = out_dir / f"{patient_id}_features.csv"
         if not compat_local.exists() and compat_local != output_csv_path:
@@ -251,4 +283,4 @@ def process_mat_file(
     except Exception:
         pass
 
-    return output_csv_path
+    return task_csv_path
