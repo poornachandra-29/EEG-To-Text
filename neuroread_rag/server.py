@@ -186,6 +186,43 @@ class NeuroReadRequestHandler(SimpleHTTPRequestHandler):
             self._send_json({"query": q, "metric_filter": metric, "count": len(results), "results": results})
             return
 
+        elif path == "/api/llm/prompt":
+            # Returns the exact prompt constructed via dynamic RAG retrieval
+            pid = self.participant_data.get("participant_id", "resultsZPH_NR") if self.participant_data else "resultsZPH_NR"
+            try:
+                from neuroread_rag.llm.prompt_builder import CognitivePromptBuilder
+                builder = CognitivePromptBuilder(enable_dynamic_retrieval=True)
+                csv_file = find_participant_csv(pid) or (PRECOMPUTED_CSVS_DIR / "task2_NR" / f"{pid}.csv")
+                if not csv_file or not csv_file.exists():
+                    csv_file = PRECOMPUTED_CSVS_DIR / "task2_NR" / f"features_task2_NR_{pid.replace('results', '').replace('_NR', '')}.csv"
+                
+                if csv_file and csv_file.exists():
+                    rag_prompt = builder.build_from_csv(csv_file)
+                    self._send_json({
+                        "participant_id": pid,
+                        "system_prompt": builder.get_system_prompt(),
+                        "user_rag_prompt": rag_prompt,
+                        "status": "ready"
+                    })
+                else:
+                    self._send_json({"error": f"CSV not found for participant {pid}"}, status=404)
+            except Exception as e:
+                self._send_json({"error": str(e)}, status=500)
+            return
+
+        elif path == "/api/llm/report":
+            pid = self.participant_data.get("participant_id", "resultsZPH_NR") if self.participant_data else "resultsZPH_NR"
+            task = query_params.get("task", ["task2_NR"])[0]
+            force = query_params.get("force", ["false"])[0].lower() == "true"
+            try:
+                from neuroread_rag.llm.personalized_advisor import PersonalizedAdvisor
+                advisor = PersonalizedAdvisor()
+                report_res = advisor.generate_for_participant(pid, task=task, force_regenerate=force)
+                self._send_json(report_res)
+            except Exception as e:
+                self._send_json({"error": str(e), "message": "Ensure GEMINI_API_KEY is set or Ollama is running"}, status=500)
+            return
+
         elif path == "/api/download/report.md":
             pid = self.participant_data.get("participant_id", "participant")
             md_path = OUTPUT_DIR / f"{pid}_final_report.md"
