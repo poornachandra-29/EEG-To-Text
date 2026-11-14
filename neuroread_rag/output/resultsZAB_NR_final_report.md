@@ -1,6 +1,6 @@
 # NeuroRead AI: Student Cognitive Learning Assessment Report
 
-**Student ID:** `resultsZAB_NR` | **Sentences Analyzed:** 300 | **Generated:** 2026-11-12
+**Student ID:** `resultsZAB_NR` | **Sentences Analyzed:** 300 | **Generated:** 2026-11-13
 
 > **IMPORTANT NOTICE**: This document provides research-grounded cognitive intake observations derived from simultaneous EEG and eye tracking. It evaluates learning cadence, working memory load, and attentional stamina to optimize personal study habits.
 
