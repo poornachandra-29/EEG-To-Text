@@ -1,0 +1,4 @@
+frequency_band,our_feature,zuco_feature,spearman_r,p_value,n_sentences
+Theta Band (4-8 Hz),ThetaPower,zuco_theta_mean,0.8412,2.2293982829334482e-67,247
+Alpha Band (8-13 Hz),AlphaPower,zuco_alpha_mean,0.8823,3.865539292505386e-82,247
+Beta Band (13-30 Hz),BetaPower,zuco_beta_mean,0.8581,6.989934662132067e-73,247

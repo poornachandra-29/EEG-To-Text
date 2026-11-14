@@ -11,17 +11,17 @@
 To rigorously evaluate unsupervised state discovery, we establish three distinct validation regimes:
 
 1. **Holdout Evaluation (Cross-Subject Generalization)**:
-   - **Training Set**: 11 healthy adult participants in Task 2 (Normal Reading: NR) totaling 3,248 sentences.
+   - **Training Set**: 11 healthy adult participants in Task 2 (Normal Reading: NR) totaling 3,243 usable sentences.
    - **Test Set**: Held-out participant `resultsZPH_NR` (250 usable sentence trials).
    - **Purpose**: Assesses whether clusters learned on a cohort generalize to a completely unseen individual.
 
 2. **Leave-One-Participant-Out (LOPO) Cross-Validation**:
    - 12 sequential validation folds, where each fold reserves one participant for testing while training on the remaining 11.
-   - **Purpose**: Eliminates participant selection bias and computes empirical confidence bounds.
+   - **Purpose**: Eliminates participant selection bias and computes empirical confidence bounds across all 3,493 usable NR sentences.
 
 3. **Cross-Task Domain Transfer (Task 2 NR $\to$ Task 3 TSR)**:
-   - **Training Set**: All 12 participants during unconstrained Natural Reading (3,548 sentences).
-   - **Test Set**: All 12 participants during Task-Specific Reading (4,884 sentences with active relation-extraction demands).
+   - **Training Set**: All 12 participants during unconstrained Natural Reading (3,493 usable sentences).
+   - **Test Set**: All 12 participants during Task-Specific Reading (4,698 usable sentences with active relation-extraction demands; 186 sentences dropped due to missing raw data).
    - **Purpose**: Evaluates cross-paradigm cognitive transfer robustness.
 
 ---
@@ -76,6 +76,13 @@ Performance when models trained exclusively on Natural Reading (Task 2) are tran
 
 ## 5. Architectural Findings & Key Insights for the IEEE Report
 
-1. **Full Covariance GMM Superiority**: GMM with full covariance outperforms spherical/isotropic clustering (K-Means) because physiological EEG spectral power and eye-tracking dwell times exhibit strong anisotropic covariance (e.g. Total Reading Time strongly correlates with Fixation Count, while EEG Theta negatively correlates with Alpha during cognitive engagement).
-2. **Soft Membership Probabilities**: Unlike hard-partition algorithms (K-Means, Ward Hierarchical), GMM provides continuous posterior probabilities ($P(C_k \mid X)$), enabling the system to express uncertainty in ambiguous reading trials.
-3. **Robust Out-of-Sample Generalization**: LOPO cross-validation confirms consistent out-of-sample performance across subjects without catastrophic collapse on any individual subject.
+1. **Empirical Evaluation (K-Means vs. GMM)**:
+   - On standard geometric clustering metrics, **K-Means outperforms GMM** across the board: higher LOPO pseudo-accuracy (41.10% vs. 33.22%), higher Macro F1 (40.37% vs. 31.80%), and superior Silhouette scores (0.1136 vs. -0.0657).
+   - This occurs because geometric validation metrics inherently penalize elongated ellipsoidal clusters and reward compact, spherical partitions that match K-Means' isotropic loss function.
+2. **Pedagogical and Architectural Justification for GMM**:
+   - Despite lower hard geometric scores, GMM is chosen for the NeuroRead architecture for two critical design reasons:
+     a) **Continuous Soft Posterior Probabilities**: Unlike K-Means (which assigns an unweighted hard discrete label), GMM outputs continuous posterior probabilities $P(C_k \mid x)$. This enables the downstream RAG engine to express confidence and uncertainty, identifying when a student is transitioning between cognitive states versus unambiguously in a focused state ($P > 0.85$).
+     b) **Anisotropic Covariance Modeling**: Full covariance matrices capture physiological interactions between correlated modalities (e.g., Total Reading Time strongly correlates with Fixation Count, and Theta correlates with Alpha during cognitive engagement) without forcing artificial spherical assumptions.
+3. **Out-of-Sample Generalization & Limitations**:
+   - The LOPO cross-validation confirms consistent out-of-sample stability ($\pm 2.22\%$ std), demonstrating that the learned representations do not collapse on unseen participants.
+   - However, "accuracy" figures must be described strictly as alignment with heuristic physiological pattern quartiles (`cognitive_pattern`), as no ground-truth clinical mental state labels exist in the natural reading protocol.
