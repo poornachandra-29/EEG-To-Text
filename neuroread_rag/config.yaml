@@ -1,0 +1,84 @@
+# NeuroRead RAG Configuration
+project:
+  name: "NeuroRead-RAG"
+  version: "2.0.0"
+  random_seed: 42
+
+paths:
+  data_dir: "neuroread_rag/data"
+  precomputed_csvs_dir: "neuroread_rag/data/precomputed_csvs"
+  artifacts_dir: "neuroread_rag/artifacts"
+  stages_dir: "neuroread_rag/artifacts/stages"
+  output_dir: "neuroread_rag/output"
+  reports_dir: "reports"
+  figures_dir: "figures"
+  docs_dir: "docs"
+
+eeg:
+  sampling_rate_hz: 500.0
+  band_edges:
+    theta: [4.0, 8.0]
+    alpha: [8.0, 13.0]
+    beta: [13.0, 30.0]
+    gamma: [30.0, 45.0]
+  welch:
+    nperseg_full: 512
+    nperseg_short: 256
+    overlap: 0.5
+  durations:
+    min_full_reliability_s: 4.0
+    min_low_reliability_s: 2.0
+  artifact:
+    max_rejected_fraction: 0.20
+    peak_to_peak_threshold_uv: 150.0
+  channels:
+    total_retained: 105
+    # Retained scalp channels closest to Fz (E11) and FCz (E6) in GSN-HydroCel-128
+    # E11 (index 10 in 105-channel array), E6 (index 5)
+    frontal_midline_indices: [5, 10]
+    frontal_midline_names: ["E6", "E11"]
+    theta_fm_channel_indices: [5, 10]
+
+features:
+  core_8:
+    - "EEI"
+    - "FMT"
+    - "ASM"
+    - "GD"
+    - "TRT"
+    - "FFD"
+    - "PupilSize"
+    - "FixationCount"
+  epsilon: 1.0e-8
+
+breakdown:
+  threshold_trt_rz: 1.0
+  threshold_fixation_rz: 0.5
+  threshold_regression_rz: 0.5
+
+clustering:
+  k_min: 2
+  k_max: 10
+  n_init: 10
+  reg_covar: 1.0e-5
+  covariance_types: ["full", "diag", "tied"]
+  stability_seeds: 20
+  stability_ari_threshold: 0.60
+  uncertainty_threshold: 0.50
+  pca_variance_ratio: 0.90
+
+composite_scores:
+  les_weights:
+    flow_factor: 0.40
+    cadence_stability: 0.35
+    workload_ease: 0.25
+  les_tiers:
+    optimal: 80.0
+    effective: 65.0
+    friction: 50.0
+
+timing:
+  min_pomodoro_min: 10
+  max_pomodoro_min: 45
+  default_pomodoro_min: 25
+  block_round_to_min: 5

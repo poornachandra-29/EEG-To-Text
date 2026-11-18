@@ -80,7 +80,9 @@ class TestRecommendationsAndReport(unittest.TestCase):
         md_text = out_paths["markdown"].read_text(encoding="utf-8")
         self.assertIn("# NeuroRead AI", md_text)
         self.assertIn("## 1. Executive Summary", md_text)
-        self.assertIn("## 10. Complete Scientific References", md_text)
+        self.assertIn("Complete Scientific References", md_text)
+        self.assertNotIn("## 7. Research-Paper Comparison", md_text)
+        self.assertIn("Fatigue-Compatible EEG Pattern Sentences", md_text)
 
         # Verify HTML content
         html_text = out_paths["html"].read_text(encoding="utf-8")

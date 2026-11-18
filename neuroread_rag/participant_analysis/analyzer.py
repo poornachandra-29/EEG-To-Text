@@ -118,20 +118,39 @@ class ParticipantAnalyzer:
                 self.df[target] = self.df[metric].rolling(10, min_periods=3).std()
                 self.df[f"{target}_rz"] = robust_z(self.df[target])
 
-        # Composite Indices
+        # Composite Indices (Calibrated empirically from Phase 4 predictive coefficients)
         if "REI" not in self.df.columns:
-            rei_cols = [c for c in ["EEI_rz", "FMT_rz", "PupilSize_rz"] if c in self.df.columns]
-            self.df["REI"] = self.df[rei_cols].mean(axis=1, skipna=True)
+            if "EEI_rz" in self.df.columns:
+                eei_z = self.df.get("EEI_rz", 0.0).fillna(0.0)
+                beta_z = self.df.get("BetaPower_rz", 0.0).fillna(0.0)
+                tbr_z = self.df.get("Theta_Beta_Ratio_rz", 0.0).fillna(0.0)
+                self.df["REI"] = (0.45 * eei_z + 0.30 * beta_z - 0.25 * tbr_z).round(4)
+            else:
+                rei_cols = [c for c in ["EEI_rz", "FMT_rz", "PupilSize_rz"] if c in self.df.columns]
+                self.df["REI"] = self.df[rei_cols].mean(axis=1, skipna=True)
 
         if "CWI" not in self.df.columns:
-            cwi_cols = [c for c in ["ThetaPower_rz", "PupilSize_rz", "GD_rz", "TRT_rz"] if c in self.df.columns]
-            self.df["CWI"] = self.df[cwi_cols].mean(axis=1, skipna=True)
+            if "TRT_rz" in self.df.columns and "FixationCount_rz" in self.df.columns:
+                trt_z = self.df.get("TRT_rz", 0.0).fillna(0.0)
+                fix_z = self.df.get("FixationCount_rz", 0.0).fillna(0.0)
+                gd_z = self.df.get("GD_rz", 0.0).fillna(0.0)
+                pup_z = self.df.get("PupilSize_rz", 0.0).fillna(0.0)
+                self.df["CWI"] = (0.40 * trt_z + 0.30 * fix_z + 0.20 * gd_z + 0.10 * pup_z).round(4)
+            else:
+                cwi_cols = [c for c in ["ThetaPower_rz", "PupilSize_rz", "GD_rz", "TRT_rz"] if c in self.df.columns]
+                self.df["CWI"] = self.df[cwi_cols].mean(axis=1, skipna=True)
 
         instability_cols = [c for c in ["EEI_local_sd_rz", "FFD_local_sd_rz", "TRT_local_sd_rz", "Pupil_local_sd_rz"] if c in self.df.columns]
         instability = self.df[instability_cols].mean(axis=1, skipna=True) if instability_cols else pd.Series(0.0, index=self.df.index)
 
         if "SAI" not in self.df.columns:
-            self.df["SAI"] = self.df["REI"] - instability
+            # Rolling 10-sentence sustained attention formula with boundary padding
+            eei_raw = pd.to_numeric(self.df.get("EEI", pd.Series(0.5, index=self.df.index)), errors="coerce").fillna(0.5)
+            r_std = eei_raw.rolling(10, min_periods=3).std().bfill().fillna(0.1)
+            r_mean = eei_raw.rolling(10, min_periods=3).mean().bfill().fillna(0.5)
+            sai_vals = 100.0 * (1.0 - (r_std / (r_mean.abs() + 1e-6)).clip(0.0, 1.0))
+            self.df["SAI"] = sai_vals.round(2)
+
         if "MWLI_proxy" not in self.df.columns:
             reading_var = self.df[[c for c in ["FFD_local_sd_rz", "TRT_local_sd_rz"] if c in self.df.columns]].mean(axis=1, skipna=True)
             self.df["MWLI_proxy"] = -self.df.get("EEI_rz", 0) + reading_var

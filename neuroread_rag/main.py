@@ -140,10 +140,14 @@ def main():
     analyzer.save_analysis()
     print(f"  ✓ Processed participant: {analysis_result.participant_id} ({analysis_result.total_sentences} sentences, {len(analysis_result.metrics)} metrics)")
 
-    print("[NeuroRead RAG] 2. Ingesting scientific literature...")
-    pipeline = IngestionPipeline()
-    stats = pipeline.run_ingestion()
-    print(f"  ✓ Indexed {stats['papers_count']} papers, {stats['chunks_count']} scientific chunks, {stats['evidence_count']} claims")
+    print("[NeuroRead RAG] 2. Checking scientific literature vector store...")
+    vector_store = HybridVectorStore()
+    if len(vector_store.chunks) == 0:
+        pipeline = IngestionPipeline()
+        stats = pipeline.run_ingestion()
+        print(f"  ✓ Indexed {stats['papers_count']} papers, {stats['chunks_count']} scientific chunks, {stats['evidence_count']} claims")
+    else:
+        print(f"  ✓ Vector store ready ({len(vector_store.chunks)} scientific chunks indexed).")
 
     print("[NeuroRead RAG] 3. Synthesizing multi-paper evidence & grounding measurements...")
     vector_store = HybridVectorStore()

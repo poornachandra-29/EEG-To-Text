@@ -38,6 +38,7 @@ class MetricInterpretation:
     divergence_or_nuance: Dict[str, Any]
     evidence_strength: str
     interpretation_and_limitations: str
+    personalized_specification: Optional[Dict[str, Any]] = None
 
     def to_dict(self) -> Dict[str, Any]:
         res = asdict(self)

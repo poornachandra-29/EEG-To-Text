@@ -1,0 +1,12 @@
+// agglomerative_model.dot — Agglomerative Hierarchical Clustering (Ward) Dataflow
+digraph Agglomerative_Model {
+    rankdir=TB;
+    node [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=10];
+
+    Input [label="Input: 10-Dimensional Normalized Features", fillcolor="#dbeafe", color="#2563eb"];
+    Singletons [label="Singleton Cluster Initialization\nEach sentence trial starts as its own cluster", fillcolor="#fef3c7", color="#d97706"];
+    WardLoop [label="Ward Variance-Minimizing Merging\nDelta_Var(A, B) = [ (n_A * n_B) / (n_A + n_B) ] * ||mu_A - mu_B||^2\nRecursively merges pairs until K=5 clusters remain", fillcolor="#e0e7ff", color="#4f46e5"];
+    Output [label="Outputs:\n- Hierarchical Cluster Partitions (0..4)\n- Empirical Centroids in Normalized Feature Space\n- Out-of-Sample Mapping via Nearest Centroid", fillcolor="#dcfce7", color="#16a34a"];
+
+    Input -> Singletons -> WardLoop -> Output;
+}

@@ -1,0 +1,12 @@
+metric,standardized_coef,odds_ratio,abs_importance,vif
+FFD_rz,0.4605,1.5849,0.4605,1.01
+Theta_Beta_Ratio_rz,-0.4238,0.6546,0.4238,9.71
+ASM_rz,0.4139,1.5127,0.4139,10.51
+EEI_rz,-0.3321,0.7174,0.3321,5.35
+AlphaPower_rz,0.2611,1.2983,0.2611,8.95
+PupilSize_rz,0.247,1.2802,0.247,1.04
+BetaPower_rz,-0.1478,0.8626,0.1478,5.08
+ThetaPower_rz,0.0502,1.0515,0.0502,10000.0
+theta_fm_rz,0.0502,1.0515,0.0502,10000.0
+FMT_rz,0.0502,1.0515,0.0502,10000.0
+Theta_Alpha_Ratio_rz,0.0148,1.0149,0.0148,4.89

@@ -431,6 +431,101 @@ body {
     padding: 8px 12px;
 }
 
+/* Personalized Metric Specification Drawers */
+.pers-spec-box {
+    margin-top: 6px;
+    background: #f8fafc;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    font-size: 12.5px;
+}
+
+.pers-spec-box details summary {
+    font-weight: 600;
+    color: var(--primary-color);
+    cursor: pointer;
+    user-select: none;
+    font-size: 12.5px;
+    outline: none;
+}
+
+.pers-spec-box details summary:hover {
+    color: #1d4ed8;
+}
+
+.pers-spec-content {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    line-height: 1.5;
+}
+
+.pers-spec-item {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 7px 10px;
+    font-size: 12px;
+}
+
+.pers-spec-item strong {
+    color: #0f172a;
+}
+
+.pers-spec-mistake-card {
+    background: #ffffff;
+    border: 1px solid #fed7aa;
+    border-left: 4px solid #ef4444;
+    border-radius: 4px;
+    padding: 10px;
+}
+
+.pers-spec-quote {
+    margin: 6px 0;
+    font-style: italic;
+    color: #334155;
+    background: #f1f5f9;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.pers-spec-stats {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+}
+
+.pers-spec-diag-note {
+    margin: 0;
+    color: #991b1b;
+    font-size: 11.5px;
+    line-height: 1.4;
+}
+
+.pers-spec-resolutions {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 4px;
+    padding: 8px 10px;
+    font-size: 12px;
+}
+
+.pers-spec-resolutions ul {
+    margin: 4px 0 0 16px;
+    padding: 0;
+    color: #166534;
+}
+
+.pers-spec-resolutions li {
+    margin-bottom: 4px;
+}
+
 /* Tables */
 .table-card {
     overflow-x: auto;

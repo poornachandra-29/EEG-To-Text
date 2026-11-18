@@ -30,21 +30,39 @@ async function initApp() {
         reportData = await repRes.json();
         participantData = await partRes.json();
 
-        renderHeaderInfo();
-        renderExecutiveSummary();
-        renderSentenceBreakdownSection();
-        renderFocusAttentionSection();
-        renderCognitiveWorkloadSection();
-        renderMetricAssessmentSection();
-        renderResearchComparisonTable();
-        renderPersonalizedRecommendations();
-        renderCompleteReportView();
-        triggerDefaultSearch();
+        // Render each section with individual error isolation
+        const renderSteps = [
+            ["Header Info", renderHeaderInfo],
+            ["Executive Summary", renderExecutiveSummary],
+            ["Sentence Breakdown", renderSentenceBreakdownSection],
+            ["Focus Attention", renderFocusAttentionSection],
+            ["Metric Assessment", renderMetricAssessmentSection],
+            ["Personalized Recommendations", renderPersonalizedRecommendations],
+            ["Complete Report View", renderCompleteReportView],
+            ["Default Search", triggerDefaultSearch]
+        ];
+
+        renderSteps.forEach(([name, fn]) => {
+            try {
+                fn();
+            } catch (err) {
+                console.warn(`Render warning in ${name}:`, err);
+            }
+        });
+
+        // Re-sync ZuCo launcher dropdowns with active participant
+        const taskSelect = document.getElementById("zuco-task-select");
+        if (window.populatePatients && taskSelect) {
+            window.populatePatients(taskSelect.value);
+        }
 
     } catch (err) {
         console.error("Initialization error:", err);
-        document.getElementById("executive-summary-text").innerHTML = 
-            `<div style="color:#dc2626;">Error connecting to API server: ${err.message}. Make sure server.py is running.</div>`;
+        const execText = document.getElementById("executive-summary-text");
+        if (execText) {
+            execText.innerHTML = 
+                `<div style="color:#dc2626;">Error connecting to API server: ${err.message}. Make sure server.py is running.</div>`;
+        }
     }
 }
 
@@ -72,58 +90,78 @@ function setupNavigation() {
 
 /* Header & Downloads */
 async function renderHeaderInfo() {
-    const pid = reportData.metadata.participant_id;
-    const total = reportData.metadata.total_sentences_analyzed;
+    if (!reportData || !reportData.metadata) return;
+    const pid = reportData.metadata.participant_id || "Unknown";
+    const total = reportData.metadata.total_sentences_analyzed || 0;
     const headerName = document.getElementById("header-patient-name");
     const sidebarName = document.getElementById("sidebar-patient-name");
     const totalDisplay = document.getElementById("total-sentences-display");
     const switchSelect = document.getElementById("switch-patient-select");
-    
+    const topSwitchSelect = document.getElementById("top-switch-patient-select");
+
     if (headerName) headerName.innerText = pid;
     if (sidebarName) sidebarName.innerText = pid;
     if (totalDisplay) totalDisplay.innerText = `${total} Sentences`;
 
-    // Fetch available participants for the homepage switcher
-    if (switchSelect) {
-        try {
-            const res = await fetch("/api/participants");
-            const data = await res.json();
-            switchSelect.innerHTML = "";
-            data.available.forEach(p => {
+    const switchers = [switchSelect, topSwitchSelect].filter(Boolean);
+    if (switchers.length === 0) return;
+
+    try {
+        const res = await fetch("/api/participants");
+        const data = await res.json();
+        const available = data.available || [];
+
+        switchers.forEach(sel => {
+            sel.innerHTML = "";
+            available.forEach(p => {
                 const opt = document.createElement("option");
                 opt.value = p;
                 opt.innerText = p;
-                if (p === pid) opt.selected = true;
-                switchSelect.appendChild(opt);
+                if (p === pid || (pid && (p.indexOf(pid) !== -1 || pid.indexOf(p) !== -1))) {
+                    opt.selected = true;
+                }
+                sel.appendChild(opt);
             });
 
-            switchSelect.onchange = async () => {
-                const newPid = switchSelect.value;
+            sel.onchange = async () => {
+                const newPid = sel.value;
                 if (newPid && newPid !== pid) {
                     if (totalDisplay) totalDisplay.innerText = "Switching...";
-                    await fetch(`/api/switch_participant?id=${newPid}`);
+                    if (headerName) headerName.innerText = "Switching Student...";
+                    await fetch(`/api/switch_participant?id=${encodeURIComponent(newPid)}`);
                     window.location.reload();
                 }
             };
-        } catch (e) {
-            switchSelect.innerHTML = `<option value="${pid}">${pid}</option>`;
-        }
+        });
+    } catch (e) {
+        console.error("Failed to load participants:", e);
+        switchers.forEach(sel => {
+            sel.innerHTML = `<option value="${pid}">${pid}</option>`;
+        });
     }
 }
 
 function setupDownloadButtons() {
-    document.getElementById("btn-download-md").addEventListener("click", () => {
-        window.location.href = "/api/download/report.md";
-    });
-    document.getElementById("btn-download-json").addEventListener("click", () => {
-        window.location.href = "/api/download/report.json";
-    });
-    document.getElementById("btn-print-report").addEventListener("click", () => {
-        // Switch to full-report view before printing
-        const fullReportNav = document.querySelector('[data-section="full-report"]');
-        if (fullReportNav) fullReportNav.click();
-        setTimeout(() => window.print(), 300);
-    });
+    const btnMd = document.getElementById("btn-download-md");
+    if (btnMd) {
+        btnMd.addEventListener("click", () => {
+            window.location.href = "/api/download/report.md";
+        });
+    }
+    const btnJson = document.getElementById("btn-download-json");
+    if (btnJson) {
+        btnJson.addEventListener("click", () => {
+            window.location.href = "/api/download/report.json";
+        });
+    }
+    const btnPrint = document.getElementById("btn-print-report");
+    if (btnPrint) {
+        btnPrint.addEventListener("click", () => {
+            const fullReportNav = document.querySelector('[data-section="full-report"]');
+            if (fullReportNav) fullReportNav.click();
+            setTimeout(() => window.print(), 300);
+        });
+    }
 }
 
 /* 1. Executive Summary Rendering */
@@ -137,7 +175,7 @@ function renderExecutiveSummary() {
     const scoreVal = document.getElementById("les-score-value");
     const tierBadge = document.getElementById("les-tier-badge");
     const flowVal = document.getElementById("les-flow-val");
-    const cadenceVal = document.getElementById("les-cadence-val");
+    const easeVal = document.getElementById("les-ease-val");
     const pomoVal = document.getElementById("les-pomodoro-val");
 
     if (scoreVal && les.score !== undefined) {
@@ -150,8 +188,8 @@ function renderExecutiveSummary() {
     if (flowVal) {
         flowVal.innerText = `${les.flow_factor || les.flow_percentage || 0}%`;
     }
-    if (cadenceVal) {
-        cadenceVal.innerText = `${les.cadence_stability_factor || 75}%`;
+    if (easeVal) {
+        easeVal.innerText = `${les.workload_ease_factor || 85}%`;
     }
     if (pomoVal) {
         pomoVal.innerText = `${fatigue.recommended_study_block_minutes || 25} min`;
@@ -310,29 +348,192 @@ function renderSentenceBreakdownSection() {
 }
 
 /* 2. Focus & Attention Section */
-function renderFocusAttentionSection() {
-    const s2 = reportData.section_2_focus_attention;
-    const statsContainer = document.getElementById("focus-stats-container");
+let currentFatigueSentences = [];
+let selectedFatigueIndex = 0;
 
-    statsContainer.innerHTML = `
-        ${format3PillarText(s2.summary)}
-        <div style="display:flex; flex-direction:column; gap:10px; margin-top:12px;">
-            <div style="background:#f1f5f9; padding:12px; border-radius:6px;">
-                <strong>Sustained Attention Evidence Proxy (SAI):</strong> 
-                <span style="font-family:monospace; font-size:15px; color:#2563eb;">${s2.sai_mean > 0 ? '+' : ''}${s2.sai_mean}</span>
-                <div style="font-size:12px; color:#64748b; margin-top:2px;">Category: ${s2.sai_category} relative to participant baseline</div>
-            </div>
-            <div style="background:#f1f5f9; padding:12px; border-radius:6px;">
-                <strong>Attention-Instability Evidence Proxy (MWLI_proxy):</strong> 
-                <span style="font-family:monospace; font-size:15px; color:#d97706;">${s2.mwli_mean > 0 ? '+' : ''}${s2.mwli_mean}</span>
-                <div style="font-size:12px; color:#64748b; margin-top:2px;">Derived from inverse EEI and reading dwell variability</div>
-            </div>
-        </div>
-    `;
+function renderFocusAttentionSection() {
+    const s2 = reportData.section_2_focus_attention || {};
 
     // Render SVG Bar Chart of Cognitive Patterns
     renderPatternChart(s2.patterns_distribution);
+
+    // Extract fatigue sentences
+    let fatigueSents = s2.fatigue_compatible_sentences || [];
+    if (!fatigueSents || fatigueSents.length === 0) {
+        const obs = (reportData.section_6_sentence_observations && reportData.section_6_sentence_observations.sample_notable_sentences) || [];
+        fatigueSents = obs.filter(o => o.cognitive_pattern && o.cognitive_pattern.includes("Fatigue"));
+    }
+    currentFatigueSentences = fatigueSents;
+
+    const badge = document.getElementById("fatigue-count-badge");
+    if (badge) {
+        badge.innerText = `${fatigueSents.length} Sentences`;
+    }
+
+    // Populate the dropdown selector
+    const dropdown = document.getElementById("fatigue-sentence-dropdown");
+    if (dropdown) {
+        dropdown.innerHTML = "";
+        if (fatigueSents.length === 0) {
+            dropdown.innerHTML = `<option value="">No fatigue-compatible trials detected</option>`;
+        } else {
+            fatigueSents.forEach((s, idx) => {
+                const opt = document.createElement("option");
+                opt.value = idx;
+                const shortText = s.sentence_text && s.sentence_text.length > 45 ? s.sentence_text.substring(0, 45) + "..." : (s.sentence_text || "");
+                opt.innerText = `Sentence #${s.sentence_index}: "${shortText}" [${s.primary_mistake || 'Fatigue'}]`;
+                dropdown.appendChild(opt);
+            });
+            dropdown.value = 0;
+        }
+    }
+
+    // Render initial preview of the first fatigue sentence (or empty state)
+    if (fatigueSents.length > 0) {
+        onSelectFatigueSentence(0);
+    } else {
+        const preview = document.getElementById("fatigue-single-sentence-preview");
+        if (preview) {
+            preview.innerHTML = `<div style="font-size:13px; color:#64748b; text-align:center; padding:10px;">No fatigue-compatible trials identified for this participant.</div>`;
+        }
+    }
+
+    // Populate full scrollable list container
+    const container = document.getElementById("fatigue-sentences-container");
+    if (!container) return;
+
+    if (fatigueSents.length === 0) {
+        container.innerHTML = `<div style="font-size:12.5px; color:#64748b; padding:10px;">No fatigue-compatible trials identified for this participant.</div>`;
+        return;
+    }
+
+    let html = `<div style="display:flex; flex-direction:column; gap:10px;">`;
+    fatigueSents.forEach((s, idx) => {
+        const eeiColor = s.eei < 0.45 ? '#dc2626' : '#2563eb';
+        html += `
+            <div style="background:#ffffff; border:1px solid #fecaca; border-radius:6px; padding:12px; box-shadow:0 1px 2px rgba(0,0,0,0.04);">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; flex-wrap:wrap; gap:6px;">
+                    <div>
+                        <strong style="color:#b91c1c; font-size:13px;">Sentence #${s.sentence_index}</strong>
+                        <span style="font-size:11px; font-weight:700; margin-left:8px; padding:2px 8px; border-radius:12px; background:#fee2e2; color:#991b1b;">
+                            ${s.primary_mistake || 'Fatigue Pattern'}
+                        </span>
+                    </div>
+                    <button onclick="onSelectFatigueSentence(${idx}); document.getElementById('fatigue-sentence-dropdown').value = ${idx}; document.getElementById('focus-attention').scrollIntoView({behavior:'smooth'});" style="font-size:11px; padding:3px 10px; cursor:pointer; background:#eff6ff; color:#1d4ed8; border:1px solid #93c5fd; border-radius:4px; font-weight:600;">
+                        🔍 Inspect in Inspector
+                    </button>
+                </div>
+                <div style="font-size:12.5px; color:#334155; margin-bottom:8px; line-height:1.5;">
+                    "${s.sentence_text}"
+                </div>
+                <div style="display:flex; gap:12px; font-size:11px; color:#64748b; font-family:var(--font-mono); flex-wrap:wrap; background:#f8fafc; padding:6px 10px; border-radius:4px;">
+                    <span>Words: <strong>${s.word_count}</strong></span>
+                    <span>Fixations: <strong>${s.fixation_count}</strong>/word</span>
+                    <span>EEI: <strong style="color:${eeiColor};">${s.eei}</strong></span>
+                    <span>TRT: <strong>${s.trt}</strong>ms</span>
+                </div>
+                <div style="font-size:12px; color:#b91c1c; margin-top:6px; font-weight:600;">
+                    ⚠️ Mistake / Processing Breakdown: ${s.mistake_diagnosis}
+                </div>
+            </div>
+        `;
+    });
+    html += `</div>`;
+    container.innerHTML = html;
 }
+
+window.onSelectFatigueSentence = function(val) {
+    const idx = parseInt(val, 10);
+    if (isNaN(idx) || !currentFatigueSentences || idx < 0 || idx >= currentFatigueSentences.length) return;
+    selectedFatigueIndex = idx;
+
+    const dropdown = document.getElementById("fatigue-sentence-dropdown");
+    if (dropdown && dropdown.value !== String(idx)) {
+        dropdown.value = idx;
+    }
+
+    const s = currentFatigueSentences[idx];
+    const preview = document.getElementById("fatigue-single-sentence-preview");
+    if (!preview) return;
+
+    const eeiColor = s.eei < 0.45 ? '#dc2626' : '#2563eb';
+
+    // Detailed diagnostic root cause & actionable advice
+    let causeExpl = "";
+    let actionFix = "";
+    const mistake = s.primary_mistake || "";
+
+    if (mistake.includes("Vigilance") || s.eei < 0.45) {
+        causeExpl = `Cortical engagement dropped sharply below baseline (EEI: ${s.eei}), triggering involuntary gaze drift and reduced semantic absorption.`;
+        actionFix = `Pause for 10-15 seconds at section breaks, take a deep mental breath, and deliberately refocus attention before entering dense text blocks.`;
+    } else if (mistake.includes("Re-fixations") || s.fixation_count > 1.6) {
+        causeExpl = `Fixation density spiked to ${s.fixation_count} fixations/word (typical < 0.10), causing regressive eye movements and reread friction.`;
+        actionFix = `Avoid immediate rereading sweeps when a difficult word appears; continue reading to the end of the clause to allow syntactic context to resolve meaning.`;
+    } else if (mistake.includes("Syntactic") || s.word_count > 25) {
+        causeExpl = `High sentence length (${s.word_count} words) with nested subclauses saturated working memory buffers, causing processing bottlenecks.`;
+        actionFix = `Mentally chunk long sentences at relative clauses ('which', 'although') and commas to consolidate each proposition before advancing.`;
+    } else {
+        causeExpl = `Frontal theta-alpha synchronization reflected accumulated reading strain and momentary comprehension fatigue.`;
+        actionFix = `Implement structured 15-20 minute study blocks followed by 3-minute resting breaks to prevent cognitive fatigue cascade.`;
+    }
+
+    preview.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
+            <div style="font-weight:700; color:#b91c1c; font-size:14px;">
+                Sentence #${s.sentence_index} (${idx + 1} of ${currentFatigueSentences.length})
+            </div>
+            <span style="font-size:11.5px; font-weight:700; padding:3px 10px; border-radius:12px; background:#fee2e2; color:#991b1b; border:1px solid #fca5a5;">
+                ${s.primary_mistake || 'Cognitive Fatigue'}
+            </span>
+        </div>
+
+        <div style="font-size:13.5px; color:#1e293b; background:#ffffff; border:1px solid #fecaca; border-radius:6px; padding:10px 14px; margin-bottom:10px; line-height:1.5; font-style:italic;">
+            "${s.sentence_text}"
+        </div>
+
+        <div style="display:flex; gap:10px; font-size:11.5px; font-family:var(--font-mono); margin-bottom:12px; flex-wrap:wrap;">
+            <span style="background:#fee2e2; padding:4px 8px; border-radius:4px; color:#991b1b;">Length: <strong>${s.word_count} words</strong></span>
+            <span style="background:#fee2e2; padding:4px 8px; border-radius:4px; color:#991b1b;">Fixations: <strong>${s.fixation_count} fix/word</strong></span>
+            <span style="background:#eff6ff; padding:4px 8px; border-radius:4px; color:#1e40af;">EEI: <strong style="color:${eeiColor};">${s.eei}</strong></span>
+            <span style="background:#f1f5f9; padding:4px 8px; border-radius:4px; color:#475569;">TRT: <strong>${s.trt} ms</strong></span>
+        </div>
+
+        <div style="background:#fef2f2; border-left:4px solid #ef4444; padding:10px 12px; border-radius:0 6px 6px 0; margin-bottom:8px;">
+            <div style="font-size:12px; font-weight:700; color:#991b1b; text-transform:uppercase; letter-spacing:0.5px;">⚠️ Identified Processing Breakdown</div>
+            <div style="font-size:13px; color:#7f1d1d; margin-top:2px; font-weight:600;">${s.mistake_diagnosis}</div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:8px;">
+            <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:6px; padding:10px;">
+                <div style="font-size:11.5px; font-weight:700; color:#475569;">🔍 Root Cause of Mistake:</div>
+                <div style="font-size:12px; color:#334155; margin-top:3px; line-height:1.4;">${causeExpl}</div>
+            </div>
+            <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:6px; padding:10px;">
+                <div style="font-size:11.5px; font-weight:700; color:#166534;">💡 Actionable Cognitive Fix:</div>
+                <div style="font-size:12px; color:#14532d; margin-top:3px; line-height:1.4;">${actionFix}</div>
+            </div>
+        </div>
+    `;
+};
+
+window.selectNextFatigueSentence = function() {
+    if (!currentFatigueSentences || currentFatigueSentences.length === 0) return;
+    const nextIdx = (selectedFatigueIndex + 1) % currentFatigueSentences.length;
+    onSelectFatigueSentence(nextIdx);
+};
+
+window.toggleFatigueSentencesUI = function() {
+    const container = document.getElementById("fatigue-sentences-container");
+    const label = document.getElementById("toggle-btn-label");
+    if (!container) return;
+    if (container.style.display === "none") {
+        container.style.display = "block";
+        if (label) label.innerText = `Hide Fatigue Sentences Table (${currentFatigueSentences.length})`;
+    } else {
+        container.style.display = "none";
+        if (label) label.innerText = `View All Fatigue Sentences Table (${currentFatigueSentences.length})`;
+    }
+};
 
 function renderPatternChart(patterns) {
     const container = document.getElementById("pattern-chart-container");
@@ -365,45 +566,7 @@ function renderPatternChart(patterns) {
     container.innerHTML = svg;
 }
 
-/* 3. Cognitive Workload Section */
-function renderCognitiveWorkloadSection() {
-    const s5 = reportData.section_5_cognitive_workload;
-    const banner = document.getElementById("workload-overview-banner");
-    banner.innerHTML = `
-        <h4 style="font-size:15px; margin-bottom:8px; color:#1e40af;">Workload Profile Synthesis (3-Pillar Assessment)</h4>
-        ${format3PillarText(s5.summary)}
-        <div style="margin-top:10px; font-size:13px;">
-            <strong>Composite Workload Index (CWI):</strong> <span style="font-family:monospace; font-weight:700;">${s5.cwi_mean > 0 ? '+' : ''}${s5.cwi_mean} robust-z</span> 
-            &nbsp;|&nbsp; <strong>Relative Shift:</strong> ${s5.cwi_deviation >= 0 ? '+' : ''}${s5.cwi_deviation}%
-        </div>
-    `;
-
-    const factorsList = document.getElementById("workload-factors-list");
-    factorsList.innerHTML = "";
-    s5.contributing_factors.forEach(f => {
-        const div = document.createElement("div");
-        div.style = "padding:8px 12px; background:#f8fafc; border-left:3px solid #2563eb; margin-bottom:8px; font-size:13px;";
-        div.innerText = f;
-        factorsList.appendChild(div);
-    });
-
-    const clustersList = document.getElementById("cluster-profiles-list");
-    clustersList.innerHTML = "";
-    reportData.section_6_sentence_observations.clusters.forEach(c => {
-        const div = document.createElement("div");
-        div.style = "padding:10px 14px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; margin-bottom:8px;";
-        div.innerHTML = `
-            <div style="display:flex; justify-content:space-between; font-weight:600; font-size:13px;">
-                <span>${c.cluster_name} (${c.percentage}%)</span>
-                <span style="color:#2563eb;">Conf: ${(c.mean_membership_probability * 100).toFixed(0)}%</span>
-            </div>
-            <div style="font-size:12px; color:#64748b; margin-top:2px;">Dominant Pattern: ${c.dominant_pattern}</div>
-        `;
-        clustersList.appendChild(div);
-    });
-}
-
-/* 4. Metric-wise Scientific Assessment */
+/* 3. Metric-wise Scientific Assessment */
 function renderMetricAssessmentSection() {
     const grid = document.getElementById("detailed-metrics-grid");
     const tabs = document.querySelectorAll("#metric-filter-tabs .tab-btn");
@@ -424,6 +587,56 @@ function renderMetricAssessmentSection() {
             const pb = m.personal_baseline_comparison;
             const statusClass = pb.deviation_category === "Within Typical Range" ? "badge-typical" : "badge-elevated";
 
+            let specHtml = "";
+            const spec = m.personalized_specification;
+            if (spec) {
+                const diag = spec.where_did_you_make_a_mistake || {};
+                const resList = (spec.how_to_resolve || []).map(r => `<li>${r}</li>`).join("");
+                const errBadge = diag.is_comprehension_error
+                    ? `<span class="badge badge-below">🔴 Comprehension Error</span>`
+                    : (diag.is_breakdown ? `<span class="badge badge-elevated">🟠 Flow Breakdown</span>` : `<span class="badge badge-typical">🟡 Outlier Friction</span>`);
+
+                specHtml = `
+                    <div class="pers-spec-box">
+                        <details>
+                            <summary>🔍 View Personalized Specification & Sentence Diagnosis</summary>
+                            <div class="pers-spec-content">
+                                <div class="pers-spec-item">
+                                    <strong>🎯 What Does It Do:</strong> ${spec.what_does_it_do || ''}
+                                </div>
+                                <div class="pers-spec-item">
+                                    <strong>🔬 What Is It Actually:</strong> ${spec.what_is_it_actually || ''}
+                                </div>
+                                <div class="pers-spec-item">
+                                    <strong>👤 What It Says About You:</strong> ${spec.what_it_says_about_you || ''}
+                                </div>
+                                <div class="pers-spec-item">
+                                    <strong>📚 Readability & Text Connection:</strong> ${spec.readability_connection || ''}
+                                </div>
+                                <div class="pers-spec-mistake-card">
+                                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                                        <strong>⚠️ Where You Made a Mistake (Sentence #${diag.sentence_index || 0}):</strong>
+                                        ${errBadge}
+                                    </div>
+                                    <blockquote class="pers-spec-quote">"${diag.sentence_text || ''}"</blockquote>
+                                    <div class="pers-spec-stats">
+                                        <span>Grade ${Number(diag.grade_level || 0).toFixed(1)}</span>
+                                        <span>Flesch Ease: ${Number(diag.flesch_reading_ease || 0).toFixed(1)}</span>
+                                        <span>Complex Words: ${Number(diag.complex_words_pct || 0).toFixed(0)}%</span>
+                                        <span>Observed: ${diag.metric_value} (Z = ${diag.robust_z >= 0 ? '+' : ''}${diag.robust_z})</span>
+                                    </div>
+                                    <p class="pers-spec-diag-note"><strong>Diagnosis:</strong> ${diag.diagnosis_note || ''}</p>
+                                </div>
+                                <div class="pers-spec-resolutions">
+                                    <strong style="color:#166534;">💡 How To Resolve It:</strong>
+                                    <ul>${resList}</ul>
+                                </div>
+                            </div>
+                        </details>
+                    </div>
+                `;
+            }
+
             const card = document.createElement("div");
             card.className = "detailed-card";
             card.innerHTML = `
@@ -440,6 +653,7 @@ function renderMetricAssessmentSection() {
                 <div class="compat-box">
                     <strong>Literature Compatibility:</strong> ${m.research_compatibility}
                 </div>
+                ${specHtml}
             `;
             grid.appendChild(card);
         });
@@ -458,7 +672,7 @@ function renderMetricAssessmentSection() {
 
 function getCompositeMetrics() {
     const composites = {};
-    const fullInterps = reportData.section_7_research_comparison;
+    const fullInterps = (reportData && reportData.section_7_research_comparison) || [];
     fullInterps.forEach(c => {
         if (["REI", "CWI", "SAI", "MWLI_proxy", "VSI_proxy"].includes(c.metric_id)) {
             composites[c.metric_id] = {
@@ -468,33 +682,17 @@ function getCompositeMetrics() {
                 scientific_definition: "Multimodal exploratory composite index derived from spectral EEG and eye-tracking signals.",
                 participant_measurement: { mean: c.participant_value, unit: "" },
                 personal_baseline_comparison: { session_baseline: c.session_baseline, relative_deviation_pct: c.relative_deviation, deviation_category: c.status },
-                research_compatibility: c.scientific_alignment
+                research_compatibility: c.scientific_alignment,
+                personalized_specification: c.personalized_specification
             };
         }
     });
     return composites;
 }
 
-/* 5. Research Evidence Comparison Table */
+/* 5. Research Evidence Comparison Table (Removed per user specification) */
 function renderResearchComparisonTable() {
-    const tbody = document.getElementById("comparison-table-body");
-    tbody.innerHTML = "";
-
-    reportData.section_7_research_comparison.forEach(item => {
-        const tr = document.createElement("tr");
-        const statusClass = item.status === "Within Typical Range" ? "badge-typical" : "badge-elevated";
-        const doiLink = item.doi ? `<a href="https://doi.org/${item.doi}" target="_blank" style="color:#2563eb;">${item.doi}</a>` : "Peer-Reviewed";
-
-        tr.innerHTML = `
-            <td><strong>${item.metric_name}</strong> (${item.metric_id})</td>
-            <td style="font-family:monospace;">${item.participant_value}</td>
-            <td style="font-family:monospace;">${item.session_baseline}</td>
-            <td><span class="metric-badge ${statusClass}">${item.status}</span></td>
-            <td>${item.key_reference} <br><small>${doiLink}</small></td>
-            <td style="font-size:12px; color:#475569; max-width:320px;">${item.scientific_alignment}</td>
-        `;
-        tbody.appendChild(tr);
-    });
+    // Section removed per user specification
 }
 
 /* 6. Research Explorer */
@@ -579,41 +777,93 @@ function renderPersonalizedRecommendations() {
 /* 8. Complete Report View */
 function renderCompleteReportView() {
     const container = document.getElementById("printable-report-container");
+    if (!container || !reportData) return;
+    const meta = reportData.metadata || {};
+    const s1 = reportData.section_1_executive_summary || "";
+    const s2 = reportData.section_2_focus_attention || {};
+    const s3 = reportData.section_3_eeg_analysis || {};
+    const s4 = reportData.section_4_eye_tracking_analysis || {};
+    const s9 = reportData.section_9_scientific_limitations || [];
+    const s10 = reportData.section_10_references || [];
+
     container.innerHTML = `
         <div style="border-bottom:2px solid #e2e8f0; padding-bottom:14px; margin-bottom:20px;">
             <h1 style="font-size:22px; margin-bottom:6px;">NeuroRead AI: Research-Grounded Assessment Report</h1>
-            <div style="font-size:13px; color:#64748b;">Participant: ${reportData.metadata.participant_id} | Protocol: ZuCo Simultaneous EEG & Eye Tracking</div>
+            <div style="font-size:13px; color:#64748b;">Participant: ${meta.participant_id || 'Student'} | Protocol: ZuCo Simultaneous EEG & Eye Tracking</div>
         </div>
         <div style="margin-bottom:18px;">
             <h3 style="color:#1e3a8a;">1. Executive Summary</h3>
-            <p style="font-size:13.5px; line-height:1.6;">${reportData.section_1_executive_summary}</p>
+            <p style="font-size:13.5px; line-height:1.6;">${s1}</p>
         </div>
         <div style="margin-bottom:18px;">
-            <h3 style="color:#1e3a8a;">2. Focus & Attention</h3>
-            ${format3PillarText(reportData.section_2_focus_attention.summary)}
+            <h3 style="color:#1e3a8a;">2. Focus & Attention Assessment</h3>
+            <p style="font-size:13px; color:#475569; margin-bottom:10px;">
+                Evaluates heuristic cognitive pattern distribution and fatigue-compatible sentence trials.
+            </p>
+            <table style="width:100%; border-collapse:collapse; margin-bottom:12px; font-size:12.5px;">
+                <thead>
+                    <tr style="background:#f1f5f9; text-align:left;">
+                        <th style="padding:6px 10px; border:1px solid #cbd5e1;">Cognitive Pattern</th>
+                        <th style="padding:6px 10px; border:1px solid #cbd5e1;">Proportion</th>
+                        <th style="padding:6px 10px; border:1px solid #cbd5e1;">Sentence Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${(s2.patterns_distribution || []).map(p => `
+                        <tr>
+                            <td style="padding:6px 10px; border:1px solid #cbd5e1;"><strong>${p.pattern_name}</strong></td>
+                            <td style="padding:6px 10px; border:1px solid #cbd5e1;">${p.percentage}%</td>
+                            <td style="padding:6px 10px; border:1px solid #cbd5e1;">${p.sentence_count}</td>
+                        </tr>
+                    `).join("")}
+                </tbody>
+            </table>
+            <div style="background:#fff1f2; border:1px solid #fca5a5; border-radius:6px; padding:12px; margin-top:8px;">
+                <h4 style="margin:0 0 6px 0; color:#b91c1c; font-size:13px;">⚠️ Fatigue-Compatible EEG Pattern Sentences (${(s2.fatigue_compatible_sentences || []).length} Trials)</h4>
+                <div style="max-height:220px; overflow-y:auto;">
+                    <table style="width:100%; border-collapse:collapse; font-size:11.5px;">
+                        <thead>
+                            <tr style="background:#fee2e2; text-align:left;">
+                                <th style="padding:4px 8px; border:1px solid #fecaca;">#</th>
+                                <th style="padding:4px 8px; border:1px solid #fecaca;">Sentence Excerpt</th>
+                                <th style="padding:4px 8px; border:1px solid #fecaca;">Fix/W</th>
+                                <th style="padding:4px 8px; border:1px solid #fecaca;">EEI</th>
+                                <th style="padding:4px 8px; border:1px solid #fecaca;">Mistake Diagnosis</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${(s2.fatigue_compatible_sentences || []).map(s => `
+                                <tr>
+                                    <td style="padding:4px 8px; border:1px solid #fecaca;">#${s.sentence_index}</td>
+                                    <td style="padding:4px 8px; border:1px solid #fecaca;">"${s.sentence_text ? (s.sentence_text.length > 50 ? s.sentence_text.substring(0, 50) + '...' : s.sentence_text) : ''}"</td>
+                                    <td style="padding:4px 8px; border:1px solid #fecaca;">${s.fixation_count}</td>
+                                    <td style="padding:4px 8px; border:1px solid #fecaca;">${s.eei}</td>
+                                    <td style="padding:4px 8px; border:1px solid #fecaca; color:#b91c1c; font-weight:500;">${s.mistake_diagnosis}</td>
+                                </tr>
+                            `).join("")}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
         <div style="margin-bottom:18px;">
             <h3 style="color:#1e3a8a;">3. Spectral EEG Analysis</h3>
-            ${format3PillarText(reportData.section_3_eeg_analysis.summary)}
+            ${format3PillarText(s3.summary || "")}
         </div>
         <div style="margin-bottom:18px;">
             <h3 style="color:#1e3a8a;">4. Eye-Tracking Analysis</h3>
-            ${format3PillarText(reportData.section_4_eye_tracking_analysis.summary)}
+            ${format3PillarText(s4.summary || "")}
         </div>
         <div style="margin-bottom:18px;">
-            <h3 style="color:#1e3a8a;">5. Cognitive Workload Evidence</h3>
-            ${format3PillarText(reportData.section_5_cognitive_workload.summary)}
-        </div>
-        <div style="margin-bottom:18px;">
-            <h3 style="color:#1e3a8a;">6. Scientific Limitations & Guardrails</h3>
+            <h3 style="color:#1e3a8a;">5. Scientific Limitations & Guardrails</h3>
             <ul style="font-size:13px; color:#475569; padding-left:20px;">
-                ${reportData.section_9_scientific_limitations.map(l => `<li>${l}</li>`).join("")}
+                ${s9.map(l => `<li>${l}</li>`).join("")}
             </ul>
         </div>
         <div>
-            <h3 style="color:#1e3a8a;">7. Scientific References</h3>
+            <h3 style="color:#1e3a8a;">6. Scientific References</h3>
             <ol style="font-size:12.5px; color:#334155; padding-left:20px;">
-                ${reportData.section_10_references.map(r => `<li><strong>${r.authors} (${r.year})</strong>. <em>${r.title}</em>. ${r.doi ? `doi:${r.doi}` : ""}</li>`).join("")}
+                ${s10.map(r => `<li><strong>${r.authors || ''} (${r.year || ''})</strong>. <em>${r.title || ''}</em>. ${r.doi ? `doi:${r.doi}` : ""}</li>`).join("")}
             </ol>
         </div>
     `;
@@ -646,28 +896,30 @@ async function setupZuCoLauncher() {
             taskSelect.appendChild(opt);
         });
 
-        function populatePatients(taskId) {
+        window.populatePatients = function(taskId) {
             patientSelect.innerHTML = "";
             const taskObj = zucoTasksData.find(t => t.task_id === taskId);
             if (!taskObj || !taskObj.patients) return;
+
+            const currPid = (reportData && reportData.metadata && reportData.metadata.participant_id) || "";
 
             taskObj.patients.forEach(p => {
                 const opt = document.createElement("option");
                 opt.value = p.filename;
                 opt.innerText = `${p.filename} (Student ${p.patient_code})`;
-                if (reportData && reportData.metadata && reportData.metadata.participant_id === p.patient_id) {
+                if (currPid && (p.patient_id === currPid || currPid.indexOf(p.patient_code) !== -1 || p.filename.indexOf(currPid) !== -1)) {
                     opt.selected = true;
                 }
                 patientSelect.appendChild(opt);
             });
-        }
+        };
 
         taskSelect.onchange = () => {
-            populatePatients(taskSelect.value);
+            if (window.populatePatients) window.populatePatients(taskSelect.value);
         };
 
         if (zucoTasksData.length > 0) {
-            populatePatients(zucoTasksData[0].task_id);
+            window.populatePatients(zucoTasksData[0].task_id);
         }
 
         // Run Pipeline on Selected Task and Student .mat file
@@ -728,9 +980,7 @@ async function setupZuCoLauncher() {
                 renderHeaderInfo();
                 renderExecutiveSummary();
                 renderFocusAttentionSection();
-                renderCognitiveWorkloadSection();
                 renderMetricAssessmentSection();
-                renderResearchComparisonTable();
                 renderPersonalizedRecommendations();
                 renderCompleteReportView();
 

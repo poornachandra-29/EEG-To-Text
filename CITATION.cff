@@ -1,0 +1,30 @@
+cff-version: 1.2.0
+message: "If you use NeuroRead RAG or ZuCo analysis pipeline in your research, please cite it as below."
+authors:
+  - family-names: "SPLAB Research Group"
+    given-names: "NeuroRead Team"
+title: "NeuroRead RAG: Confound-Controlled Multi-Modal Reading Assessment and Cognitive Pacing"
+version: 2.0.0
+date-released: 2026-11-15
+url: "https://github.com/splab/neuroread-rag"
+references:
+  - type: article
+    authors:
+      - family-names: "Hollenstein"
+        given-names: "Nora"
+      - family-names: "Rabadan"
+        given-names: "Jonathan"
+      - family-names: "Barrett"
+        given-names: "Maria"
+      - family-names: "Troendle"
+        given-names: "Marius"
+      - family-names: "Beinborn"
+        given-names: "Lisa"
+      - family-names: "Zhang"
+        given-names: "Ce"
+    title: "ZuCo, a simultaneous EEG and eye-tracking resource for natural reading"
+    journal: "Scientific Data"
+    volume: 5
+    pages: 180291
+    year: 2018
+    doi: "10.1038/sdata.2018.291"

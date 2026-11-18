@@ -183,12 +183,78 @@ class FinalReportGenerator:
             "personal_optimal_zone": {},
         }
 
+    def _extract_fatigue_sentences(self, analysis_result: ParticipantAnalysisResult) -> List[Dict[str, Any]]:
+        """Extract and diagnose sentences exhibiting fatigue-compatible EEG patterns."""
+        fatigue_sents = []
+        obs_list = getattr(analysis_result, "sentence_observations", [])
+        
+        candidates = [
+            o for o in obs_list
+            if getattr(o, "cognitive_pattern", "") == "Fatigue-compatible EEG pattern"
+        ]
+        
+        if not candidates and obs_list:
+            def _fatigue_score(o):
+                rz = getattr(o, "robust_z_scores", {}) or {}
+                return rz.get("ThetaPower", 0.0) + rz.get("AlphaPower", 0.0) - rz.get("EEI", 0.0)
+            candidates = sorted(obs_list, key=_fatigue_score, reverse=True)[:10]
+
+        for rank, o in enumerate(candidates, 1):
+            wc = len(o.sentence_text.split())
+            m = o.metrics or {}
+            rz = o.robust_z_scores or {}
+            fix = m.get("FixationCount", 1.0)
+            eei = m.get("EEI", 0.5)
+            trt = m.get("TRT", 0.0)
+            theta = m.get("ThetaPower", 0.0)
+            alpha = m.get("AlphaPower", 0.0)
+            tar = m.get("Theta_Alpha_Ratio", theta / (alpha + 1e-6) if alpha else 0.0)
+
+            mistake_causes = []
+            if rz.get("ThetaPower", 0.0) >= 1.0:
+                mistake_causes.append("Theta power surge (mental exhaustion / working memory overload)")
+            if rz.get("AlphaPower", 0.0) >= 1.0:
+                mistake_causes.append("Alpha wave surge (attentional waning / passive lapse)")
+            if rz.get("EEI", 0.0) <= -0.8 or eei < 0.45:
+                mistake_causes.append("Cortical vigilance drop (low cognitive engagement)")
+            if fix >= 1.5 or rz.get("FixationCount", 0.0) >= 1.0:
+                mistake_causes.append(f"Excessive re-fixations ({fix:.2f}/word: eye regression)")
+            if rz.get("TRT", 0.0) >= 1.0:
+                mistake_causes.append(f"Prolonged dwell time ({trt:.0f} ms: decoding delay)")
+            if wc >= 25:
+                mistake_causes.append(f"Syntactic overload ({wc} words: dense multi-clause)")
+
+            if not mistake_causes:
+                mistake_causes.append("Theta-alpha synchronization with subdued cortical engagement")
+
+            mistake_diagnosis = " | ".join(mistake_causes[:2])
+            primary_mistake = mistake_causes[0]
+
+            fatigue_sents.append({
+                "rank": rank,
+                "sentence_index": o.sentence_index,
+                "sentence_text": o.sentence_text,
+                "word_count": wc,
+                "fixation_count": round(fix, 2),
+                "eei": round(eei, 4),
+                "trt": round(trt, 1),
+                "theta_power": round(theta, 4),
+                "alpha_power": round(alpha, 4),
+                "theta_alpha_ratio": round(tar, 2),
+                "pattern_strength": getattr(o, "pattern_evidence_strength", "Moderate"),
+                "mistake_diagnosis": mistake_diagnosis,
+                "primary_mistake": primary_mistake,
+                "actionable_fix": "Pause at punctuation marks and summarize clause before reading on."
+            })
+
+        return fatigue_sents
+
     def generate_full_report(
         self,
         grounded_report: ParticipantGroundedReport,
         analysis_result: ParticipantAnalysisResult
     ) -> Dict[str, Any]:
-        """Compile complete 10-section structured report data."""
+        """Compile complete structured report data."""
         recommendations = self.recommender.generate_recommendations(grounded_report, analysis_result)
 
         # 1. Executive Summary
@@ -204,15 +270,13 @@ class FinalReportGenerator:
         )
 
         # 2. Focus and Attention Assessment
-        sai = analysis_result.metrics.get("SAI")
-        mwli = analysis_result.metrics.get("MWLI_proxy")
+        fatigue_sents = self._extract_fatigue_sentences(analysis_result)
         focus_assessment = {
             "summary": grounded_report.focus_attention_summary,
-            "sai_mean": sai.mean if sai else 0.0,
-            "sai_category": sai.deviation_category if sai else "Typical",
-            "mwli_mean": mwli.mean if mwli else 0.0,
             "patterns_distribution": [p.to_dict() for p in analysis_result.patterns],
-            "interpretation_note": "Evaluates reading cadence stability and relative spectral engagement proxies, strictly non-diagnostic."
+            "fatigue_compatible_sentences": fatigue_sents,
+            "fatigue_sentence_count": len(fatigue_sents),
+            "interpretation_note": "Evaluates cognitive pattern frequencies and fatigue-compatible sentence trials."
         }
 
         # 3. EEG Analysis
@@ -286,7 +350,8 @@ class FinalReportGenerator:
                 "status": interp.personal_baseline_comparison["deviation_category"],
                 "key_reference": f"{top_paper.authors} ({top_paper.year})" if top_paper else "Academic Literature",
                 "doi": top_paper.doi if top_paper else "",
-                "scientific_alignment": interp.research_compatibility
+                "scientific_alignment": interp.research_compatibility,
+                "personalized_specification": interp.personalized_specification,
             })
 
         # 8. Personalized Recommendations
@@ -365,6 +430,34 @@ class FinalReportGenerator:
                 )
             return str(summary_raw)
 
+        def _format_metric_spec_md(interp: Dict[str, Any]) -> str:
+            spec = interp.get("personalized_specification")
+            if not spec:
+                return ""
+            m_id = spec.get("metric_id", "")
+            m_name = interp.get("metric_name", m_id)
+            diag = spec.get("where_did_you_make_a_mistake", {})
+            resolutions = spec.get("how_to_improve") or spec.get("how_to_resolve", [])
+            err_badge = "🔴 Comprehension Error" if diag.get("is_comprehension_error") else ("🟠 Flow Breakdown" if diag.get("is_breakdown") else "🟡 Outlier Friction")
+            res_md = "\n".join(f"  - {r}" for r in resolutions)
+            provider = spec.get("llm_provider", "RAG Engine")
+            
+            return (
+                f"#### 🔍 Pure RAG Pedagogical Specification: {m_name} ({m_id}) `[Engine: {provider}]`\n"
+                f"- **🎯 1. What This Metric Says (Scientific Literature Ground Truth):**\n"
+                f"  {spec.get('what_this_metric_says') or spec.get('what_is_it_actually')}\n"
+                f"- **👤 2. How You Are Performing According To This Metric (CSV Review):**\n"
+                f"  {spec.get('how_you_are_performing') or spec.get('what_it_says_about_you')}\n"
+                f"- **⚠️ Diagnosed Peak Friction / Breakdown Trial (Sentence #{diag.get('sentence_index')} — {err_badge}):**\n"
+                f"  - *\"{diag.get('sentence_text')}\"*\n"
+                f"  - **Linguistics:** Grade Level {diag.get('grade_level', 0):.1f} | Flesch Ease: {diag.get('flesch_reading_ease', 0):.1f} | Complex Words: {diag.get('complex_words_pct', 0):.0f}%\n"
+                f"  - **Observed Value:** {diag.get('metric_value')} (Robust Z: {diag.get('robust_z', 0):+.2f})\n"
+                f"  - **Cognitive Diagnosis:** {diag.get('diagnosis_note')}\n"
+                f"- **💡 3. How To Improve Results In The Context Of This Metric:**\n{res_md}\n"
+                f"- **🚀 4. What Improving This Metric Actually Means To You:**\n"
+                f"  {spec.get('what_improving_means_to_you', 'Enhances reading efficiency, minimizes working memory saturation, and builds sustainable study stamina.')}\n"
+            )
+
         md = []
         md.append(f"# NeuroRead AI: Student Cognitive Learning Assessment Report\n")
         md.append(f"**Student ID:** `{meta.get('student_id', meta['participant_id'])}` | **Sentences Analyzed:** {meta['total_sentences_analyzed']} | **Generated:** {meta['report_timestamp'][:10]}\n")
@@ -381,7 +474,6 @@ class FinalReportGenerator:
             md.append("## 1b. Learning Efficiency Score (LES) & Study Stamina Profile\n")
             md.append(f"- **Learning Efficiency Score (LES):** **{les.get('score', 0)}%** — *{les.get('tier', 'Typical')}*")
             md.append(f"- **Flow Factor:** {les.get('flow_factor', 0)}% (effortless reading progression)")
-            md.append(f"- **Cadence Stability:** {les.get('cadence_stability_factor', 0)}% (low ocular/EEG variance)")
             md.append(f"- **Cognitive Ease Factor:** {les.get('workload_ease_factor', 0)}% (working memory margin)")
             if fatigue:
                 md.append(f"- **Attentive Stamina Horizon:** Sentences 1–{fatigue.get('fatigue_onset_sentence', 'N/A')} (~{fatigue.get('estimated_fatigue_minute', 0):.0f} min)")
@@ -391,9 +483,36 @@ class FinalReportGenerator:
         # 2. Focus and Attention
         md.append("## 2. Focus and Attention Assessment\n")
         s2 = report_data["section_2_focus_attention"]
-        md.append(_format_3pillar_md(s2["summary"]) + "\n")
-        md.append(f"- **Sustained Attention Evidence Proxy (SAI):** {s2['sai_mean']:+.4f} ({s2['sai_category']})")
-        md.append(f"- **Attention-Instability Evidence Proxy (MWLI_proxy):** {s2['mwli_mean']:+.4f}\n")
+
+        md.append("### Heuristic Cognitive Pattern Distribution\n")
+        md.append("| Cognitive Pattern | Proportion (%) | Sentence Count |")
+        md.append("| :--- | :--- | :--- |")
+        for p in s2.get("patterns_distribution", []):
+            md.append(f"| **{p['pattern_name']}** | {p['percentage']:.1f}% | {p['sentence_count']} |")
+        md.append("")
+
+        fatigue_sents = s2.get("fatigue_compatible_sentences", [])
+        fatigue_count = len(fatigue_sents)
+        md.append("### ⚠️ Fatigue-Compatible EEG Pattern Sentences (Fatigue & Mistake Assessment)\n")
+        md.append(
+            f"A total of **{fatigue_count} sentences** exhibited physiological markers of cognitive fatigue "
+            f"(e.g., theta-alpha power elevation, depressed EEI engagement, or ocular dwell delays). "
+            f"Review these specific trials below to assess where comprehension friction and reading mistakes occurred:\n"
+        )
+        if fatigue_sents:
+            md.append("<details open>")
+            md.append(f"<summary><b>🔍 Click to View Fatigue-Compatible Sentences ({fatigue_count} Trials Identified)</b></summary>\n")
+            md.append("| # | Sentence Excerpt | Words | Fixations | Engagement (EEI) | TRT (ms) | Mistake / Processing Breakdown |")
+            md.append("| :--- | :--- | :--- | :--- | :--- | :--- | :--- |")
+            for s in fatigue_sents:
+                excerpt = s["sentence_text"] if len(s["sentence_text"]) <= 55 else s["sentence_text"][:55] + "..."
+                md.append(
+                    f"| #{s['sentence_index']} | \"{excerpt}\" | {s['word_count']} | {s['fixation_count']:.2f} | "
+                    f"{s['eei']:.4f} | {s['trt']:.0f} | {s['mistake_diagnosis']} |"
+                )
+            md.append("\n</details>\n")
+        else:
+            md.append("*No trials in this session reached the threshold for fatigue-compatible patterns.*\n")
 
         # 3. EEG Analysis
         md.append("## 3. Spectral EEG Analysis\n")
@@ -406,6 +525,10 @@ class FinalReportGenerator:
             pb = interp["personal_baseline_comparison"]
             md.append(f"| **{interp['metric_name']} ({m_id})** | {interp['category']} | {pm['mean']} {pm['unit']} | {pb['session_baseline']} | {pb['relative_deviation_pct']:+.1f}% | {pb['deviation_category']} |")
         md.append("")
+        for m_id, interp in s3["metrics"].items():
+            spec_md = _format_metric_spec_md(interp)
+            if spec_md:
+                md.append(spec_md)
 
         # 4. Eye Tracking
         md.append("## 4. Eye-Tracking Analysis\n")
@@ -418,6 +541,10 @@ class FinalReportGenerator:
             pb = interp["personal_baseline_comparison"]
             md.append(f"| **{interp['metric_name']} ({m_id})** | {interp['category']} | {pm['mean']} {pm['unit']} | {pb['session_baseline']} | {pb['relative_deviation_pct']:+.1f}% | {pb['deviation_category']} |")
         md.append("")
+        for m_id, interp in s4["metrics"].items():
+            spec_md = _format_metric_spec_md(interp)
+            if spec_md:
+                md.append(spec_md)
 
         # 5. Cognitive Workload
         md.append("## 5. Cognitive Workload Assessment\n")
@@ -475,17 +602,8 @@ class FinalReportGenerator:
             md.append("### 💡 Key Insight\n")
             md.append(s6b["contrast_insight"] + "\n")
 
-        # 7. Research Comparison
-        md.append("## 7. Research-Paper Comparison\n")
-        md.append("| Metric | Participant Observed | Session Baseline | Literature Alignment & DOI |")
-        md.append("| :--- | :--- | :--- | :--- |")
-        for comp in report_data["section_7_research_comparison"]:
-            doi_link = f"[{comp['doi']}](https://doi.org/{comp['doi']})" if comp["doi"] else "Peer-Reviewed"
-            md.append(f"| **{comp['metric_name']}** | {comp['participant_value']} ({comp['status']}) | {comp['session_baseline']} | {comp['key_reference']} - {doi_link} |")
-        md.append("")
-
-        # 8. Recommendations — Issue-grounded format (Stage 4)
-        md.append("## 8. Personalized Evidence-Based Recommendations\n")
+        # 7. Recommendations — Issue-grounded format (Stage 4)
+        md.append("## 7. Personalized Evidence-Based Recommendations\n")
         for r in report_data["section_8_recommendations"]:
             # Derive short ID from rec_id (e.g. "REC_01_COMPREHENSION" → "REC_01")
             short_id = "_".join(r["rec_id"].split("_")[:2])
@@ -502,14 +620,14 @@ class FinalReportGenerator:
             )
             md.append(f"**📚 Supporting Research:**\n{citations_str}\n")
 
-        # 9. Scientific Limitations
-        md.append("## 9. Scientific Limitations & Guardrails\n")
+        # 8. Scientific Limitations
+        md.append("## 8. Scientific Limitations & Guardrails\n")
         for lim in report_data["section_9_scientific_limitations"]:
             md.append(f"- {lim}")
         md.append("")
 
-        # 10. Complete References
-        md.append("## 10. Complete Scientific References\n")
+        # 9. Complete References
+        md.append("## 9. Complete Scientific References\n")
         for ref in report_data["section_10_references"]:
             doi_part = f"DOI: [{ref['doi']}](https://doi.org/{ref['doi']})" if ref['doi'] else ""
             md.append(f"- **{ref['authors']} ({ref['year']})**. *{ref['title']}*. {ref['venue']}. {doi_part}")
@@ -552,6 +670,58 @@ class FinalReportGenerator:
         def _trunc(text: str, limit: int = 55) -> str:
             return text if len(text) <= limit else text[:limit] + "..."
 
+        def _format_metric_spec_html(interp: Dict[str, Any]) -> str:
+            spec = interp.get("personalized_specification")
+            if not spec:
+                return ""
+            m_id = spec.get("metric_id", "")
+            m_name = interp.get("metric_name", m_id)
+            diag = spec.get("where_did_you_make_a_mistake", {})
+            resolutions = spec.get("how_to_improve") or spec.get("how_to_resolve", [])
+            err_badge = "<span class='badge badge-below'>🔴 Comprehension Error</span>" if diag.get("is_comprehension_error") else ("<span class='badge badge-elevated'>🟠 Flow Breakdown</span>" if diag.get("is_breakdown") else "<span class='badge badge-typical'>🟡 Outlier Friction</span>")
+            res_items = "".join(f"<li style='margin-bottom:6px;'>{r}</li>" for r in resolutions)
+            provider = spec.get("llm_provider", "RAG Engine")
+            
+            return f"""
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:14px 18px; margin:12px 0;">
+                <details>
+                    <summary style="font-weight:600; color:#1e40af; cursor:pointer; font-size:13.5px;">
+                        🔍 Pure RAG Pedagogical Specification: <strong>{m_name} ({m_id})</strong> <span style="font-size:11px; background:#e0e7ff; color:#3730a3; padding:2px 8px; border-radius:12px; margin-left:8px;">Engine: {provider}</span>
+                    </summary>
+                    <div style="margin-top:12px; font-size:13px; line-height:1.6;">
+                        <p style="margin:6px 0;"><strong>🎯 1. What This Metric Says (Scientific Literature Ground Truth):</strong><br/>
+                        {spec.get('what_this_metric_says') or spec.get('what_is_it_actually')}</p>
+                        
+                        <p style="margin:6px 0;"><strong>👤 2. How You Are Performing According To This Metric:</strong><br/>
+                        {spec.get('how_you_are_performing') or spec.get('what_it_says_about_you')}</p>
+                        
+                        <div style="background:#ffffff; border-left:4px solid #ef4444; border:1px solid #fecaca; padding:12px; border-radius:6px; margin:10px 0;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                                <strong>⚠️ Diagnosed Peak Friction / Breakdown Trial (Sentence #{diag.get('sentence_index')}):</strong>
+                                {err_badge}
+                            </div>
+                            <blockquote style="margin:6px 0; font-style:italic; color:#334155; background:#f1f5f9; padding:8px 12px; border-radius:4px;">
+                                "{diag.get('sentence_text')}"
+                            </blockquote>
+                            <div style="font-size:12px; color:#64748b; margin-bottom:6px;">
+                                <strong>Linguistics:</strong> Grade {diag.get('grade_level', 0):.1f} &nbsp;|&nbsp; Flesch Ease: {diag.get('flesch_reading_ease', 0):.1f} &nbsp;|&nbsp; Complex Words: {diag.get('complex_words_pct', 0):.0f}% &nbsp;|&nbsp;
+                                <strong>Observed:</strong> {diag.get('metric_value')} (Robust Z: {diag.get('robust_z', 0):+.2f})
+                            </div>
+                            <p style="margin:0; color:#991b1b; font-size:12.5px;"><strong>Cognitive Diagnosis:</strong> {diag.get('diagnosis_note')}</p>
+                        </div>
+                        
+                        <div style="background:#f0fdf4; border:1px solid #bbf7d0; padding:12px; border-radius:6px; margin:10px 0;">
+                            <strong style="color:#166534;">💡 3. How To Improve Results In The Context Of This Metric:</strong>
+                            <ul style="margin:6px 0 0 18px; padding:0; color:#14532d;">{res_items}</ul>
+                        </div>
+
+                        <p style="margin:10px 0 4px 0; color:#1e293b;"><strong>🚀 4. What Improving This Metric Actually Means To You:</strong><br/>
+                        {spec.get('what_improving_means_to_you', 'Enhances reading efficiency, minimizes working memory saturation, and builds sustainable study stamina.')}</p>
+                    </div>
+                </details>
+            </div>
+            """
+
         s6b = report_data.get("section_6b_sentence_comparison", {})
         flow_rows = ""
         for s in s6b.get("flow_sentences", []):
@@ -577,6 +747,38 @@ class FinalReportGenerator:
                 <td>Grade {s.get('grade_level', '-')}</td>
                 <td><strong style="color:#b91c1c;">{rc}</strong></td>
             </tr>"""
+
+        s2 = report_data.get("section_2_focus_attention", {})
+        fatigue_sents = s2.get("fatigue_compatible_sentences", [])
+        fatigue_count = len(fatigue_sents)
+
+        pattern_rows = ""
+        for p in s2.get("patterns_distribution", []):
+            color = "#16a34a" if "Focused" in p['pattern_name'] else "#dc2626" if "Fatigue" in p['pattern_name'] else "#d97706" if "Workload" in p['pattern_name'] else "#9333ea" if "Instability" in p['pattern_name'] else "#64748b"
+            pattern_rows += f"""            <tr>
+                <td><strong>{p['pattern_name']}</strong></td>
+                <td>
+                    <div style="background:#e2e8f0; border-radius:4px; height:8px; width:100%; overflow:hidden;">
+                        <div style="background:{color}; width:{p['percentage']}%; height:100%;"></div>
+                    </div>
+                </td>
+                <td style="font-weight:700;">{p['percentage']:.1f}%</td>
+                <td>{p['sentence_count']} sentences</td>
+            </tr>\n"""
+
+        fatigue_rows = ""
+        for s in fatigue_sents:
+            excerpt = s['sentence_text'] if len(s['sentence_text']) <= 65 else s['sentence_text'][:65] + "..."
+            eei_color = "#dc2626" if s['eei'] < 0.45 else "#2563eb"
+            fatigue_rows += f"""            <tr>
+                <td><strong>#{s['sentence_index']}</strong></td>
+                <td>"{excerpt}"</td>
+                <td>{s['word_count']}</td>
+                <td>{s['fixation_count']:.2f}</td>
+                <td><span style="font-family:monospace; color:{eei_color}; font-weight:600;">{s['eei']:.4f}</span></td>
+                <td>{s['trt']:.0f} ms</td>
+                <td><span style="display:inline-block; padding:3px 8px; border-radius:4px; font-size:11px; background:#fee2e2; color:#991b1b; font-weight:600;">{s['mistake_diagnosis']}</span></td>
+            </tr>\n"""
 
         html = f"""<!DOCTYPE html>
 <html lang="en">
@@ -639,8 +841,8 @@ class FinalReportGenerator:
                 <div style="font-size: 20px; font-weight: 700; color: #38bdf8;">{les.get('flow_factor', 0)}%</div>
             </div>
             <div style="background: rgba(255,255,255,0.08); padding: 12px 16px; border-radius: 8px; min-width: 110px;">
-                <div style="font-size: 11px; color: #94a3b8;">Cadence Stability</div>
-                <div style="font-size: 20px; font-weight: 700; color: #4ade80;">{les.get('cadence_stability_factor', 0)}%</div>
+                <div style="font-size: 11px; color: #94a3b8;">Cognitive Ease</div>
+                <div style="font-size: 20px; font-weight: 700; color: #4ade80;">{les.get('workload_ease_factor', 0)}%</div>
             </div>
             <div style="background: rgba(255,255,255,0.08); padding: 12px 16px; border-radius: 8px; min-width: 110px;">
                 <div style="font-size: 11px; color: #94a3b8;">Optimal Study Block</div>
@@ -653,7 +855,40 @@ class FinalReportGenerator:
     <p>{report_data['section_1_executive_summary']}</p>
 
     <h2>2. Focus and Attention Assessment</h2>
-    {_format_3pillar_html(report_data['section_2_focus_attention']['summary'])}
+    <div style="margin-bottom: 20px;">
+        <h3 style="margin-bottom: 8px; color: #1e3a8a;">Heuristic Cognitive Pattern Distribution</h3>
+        <table>
+            <thead>
+                <tr><th>Pattern Name</th><th style="width:30%;">Distribution</th><th>Percentage</th><th>Sentence Count</th></tr>
+            </thead>
+            <tbody>
+{pattern_rows}            </tbody>
+        </table>
+    </div>
+
+    <div style="background:#ffffff; border:2px solid #f87171; border-radius:8px; padding:18px; margin: 20px 0;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+            <div>
+                <h3 style="color:#b91c1c; margin:0 0 4px 0;">⚠️ Fatigue-Compatible EEG Pattern Sentences</h3>
+                <p style="margin:0; font-size:13px; color:#64748b;">
+                    Detected <strong>{fatigue_count} sentences</strong> with elevated theta-alpha synchronization and reduced engagement. Click below to inspect where mistakes occurred.
+                </p>
+            </div>
+            <button id="btn-fatigue-toggle" onclick="toggleFatigueTable()" style="background:#dc2626; color:#ffffff; border:none; padding:8px 16px; border-radius:6px; font-weight:600; font-size:13px; cursor:pointer; box-shadow:0 2px 4px rgba(220,38,38,0.25);">
+                🔍 View Fatigue-Compatible Sentences ({fatigue_count})
+            </button>
+        </div>
+
+        <div id="fatigue-table-wrapper" style="display:none; margin-top:16px; border-top:1px solid #fecaca; padding-top:14px; max-height:420px; overflow-y:auto;">
+            <table>
+                <thead>
+                    <tr><th>#</th><th>Sentence Excerpt</th><th>Words</th><th>Fix/Word</th><th>EEI</th><th>TRT</th><th>Mistake & Error Diagnosis</th></tr>
+                </thead>
+                <tbody>
+{fatigue_rows}                </tbody>
+            </table>
+        </div>
+    </div>
 
     <h2>3. Spectral EEG & Derived Metrics</h2>
     {_format_3pillar_html(report_data['section_3_eeg_analysis']['summary'])}
@@ -677,7 +912,11 @@ class FinalReportGenerator:
 
         html += f"""        </tbody>
     </table>
+"""
+        for m_id, interp in report_data["section_3_eeg_analysis"]["metrics"].items():
+            html += _format_metric_spec_html(interp)
 
+        html += f"""
     <h2>4. Eye-Tracking & Reading Dynamics</h2>
     {_format_3pillar_html(report_data['section_4_eye_tracking_analysis']['summary'])}
     <table>
@@ -700,7 +939,11 @@ class FinalReportGenerator:
 
         html += f"""        </tbody>
     </table>
+"""
+        for m_id, interp in report_data["section_4_eye_tracking_analysis"]["metrics"].items():
+            html += _format_metric_spec_html(interp)
 
+        html += f"""
     <h2>5. Cognitive Workload Evidence</h2>
     {_format_3pillar_html(report_data['section_5_cognitive_workload']['summary'])}
 
@@ -725,26 +968,7 @@ class FinalReportGenerator:
         <strong>💡 Key Cognitive Insight:</strong> {s6b.get('contrast_insight', '')}
     </div>
 
-    <h2>7. Research-Paper Comparison Table</h2>
-    <table>
-        <thead>
-            <tr><th>Metric</th><th>Observed Measurement</th><th>Session Baseline</th><th>Scientific Citation & DOI</th></tr>
-        </thead>
-        <tbody>
-"""
-        for comp in report_data["section_7_research_comparison"][:8]:
-            doi_anchor = f"<a href='https://doi.org/{comp['doi']}' target='_blank'>{comp['doi']}</a>" if comp['doi'] else "Verified"
-            html += f"""            <tr>
-                <td><strong>{comp['metric_name']}</strong></td>
-                <td>{comp['participant_value']}</td>
-                <td>{comp['session_baseline']} ({comp['status']})</td>
-                <td>{comp['key_reference']} &mdash; {doi_anchor}</td>
-            </tr>\n"""
-
-        html += """        </tbody>
-    </table>
-
-    <h2>8. Personalized Evidence-Based Recommendations</h2>
+    <h2>7. Personalized Evidence-Based Recommendations</h2>
 """
         for r in report_data["section_8_recommendations"]:
             citations = ", ".join(f"<a href='{c['url'] or ('https://doi.org/' + c['doi'])}' target='_blank'>{c['citation_text']}</a>" for c in r["supporting_citations"])
@@ -756,7 +980,7 @@ class FinalReportGenerator:
         <p style="font-size:12px; color:#475569; margin: 8px 0 0 0;"><strong>📚 Supporting Research:</strong> {citations}</p>
     </div>\n"""
 
-        html += """    <h2>9. Scientific Limitations & Guardrails</h2>
+        html += """    <h2>8. Scientific Limitations & Guardrails</h2>
     <ul>
 """
         for lim in report_data["section_9_scientific_limitations"]:
@@ -764,15 +988,29 @@ class FinalReportGenerator:
 
         html += """    </ul>
 
-    <h2>10. Complete Scientific References</h2>
+    <h2>9. Complete Scientific References</h2>
     <ol style="font-size:13px; color:#334155;">
 """
         for ref in report_data["section_10_references"]:
             doi_link = f"<a href='https://doi.org/{ref['doi']}' target='_blank'>doi:{ref['doi']}</a>" if ref['doi'] else ""
             html += f"        <li><strong>{ref['authors']} ({ref['year']})</strong>. {ref['title']}. <em>{ref['venue']}</em>. {doi_link}</li>\n"
 
-        html += """    </ol>
+        html += f"""    </ol>
 </div>
+<script>
+function toggleFatigueTable() {{
+    var el = document.getElementById('fatigue-table-wrapper');
+    var btn = document.getElementById('btn-fatigue-toggle');
+    if (!el || !btn) return;
+    if (el.style.display === 'none' || el.style.display === '') {{
+        el.style.display = 'block';
+        btn.innerText = '🔼 Hide Fatigue Sentences';
+    }} else {{
+        el.style.display = 'none';
+        btn.innerText = '🔍 View Fatigue-Compatible Sentences ({fatigue_count})';
+    }}
+}}
+</script>
 </body>
 </html>"""
         return html

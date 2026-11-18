@@ -1,0 +1,13 @@
+// hdbscan_model.dot — HDBSCAN Density-Based Clustering Dataflow
+digraph HDBSCAN_Model {
+    rankdir=TB;
+    node [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=10];
+
+    Input [label="Input: 10-Dimensional Normalized Features", fillcolor="#dbeafe", color="#2563eb"];
+    MutualReach [label="Mutual Reachability Graph\nd_mreach-k(a, b) = max(core_k(a), core_k(b), d(a, b))", fillcolor="#fef3c7", color="#d97706"];
+    MST [label="Minimum Spanning Tree & Dendrogram Hierarchy", fillcolor="#e0e7ff", color="#4f46e5"];
+    Condense [label="Cluster Condensation & Excess of Mass Extraction\nSelects persistent, density-stable clusters", fillcolor="#fdf4ff", color="#9333ea"];
+    Output [label="Outputs:\n- Discovered Clusters (0..K-1)\n- Atypical Artifacts Flagged as Outlier Noise (-1)\n- Non-Noise Cluster Centroids", fillcolor="#dcfce7", color="#16a34a"];
+
+    Input -> MutualReach -> MST -> Condense -> Output;
+}

@@ -1,115 +1,82 @@
-# NeuroRead AI: Research-Grounded RAG Pipeline
+# 🧠 NeuroRead RAG (v2.0): Research-Grounded Cognitive Reading Analytics
 
-A research-grounded Retrieval-Augmented Generation (RAG) module that integrates with the ZuCo simultaneous EEG and eye-tracking natural reading pipeline.
-
----
-
-## 🌟 Key Architecture & Highlights
-
-* **100% Non-Invasive Integration**: Your existing ML pipeline (`train.py`, `test.py`, `cognitive_profile_2.py`) is completely untouched.
-* **Deterministic Numerical Processing**: Programmatic pandas/numpy statistics (means, medians, standard deviations, MAD, robust SD, relative baseline deviations, and sentence outlier tracking) with **zero LLM calculation or hallucination**.
-* **Multi-Source Research Discovery**: Aggregates peer-reviewed literature across **OpenAlex, Semantic Scholar, Europe PMC, PubMed, and Crossref**, cross-referencing canonical literature (*ZuCo Nature Scientific Data, Pope et al., Cavanagh & Frank, Rayner, Beatty & Kahneman, Dimigen et al., Klimesch*).
-* **Section-Aware Hybrid Vector RAG**: Combines BM25 keyword matching with dense semantic cosine similarity (Reciprocal Rank Fusion) and metadata filtering.
-* **Contradiction & Nuance Detection**: Flags context-dependent divergence (e.g. FMT cognitive control vs. fatigue, pupil dilation mental effort vs. constriction/drift).
-* **Personalized Recommendations**: Concrete reading and cognitive pacing strategies backed by real citations and verified DOIs.
-* **Standardized 10-Section Assessment Report**: Available in Markdown (`.md`), JSON (`.json`), and self-contained printable HTML (`.html`).
-* **Interactive Web Dashboard**: Modern UI in pure HTML, CSS, and Vanilla JavaScript with interactive charts, live Research Explorer, and PDF printing.
+A scientific, multi-modal Retrieval-Augmented Generation (RAG) platform and deterministic physiological analytics engine designed for the Zurich Cognitive Language Processing Corpus (ZuCo 1.0; simultaneous 128-channel EEG and eye-tracking).
 
 ---
 
-## 📂 Directory Structure
+## 🌟 Key Capabilities & Architectural Upgrades (v2.0)
+
+* **Lexical & Syntactic Confound Control (Phase 2)**: Removes predictable text difficulty (sentence length, Zipf word frequency, surprisal, dependency syntax) using Leave-One-Subject-Out (LOSO) cross-fitted Ridge regression. Flags indicate reading friction *relative to what text complexity predicts*, not general sentence hardness.
+* **Empirical Behavioral Breakdown (Phase 3)**: Eliminates fixed 25% quartile quotas. Behavioral breakdowns (`breakdown_behav`) are defined by standardized residualized processing effort (`TRT_rz >= 1.0` and ocular refixation). Legacy quartile categories are retained for descriptive comparison under `legacy_state`.
+* **External Comprehension Validation (Phase 3 & 4)**: Maps ZuCo Task 2 control questions to evaluate objective comprehension error rates across 416 trials with empirical validation and bootstrap confidence intervals.
+* **Frontal Midline Theta (FMT) Anatomical Mapping (Phase 1)**: Computes true frontal midline spectral power from GSN-HydroCel-128 electrodes closest to Fz and FCz (E11, E6; indices `[5, 10]`), isolating true executive control signals.
+* **Spectral Reliability Gating (Phase 1)**: Duration-aware Welch PSD estimation:
+  - $\ge 4.0$ s: Full reliability (`nperseg = 512`)
+  - $2.0 \le t < 4.0$ s: Low reliability (`nperseg = 256`)
+  - $< 2.0$ s: Insufficient signal (`NaN` spectral features, preventing zero-imputation artifacts).
+* **Multi-Modal Predictive Validation & Pruning (Phase 4)**: Cross-validated under Leave-One-Subject-Out (LOSO) across all 12 participants. Prunes collinear redundant metrics ($|r| > 0.85$, VIF $> 10$) and generates `reports/metric_importance.csv` and `reports/validation_report.md`.
+* **Clustering Rework & Stability Floor (Phase 5)**: Dimensionality reduction via PCA (93.4% variance explained) and full sweep over $K \in [2, 10]$ across full, diagonal, and tied covariances. Enforces a stability floor of mean pairwise $\text{ARI} \ge 0.60$ over 20 random seeds. Identifies $K=3$ (Full Covariance) as the optimal stable solution (Stability $\text{ARI} = 0.991$, BIC = 64,912.9). Ambiguous trials with max posterior $< 0.50$ (14.8%) are labeled `Indeterminate`.
+* **Real Timing & Fatigue Changepoints (Phase 8)**: Replaces synthetic multipliers with true elapsed recording time derived from sensor durations. Fits two-segment piecewise linear regression to identify session cognitive fatigue onsets, providing empirically calibrated Pomodoro study blocks.
+* **Transparent Heuristic Labeling (Phase 6)**: All composite scores (Learning Efficiency Score, Cognitive Workload Index, Reading Engagement Index) are explicitly tagged as empirical heuristic proxies for learner reflection.
+
+---
+
+## 📂 Repository Structure
 
 ```
 EEG-To-Text/
+├── config.yaml                       # Global configuration (sampling rates, band edges, thresholds, seeds)
+├── CHANGELOG.md                      # Detailed release history and phase breakdown
+├── CITATION.cff                      # Academic citation metadata
+├── docs/
+│   ├── DATA_NOTES.md                 # ZuCo 1.0 data inspection, montage mapping, control questions
+│   └── MODEL_CARD.md                 # Standardized Model Card (Mitchell et al., 2019)
+├── figures/
+│   ├── eeg_reliability_by_sentence_length.png
+│   ├── trt_vs_surprisal_residualization.png
+│   └── cluster_stability_sweep.png
+├── reports/
+│   ├── validation_report.md          # Multi-group LOSO evaluation and statistical report
+│   ├── metric_importance.csv         # Standardized coefficients, odds ratios, and VIFs
+│   └── cluster_selection.csv         # Full BIC, AIC, and stability sweep over K=2..8
 └── neuroread_rag/
-    ├── config.py                     # Metric definitions, units, search keywords, guardrails
+    ├── schemas.py                    # Typed Pydantic stage schemas
+    ├── config.py                     # Metric definitions, constants, and path helpers
     ├── main.py                       # CLI entrypoint for report generation and server launch
-    ├── server.py                     # Lightweight REST API server (Python standard http.server)
-    ├── participant_analysis/         # Phase 1: Pure deterministic pandas/numpy analytics
-    │   ├── analyzer.py               # Deterministic stats, baselines, sentence outliers
-    │   └── data_models.py            # Typed dataclasses for metrics, clusters, observations
-    ├── discovery/                    # Phase 2: Scientific paper discovery
-    │   ├── models.py                 # PaperMetadata, ResearchChunk schemas
-    │   ├── openalex.py               # OpenAlex API client
-    │   ├── semantic_scholar.py       # Semantic Scholar Graph API client
-    │   ├── pubmed.py                 # PubMed E-Utilities & Europe PMC clients
-    │   ├── crossref.py               # Crossref DOI verification client
-    │   └── aggregator.py             # Multi-source paper aggregator and deduplicator
-    ├── ingestion/                    # Phase 2: Ingestion & Vector Indexing
-    │   ├── chunker.py                # Scientific section-aware chunker
-    │   ├── vector_store.py           # Hybrid BM25 + dense semantic store (SQLite)
-    │   ├── evidence_extractor.py     # Metric claim and directionality parser
-    │   └── pipeline.py               # End-to-end ingestion pipeline coordinator
-    ├── retrieval/                    # Phase 3: Hybrid Retrieval & Synthesis
-    │   ├── hybrid_search.py          # Query expansion & hybrid retrieval
-    │   ├── reranker.py               # Academic multi-factor reranker (reading context boost)
-    │   ├── contradiction.py          # Contradictory & context-dependent nuance detector
-    │   └── synthesizer.py            # Multi-paper consensus synthesizer
-    ├── interpretation/               # Phase 4: Research-Grounded Interpretation
-    │   ├── models.py                 # MetricInterpretation & GroundedReport schemas
-    │   ├── guardrails.py             # Safety validators (enforces non-diagnostic compliance)
-    │   └── grounding_engine.py       # Connects numerical measurements to literature
-    ├── recommendations/              # Phase 5: Personalized Recommendations
-    │   └── recommender.py            # Actionable guidance with citations & DOIs
-    ├── reporting/                    # Phase 5: 10-Section Report Generator
-    │   └── report_generator.py       # Markdown, HTML, and JSON report generator
-    ├── frontend/                     # Phase 6: HTML, CSS, JavaScript Dashboard
-    │   ├── index.html                # Responsive neurotech dashboard
-    │   ├── style.css                 # Modern CSS with print media queries for PDF
-    │   └── app.js                    # Vanilla JS client (charts, search, live filters)
-    ├── output/                       # Generated artifacts, databases, reports
-    │   ├── scientific_literature.db  # SQLite persistent vector database
-    │   ├── extracted_evidence.json   # Extracted empirical claims catalog
-    │   ├── resultsZPH_NR_analysis.json
-    │   ├── resultsZPH_NR_grounded_report.json
-    │   ├── resultsZPH_NR_final_report.json
-    │   ├── resultsZPH_NR_final_report.md
-    │   └── resultsZPH_NR_final_report.html
-    └── tests/                        # Full 26-test unit and integration suite
+    ├── server.py                     # API server for interactive dashboard
+    ├── participant_analysis/
+    │   ├── feature_extractor.py      # Welch PSD, reliability gating, artifact rejection
+    │   ├── text_features.py          # Surprisal, Zipf frequency, syntax depth
+    │   ├── residualize.py            # LOSO Ridge confound residualizer & robust z-scores
+    │   ├── comprehension_labels.py   # Control question mapping & consensus derivation
+    │   ├── sentence_comparator.py    # Breakdown classifier & fatigue curve
+    │   └── analyzer.py               # Session analytics, baselines, composite indices
+    ├── cluster_machine_learning/
+    │   └── cluster_rework.py         # PCA + GMM sweep, stability floor, cluster profiles
+    ├── validation/
+    │   └── predictive_models.py      # Cross-modal LOSO evaluation, bootstrap CIs, changepoints
+    └── tests/
+        ├── snapshots/legacy_ZPH.json # Legacy baseline output for non-regression parity
         ├── test_participant_analysis.py
-        ├── test_discovery_and_ingestion.py
-        ├── test_retrieval.py
-        ├── test_interpretation.py
-        ├── test_recommendations_and_report.py
-        └── test_server_and_frontend.py
+        └── test_student_learning.py
 ```
 
 ---
 
-## 🚀 Quickstart Guide
+## 🚀 Quickstart & Reproducibility
 
-### 1. Generate Reports
-To execute the pipeline and generate the 10-section report in Markdown, HTML, and JSON:
+### 1. Run All Tests
 ```bash
-python -m neuroread_rag.main --generate-report
+.venv/bin/python -m unittest discover neuroread_rag/tests/
 ```
 
-### 2. Launch the Interactive Dashboard Server
-To start the local web dashboard and REST API server:
+### 2. Run End-to-End Pipeline
 ```bash
-python -m neuroread_rag.main --server --port 8080
-```
-Open **`http://127.0.0.1:8080/`** in your browser to view:
-* **Executive Overview**: Participant stats and summary cards.
-* **Focus & Attention Report**: Interactive SVG distribution of cognitive patterns.
-* **Cognitive Workload Report**: CWI multi-metric breakdown and cluster profiles.
-* **Metric Scientific Assessment**: Filterable cards across Spectral EEG, Eye-Tracking, and Composite Proxies.
-* **Research Evidence Comparison**: Live side-by-side comparison table.
-* **Research Explorer**: Live search bar querying the vector store.
-* **Personalized Recommendations**: Expandable science-backed pacing cards.
-* **Complete AI Assessment Report**: Printable view with one-click **Print / Save as PDF**.
-
-### 3. Run the Test Suite
-To run all 26 unit and integration tests:
-```bash
-python -m unittest discover -s neuroread_rag/tests -v
+.venv/bin/python -m neuroread_rag.run_all
 ```
 
----
-
-## 🔒 Scientific Guardrails & Compliance
-
-* **Physiological Observations vs. Psychological Interpretations**: Distinguishes objective signal modulations from subjective states.
-* **Non-Diagnostic Standards**: Explicitly forbids diagnostic claims (e.g. ADHD, dyslexia, cognitive disorders).
-* **No Universal Population Cutoffs**: Evaluates participants strictly against within-session personal baseline reference intervals.
-* **Cadence Proxies**: Treats MWLI and SAI strictly as reading cadence irregularity proxies rather than proof of mind-wandering.
+### 3. Launch Interactive Dashboard
+```bash
+.venv/bin/python -m neuroread_rag.server --port 8000
+```
+Open `http://localhost:8000` in your web browser.

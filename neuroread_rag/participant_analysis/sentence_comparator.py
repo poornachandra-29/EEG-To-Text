@@ -4,18 +4,45 @@ Sentence Comprehension Classifier & Breakdown Analyzer.
 Detects when a reader gets "stuck" on sentences (high fixation + EEI drop)
 vs when they are in a "flow state" (smooth reading, high engagement).
 
-Core insight: If FixationCount is high AND EEI drops simultaneously,
-the reader is NOT deeply focused — they are having a comprehension breakdown.
-If FixationCount is high AND EEI is also high, that is deep focus.
-
-Also computes post-breakdown EEI drift: after a breakdown sentence,
-the brain compensates by showing elevated EEI on the next sentence.
+Provides both:
+1. Legacy quartile-based descriptive states (legacy_state, reading_state)
+2. Validated behavioral breakdown flags (breakdown_behav) and excess processing scores
+3. External outcome tracking (comprehension_error from ZuCo control questions)
+4. Target leakage guardrails to ensure valid machine learning evaluations.
 """
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
+
+from neuroread_rag.participant_analysis.comprehension_labels import attach_comprehension_labels
+from neuroread_rag.participant_analysis.residualize import compute_robust_z
+
+
+# ---------------------------------------------------------------------------
+# Leakage Prevention Guardrail
+# ---------------------------------------------------------------------------
+
+def verify_no_leakage(target: str, feature_names: List[str]) -> None:
+    """
+    Enforces strict target-feature leakage guards.
+    When predicting behavioral breakdown or excess processing, eye-tracking features
+    defining the target (TRT, FixationCount, RegressionCount, GD, excess_processing)
+    and their derived transformations cannot be used as predictors.
+    """
+    if target in ("breakdown_behav", "excess_processing"):
+        leaking_bases = ["trt", "fixation", "regression", "gd", "excess_processing"]
+        leaks = [
+            f for f in feature_names
+            if any(b in f.lower() for b in leaking_bases)
+        ]
+        if leaks:
+            raise ValueError(
+                f"Target leakage violation for target '{target}'! "
+                f"The following predictors define the outcome and must be excluded: {leaks}"
+            )
 
 
 # ---------------------------------------------------------------------------
@@ -133,6 +160,8 @@ def _sentence_row(df: pd.DataFrame, idx: int) -> Dict[str, Any]:
         "flesch_reading_ease": fre,
         "grade_level": grade,
         "linguistic_root_cause": root_cause,
+        "breakdown_behav": _safe_int(row.get("breakdown_behav", 0)),
+        "excess_processing": _safe_float(row.get("excess_processing", 0.0)),
     }
 
 
@@ -148,12 +177,10 @@ class SentenceComparator:
     Parameters
     ----------
     df : pd.DataFrame
-        The participant CSV loaded as a DataFrame.  Must contain at least the
-        columns ``EEI``, ``FixationCount``, ``TRT``, ``CWI``, and
-        ``sentence_text``.  Missing columns are handled gracefully.
+        The participant CSV loaded as a DataFrame.
     """
 
-    # State labels
+    # Legacy state labels
     STATE_FLOW = "🟢 Flow State"
     STATE_DEEP_FOCUS = "🟡 Deep Focus"
     STATE_BREAKDOWN = "🔴 Comprehension Breakdown"
@@ -169,20 +196,15 @@ class SentenceComparator:
 
     def classify_reading_states(self, df: pd.DataFrame) -> pd.DataFrame:
         """
-        Add a ``reading_state`` column to *df* based on EEI and FixationCount
-        percentile thresholds computed from the same DataFrame.
-
-        Rules (applied in priority order):
-        - 🟢 Flow State          — EEI > Q75(EEI)  AND  FixationCount ≤ Q50(FixationCount)
-        - 🟡 Deep Focus          — EEI > Q75(EEI)  AND  FixationCount > Q75(FixationCount)
-        - 🔴 Comprehension Breakdown — FixationCount > Q75(FixationCount) AND EEI < Q25(EEI)
-        - ⚪ Cognitive Fatigue   — EEI < Q25(EEI)  AND  FixationCount ≤ Q50(FixationCount)
-        - 🔵 Normal Reading      — everything else
-
-        Returns the modified DataFrame (also modifies in place).
+        Classifies sentences using:
+        1. Legacy quartile-based descriptive states (reading_state, legacy_state).
+        2. Absolute confound-controlled behavioral breakdown (breakdown_behav).
+        3. Continuous excess processing index.
+        4. External comprehension question outcomes (comprehension_error).
         """
         out = df.copy()
 
+        # 1. Legacy quartile-based states
         try:
             eei = pd.to_numeric(out["EEI"], errors="coerce")
             fix = pd.to_numeric(out["FixationCount"], errors="coerce")
@@ -192,24 +214,64 @@ class SentenceComparator:
             fix_q50 = float(fix.quantile(0.50))
             fix_q75 = float(fix.quantile(0.75))
 
-            # Assign states using boolean masks (order matters!)
             states = pd.Series(self.STATE_NORMAL, index=out.index)
-
             cog_fatigue = (eei < eei_q25) & (fix <= fix_q50)
             breakdown = (fix > fix_q75) & (eei < eei_q25)
             deep_focus = (eei > eei_q75) & (fix > fix_q75)
             flow = (eei > eei_q75) & (fix <= fix_q50)
 
-            # Apply from lowest to highest priority (last wins)
             states[cog_fatigue] = self.STATE_FATIGUE
             states[breakdown] = self.STATE_BREAKDOWN
             states[deep_focus] = self.STATE_DEEP_FOCUS
             states[flow] = self.STATE_FLOW
 
             out["reading_state"] = states
+            out["legacy_state"] = states.apply(lambda s: f"{s} (quartile-based, descriptive only)")
 
         except (KeyError, TypeError, ValueError):
             out["reading_state"] = self.STATE_NORMAL
+            out["legacy_state"] = "🔵 Normal Reading (quartile-based, descriptive only)"
+
+        # 2. Confound-controlled behavioral breakdown (breakdown_behav)
+        # Target: TRT_rz >= 1.0 AND (FixationCount_rz >= 0.5 OR GD_rz >= 0.5)
+        try:
+            if "TRT_rz" in out.columns and out["TRT_rz"].notna().any():
+                trt_z = pd.to_numeric(out["TRT_rz"], errors="coerce").fillna(0.0)
+            elif "TRT" in out.columns:
+                trt_z = pd.Series(compute_robust_z(out["TRT"].values), index=out.index).fillna(0.0)
+            else:
+                trt_z = pd.Series(0.0, index=out.index)
+
+            if "FixationCount_rz" in out.columns and out["FixationCount_rz"].notna().any():
+                fix_z = pd.to_numeric(out["FixationCount_rz"], errors="coerce").fillna(0.0)
+            elif "FixationCount" in out.columns:
+                fix_z = pd.Series(compute_robust_z(out["FixationCount"].values), index=out.index).fillna(0.0)
+            else:
+                fix_z = pd.Series(0.0, index=out.index)
+
+            if "GD_rz" in out.columns and out["GD_rz"].notna().any():
+                gd_z = pd.to_numeric(out["GD_rz"], errors="coerce").fillna(0.0)
+            elif "GD" in out.columns:
+                gd_z = pd.Series(compute_robust_z(out["GD"].values), index=out.index).fillna(0.0)
+            else:
+                gd_z = pd.Series(0.0, index=out.index)
+
+            if "RegressionCount_rz" in out.columns and out["RegressionCount_rz"].notna().any():
+                reg_z = pd.to_numeric(out["RegressionCount_rz"], errors="coerce").fillna(0.0)
+            elif "RegressionCount" in out.columns:
+                reg_z = pd.Series(compute_robust_z(out["RegressionCount"].values), index=out.index).fillna(0.0)
+            else:
+                reg_z = pd.Series(0.0, index=out.index)
+
+            is_bd_behav = (trt_z >= 1.0) & ((fix_z >= 0.5) | (reg_z >= 0.5) | (gd_z >= 0.5))
+            out["breakdown_behav"] = is_bd_behav.astype(int)
+            out["excess_processing"] = ((trt_z + fix_z + gd_z) / 3.0).round(4)
+        except Exception:
+            out["breakdown_behav"] = 0
+            out["excess_processing"] = 0.0
+
+        # 3. External comprehension questions outcome
+        out = attach_comprehension_labels(out)
 
         return out
 
@@ -219,9 +281,7 @@ class SentenceComparator:
 
     def compute_word_metrics(self, df: pd.DataFrame) -> pd.DataFrame:
         """
-        Add ``word_count``, ``fixation_per_word``, ``sentence_complexity``,
-        and linguistic readability columns (syllables, complex words, Flesch Reading Ease,
-        Grade Level, linguistic root cause) to *df*.
+        Add word_count, fixation_per_word, sentence_complexity, and linguistic readability columns.
         """
         out = df.copy()
 
@@ -249,7 +309,6 @@ class SentenceComparator:
         except (KeyError, TypeError, ValueError):
             out["sentence_complexity"] = "Medium"
 
-        # Deterministic linguistic readability profiling
         syl_list, comp_pct_list, fre_list, grade_list, root_causes = [], [], [], [], []
         for t, w, fpw in zip(texts, out["word_count"], out["fixation_per_word"]):
             ling = analyze_sentence_linguistics(t)
@@ -282,22 +341,11 @@ class SentenceComparator:
 
     def build_breakdown_report(self, df: pd.DataFrame) -> Dict[str, Any]:
         """
-        Compute sentence-level comprehension statistics.
-
-        Parameters
-        ----------
-        df : pd.DataFrame
-            Must have already been processed by ``classify_reading_states``
-            and ``compute_word_metrics``.
-
-        Returns
-        -------
-        dict
-            Breakdown report (see module docstring for schema).
+        Compute sentence-level comprehension statistics, learning efficiency scores,
+        and chronological fatigue curve using true elapsed session time.
         """
         total = len(df)
 
-        # ---- state counts ------------------------------------------------
         def _count(state: str) -> int:
             try:
                 return int((df["reading_state"] == state).sum())
@@ -313,7 +361,15 @@ class SentenceComparator:
         fatigue_count = _count(self.STATE_FATIGUE)
         normal_count = total - flow_count - deep_focus_count - breakdown_count - fatigue_count
 
-        # ---- simple vs complex sentence profiles -------------------------
+        # Behavioral breakdown & external outcomes
+        bd_behav_count = int((df["breakdown_behav"] == 1).sum()) if "breakdown_behav" in df else 0
+        bd_behav_pct = _pct(bd_behav_count)
+        excess_proc_mean = round(_safe_float(df["excess_processing"].mean()), 4) if "excess_processing" in df else 0.0
+
+        comp_errors_count = int(np.nansum(df["comprehension_error"])) if "comprehension_error" in df else 0
+        comp_asked_count = int(df["comprehension_error"].notna().sum()) if "comprehension_error" in df else 0
+        comp_error_rate = round(comp_errors_count / max(1, comp_asked_count), 3) if comp_asked_count > 0 else 0.0
+
         def _profile(mask: pd.Series) -> Dict[str, Any]:
             sub = df[mask]
             n = int(mask.sum())
@@ -337,7 +393,7 @@ class SentenceComparator:
         simple_profile = _profile(simple_mask)
         complex_profile = _profile(complex_mask)
 
-        # ---- post-breakdown EEI drift ------------------------------------
+        # Post-breakdown EEI drift
         try:
             eei_series = pd.to_numeric(df["EEI"], errors="coerce")
             eei_next = eei_series.shift(-1)
@@ -352,7 +408,7 @@ class SentenceComparator:
             post_breakdown_eei_change = 0.0
             post_normal_eei_change = 0.0
 
-        # ---- top-5 flow sentences ----------------------------------------
+        # Top flow & breakdown sentences
         try:
             flow_df = df[df["reading_state"] == self.STATE_FLOW].copy()
             flow_df = flow_df.sort_values("EEI", ascending=False)
@@ -360,7 +416,6 @@ class SentenceComparator:
         except (KeyError, TypeError):
             top_flow = []
 
-        # ---- top-5 breakdown sentences -----------------------------------
         try:
             bd_df = df[df["reading_state"] == self.STATE_BREAKDOWN].copy()
             bd_df = bd_df.sort_values("fixation_per_word", ascending=False)
@@ -368,7 +423,6 @@ class SentenceComparator:
         except (KeyError, TypeError):
             top_breakdown = []
 
-        # ---- top-5 high-workload sentences (by CWI) ----------------------
         try:
             wl_df = df.copy()
             wl_df = wl_df.sort_values("CWI", ascending=False)
@@ -380,7 +434,7 @@ class SentenceComparator:
         except (KeyError, TypeError):
             top_workload = []
 
-        # ---- personal optimal zone (from flow sentences) -----------------
+        # Optimal personal zone
         try:
             flow_df2 = df[df["reading_state"] == self.STATE_FLOW].copy()
             if len(flow_df2) > 0:
@@ -402,7 +456,7 @@ class SentenceComparator:
             "recommended_break_interval": "Every 20-25 minutes",
         }
 
-        # ---- Learning Efficiency Score (LES, 0-100) -------------------------
+        # Learning Efficiency Score (LES, 0-100) - explicitly tagged as heuristic proxy
         denom = flow_count + breakdown_count
         flow_factor = min(100.0, max(0.0, (flow_count / denom) * 100.0)) if denom > 0 else 50.0
 
@@ -438,13 +492,36 @@ class SentenceComparator:
             "workload_ease_factor": round(workload_ease, 1),
             "flow_percentage": _pct(flow_count),
             "breakdown_percentage": _pct(breakdown_count),
+            "breakdown_behav_count": bd_behav_count,
+            "breakdown_behav_pct": bd_behav_pct,
+            "excess_processing_mean": excess_proc_mean,
+            "comprehension_errors_count": comp_errors_count,
+            "comprehension_asked_count": comp_asked_count,
+            "comprehension_error_rate": comp_error_rate,
+            "is_heuristic": True,
+            "heuristic_label": "Heuristic composite score for self-directed study calibration",
+            "reliability_disclaimer": "Scores represent empirical study engagement proxies, not clinical diagnostics.",
         }
 
-        # ---- Session Fatigue Curve (Chronological Timeline) -----------------
+        # Chronological Fatigue Curve & Real Timing (Phase 8)
+        # Compute true elapsed time in minutes from duration signals
+        if "eeg_duration_s" in df.columns and pd.to_numeric(df["eeg_duration_s"], errors="coerce").sum() > 0:
+            durations_min = pd.to_numeric(df["eeg_duration_s"], errors="coerce").fillna(3.5) / 60.0
+        elif "TRT" in df.columns and pd.to_numeric(df["TRT"], errors="coerce").sum() > 0:
+            durations_min = pd.to_numeric(df["TRT"], errors="coerce").fillna(2500.0) / 1000.0 / 60.0
+        else:
+            # Fallback average 3.5s per sentence
+            durations_min = pd.Series(3.5 / 60.0, index=df.index)
+
+        elapsed_mins = durations_min.cumsum().values
+        total_session_minutes = round(float(elapsed_mins[-1]), 1) if len(elapsed_mins) > 0 else 0.0
+
         num_pts = min(8, max(4, total // 25)) if total > 20 else max(1, total)
         chunk_size = max(1, total // num_pts)
         checkpoints = []
         fatigue_onset_sentence = None
+        fatigue_onset_minute = None
+
         for i in range(num_pts):
             s_idx = i * chunk_size
             e_idx = total if i == num_pts - 1 else (i + 1) * chunk_size
@@ -453,13 +530,19 @@ class SentenceComparator:
             ch_cwi = round(_safe_float(pd.to_numeric(chunk.get("CWI", pd.Series(dtype=float)), errors="coerce").mean()), 4)
             ch_fix = round(_safe_float(pd.to_numeric(chunk.get("FixationCount", pd.Series(dtype=float)), errors="coerce").mean()), 2)
             ch_trt = round(_safe_float(pd.to_numeric(chunk.get("TRT", pd.Series(dtype=float)), errors="coerce").mean()), 1)
-            est_min = round((s_idx + e_idx) / 2.0 * 0.12, 1)
+
+            # Checkpoint elapsed minute
+            est_min = round(float(elapsed_mins[min(e_idx - 1, len(elapsed_mins) - 1)]), 1)
+            chunk_dur_min = float(durations_min.iloc[s_idx:e_idx].sum())
+            chunk_words = int(pd.to_numeric(chunk.get("word_count", 0), errors="coerce").sum())
+            wpm = round(chunk_words / max(0.1, chunk_dur_min), 1)
 
             is_fatigued = (ch_cwi > 0.15 and ch_eei < eei_mean) or (ch_fix > 1.8 and ch_eei < eei_mean)
             status = "Elevated Fatigue" if is_fatigued else ("Optimal Focus" if ch_eei >= eei_mean else "Mild Drift")
 
             if is_fatigued and fatigue_onset_sentence is None and s_idx > 0:
                 fatigue_onset_sentence = s_idx
+                fatigue_onset_minute = est_min
 
             checkpoints.append({
                 "checkpoint": i + 1,
@@ -471,20 +554,43 @@ class SentenceComparator:
                 "mean_fixation": ch_fix,
                 "mean_trt": ch_trt,
                 "estimated_minute": est_min,
+                "reading_wpm": wpm,
                 "status": status,
             })
 
-        if fatigue_onset_sentence is None:
+        # Reliable fatigue detection & Pomodoro clamping (Phase 8)
+        if fatigue_onset_sentence is not None and fatigue_onset_minute is not None:
+            raw_target_pomo = fatigue_onset_minute
+            has_fatigue_detected = True
+        else:
+            has_fatigue_detected = False
             fatigue_onset_sentence = int(total * 0.65) if total > 30 else total
-        est_fatigue_minute = round(fatigue_onset_sentence * 0.12, 1)
-        recommended_pomodoro = max(15, min(35, int(est_fatigue_minute)))
+            fatigue_onset_minute = round(float(elapsed_mins[min(fatigue_onset_sentence, len(elapsed_mins) - 1)]), 1) if len(elapsed_mins) > 0 else 25.0
+            raw_target_pomo = 25.0
+
+        # Clamp Pomodoro to [15, 40] minutes rounded to nearest 5 min
+        recommended_pomodoro = int(max(15, min(40, round(raw_target_pomo / 5.0) * 5)))
+
+        if has_fatigue_detected:
+            insight_text = (
+                f"Attentional engagement was highest during the initial {fatigue_onset_minute:.0f} minutes "
+                f"(sentences 1–{fatigue_onset_sentence}). Structuring study sessions with a {recommended_pomodoro}-minute "
+                f"Pomodoro interval followed by a 5-minute break aligns with your observed neural stamina."
+            )
+        else:
+            insight_text = (
+                f"No persistent cognitive fatigue onset detected across the {total_session_minutes:.1f}-minute reading session. "
+                f"A standard {recommended_pomodoro}-minute focus block is recommended for baseline scheduling."
+            )
 
         session_fatigue_curve = {
             "checkpoints": checkpoints,
+            "total_session_minutes": total_session_minutes,
+            "has_reliable_fatigue_detected": has_fatigue_detected,
             "fatigue_onset_sentence": fatigue_onset_sentence,
-            "estimated_fatigue_minute": est_fatigue_minute,
+            "estimated_fatigue_minute": fatigue_onset_minute,
             "recommended_study_block_minutes": recommended_pomodoro,
-            "insight": f"Attentional engagement was highest during sentences 1–{fatigue_onset_sentence} (~{est_fatigue_minute:.0f} min). Pacing with a {recommended_pomodoro}-minute Pomodoro interval aligns with your neural stamina profile.",
+            "insight": insight_text,
         }
 
         avg_flow_w = np.mean([s["word_count"] for s in top_flow]) if top_flow else 15
@@ -511,6 +617,12 @@ class SentenceComparator:
             "fatigue_count": fatigue_count,
             "fatigue_pct": _pct(fatigue_count),
             "normal_count": normal_count,
+            "breakdown_behav_count": bd_behav_count,
+            "breakdown_behav_pct": bd_behav_pct,
+            "excess_processing_mean": excess_proc_mean,
+            "comprehension_errors_count": comp_errors_count,
+            "comprehension_asked_count": comp_asked_count,
+            "comprehension_error_rate": comp_error_rate,
             "simple_sentences_profile": simple_profile,
             "complex_sentences_profile": complex_profile,
             "post_breakdown_eei_change": round(post_breakdown_eei_change, 4),
@@ -533,12 +645,7 @@ class SentenceComparator:
         report_dict: Dict[str, Any],
         participant_id: str,
     ) -> str:
-        """
-        Produce a jargon-free narrative from the breakdown report.
-
-        All numbers are drawn exclusively from *report_dict* — nothing is
-        invented.
-        """
+        """Produce a jargon-free narrative from the breakdown report."""
         try:
             total = _safe_int(report_dict.get("total_sentences", 0))
             flow_count = _safe_int(report_dict.get("flow_count", 0))
@@ -554,13 +661,11 @@ class SentenceComparator:
             trt_complex = _safe_float(complex_profile.get("mean_trt", 0.0))
             trt_simple = _safe_float(simple_profile.get("mean_trt", 0.0))
 
-            # Avoid division by zero
             cwi_ratio = (cwi_complex / (cwi_simple + 1e-9)) if cwi_simple > 1e-9 else 1.0
             trt_ratio = ((trt_complex - trt_simple) / (trt_simple + 1e-9) * 100.0) if trt_simple > 1e-9 else 0.0
 
             optimal_zone = report_dict.get("personal_optimal_zone", {})
             max_words = _safe_int(optimal_zone.get("max_word_count_for_flow", 20))
-            max_fix_per_word = _safe_float(optimal_zone.get("max_fixation_per_word", 1.0))
 
             les = report_dict.get("learning_efficiency", {})
             les_score = _safe_float(les.get("score", 75.0))
@@ -589,27 +694,18 @@ class SentenceComparator:
                 f"block length of {pomo} minutes before taking a structured 5-minute break."
             )
 
-        except Exception as exc:  # pragma: no cover
+        except Exception as exc:
             return (
                 f"Summary could not be generated for student {participant_id}. "
                 f"Reason: {exc}"
             )
 
     # ------------------------------------------------------------------
-    # Convenience: run the full pipeline on the stored DataFrame
+    # Convenience: run full pipeline
     # ------------------------------------------------------------------
 
     def run(self) -> Dict[str, Any]:
-        """
-        Run the full pipeline on the DataFrame passed at construction time.
-
-        Returns
-        -------
-        dict with keys:
-            ``df``          — enriched DataFrame
-            ``report``      — breakdown report dict
-            ``summary``     — plain-English narrative string
-        """
+        """Run the full pipeline on the stored DataFrame."""
         df = self.compute_word_metrics(self._df)
         df = self.classify_reading_states(df)
         report = self.build_breakdown_report(df)

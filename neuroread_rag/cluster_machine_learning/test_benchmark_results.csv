@@ -1,0 +1,7 @@
+algorithm,participant_id,n_test_samples,test_silhouette,test_calinski_harabasz,test_davies_bouldin,concentrated_percentage,fatigued_percentage,latency_ms_per_sentence
+GMM,ZPH,250,0.2876,42.17,1.3198,1.2,85.2,0.0008
+HDBSCAN,ZPH,250,0.0322,3.31,1.3518,0.4,97.2,0.0002
+K-Means,ZPH,250,0.2683,51.64,1.1439,7.6,92.4,0.0308
+Fuzzy C-Means,ZPH,250,0.5945,93.37,0.9321,5.2,94.8,0.0003
+Agglomerative Clustering,ZPH,250,0.1476,23.95,1.3414,2.8,97.2,0.0002
+BIRCH,ZPH,250,0.1223,19.36,2.8059,7.6,92.4,0.0091

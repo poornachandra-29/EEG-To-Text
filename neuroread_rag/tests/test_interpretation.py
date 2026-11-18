@@ -81,6 +81,57 @@ class TestInterpretationAndGrounding(unittest.TestCase):
         self.assertTrue(out_file.exists())
         self.assertGreater(out_file.stat().st_size, 5000)
 
+    def test_personalized_metric_specifications(self):
+        """Verify that every metric includes a 6-dimension personalized pedagogical specification."""
+        report = self.engine.ground_participant_profile(self.participant_result)
+        
+        required_keys = [
+            "metric_id",
+            "what_does_it_do",
+            "what_is_it_actually",
+            "what_it_says_about_you",
+            "readability_connection",
+            "where_did_you_make_a_mistake",
+            "how_to_resolve",
+            "what_this_metric_says",
+            "how_you_are_performing",
+            "how_to_improve",
+            "what_improving_means_to_you",
+        ]
+        
+        for m_id in ["EEI", "FMT", "TRT", "FixationCount", "BetaPower"]:
+            self.assertIn(m_id, report.metric_interpretations)
+            interp = report.metric_interpretations[m_id]
+            spec = interp.personalized_specification
+            self.assertIsNotNone(spec, f"Metric {m_id} is missing personalized_specification")
+            
+            for k in required_keys:
+                self.assertIn(k, spec, f"Metric {m_id} missing {k} in personalized_specification")
+                
+            self.assertGreater(len(spec["what_does_it_do"]), 10)
+            self.assertGreater(len(spec["what_is_it_actually"]), 10)
+            self.assertGreater(len(spec["what_it_says_about_you"]), 10)
+            self.assertGreater(len(spec["readability_connection"]), 10)
+            self.assertGreater(len(spec["what_this_metric_says"]), 20)
+            self.assertGreater(len(spec["how_you_are_performing"]), 20)
+            self.assertGreater(len(spec["what_improving_means_to_you"]), 20)
+            self.assertGreaterEqual(len(spec["how_to_improve"]), 1)
+            
+            diag = spec["where_did_you_make_a_mistake"]
+            self.assertIsInstance(diag, dict)
+            self.assertIn("sentence_index", diag)
+            self.assertIn("sentence_text", diag)
+            self.assertIn("grade_level", diag)
+            self.assertIn("flesch_reading_ease", diag)
+            self.assertIn("diagnosis_note", diag)
+            self.assertGreater(len(diag["diagnosis_note"]), 10)
+            
+            resolutions = spec["how_to_resolve"]
+            self.assertIsInstance(resolutions, list)
+            self.assertGreaterEqual(len(resolutions), 1)
+            for res in resolutions:
+                self.assertGreater(len(res), 15)
+
 
 if __name__ == "__main__":
     unittest.main()

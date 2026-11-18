@@ -1,0 +1,12 @@
+// birch_model.dot — BIRCH (Balanced Iterative Reducing and Clustering using Hierarchies) Dataflow
+digraph BIRCH_Model {
+    rankdir=TB;
+    node [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=10];
+
+    Input [label="Input: 10-Dimensional Normalized Features", fillcolor="#dbeafe", color="#2563eb"];
+    CFTree [label="Clustering Feature (CF) Tree Construction\nCF = (N, LS, SS)\n- Compresses samples into leaf entries within threshold T\n- Dynamically splits nodes exceeding branching factor B", fillcolor="#fef3c7", color="#d97706"];
+    GlobalCluster [label="Global Partitioning on CF Subcluster Centroids\nGroups subclusters into K=5 final cognitive states", fillcolor="#e0e7ff", color="#4f46e5"];
+    Output [label="Outputs:\n- Hard Cluster Assignments (0..4)\n- Subcluster Centroids\n- Native Out-of-Sample Prediction on Unseen Data", fillcolor="#dcfce7", color="#16a34a"];
+
+    Input -> CFTree -> GlobalCluster -> Output;
+}

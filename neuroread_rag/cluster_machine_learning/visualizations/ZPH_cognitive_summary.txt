@@ -1,0 +1,38 @@
+Cognitive State Sentence Distribution for Student ZPH
+============================================================
+Algorithm: GMM (Full Covariance)
+  Concentrated Reading: 1.2%
+  Cognitive Fatigue:    85.2%
+  High Workload:        0.0%
+  Bottleneck:           13.6%
+
+Algorithm: GMM (Tied Covariance)
+  Concentrated Reading: 94.8%
+  Cognitive Fatigue:    0.0%
+  High Workload:        0.0%
+  Bottleneck:           5.2%
+
+Algorithm: GMM (Diag Covariance)
+  Concentrated Reading: 0.8%
+  Cognitive Fatigue:    93.2%
+  High Workload:        1.2%
+  Bottleneck:           4.8%
+
+Algorithm: K-Means (k-means++)
+  Concentrated Reading: 1.6%
+  Cognitive Fatigue:    92.4%
+  High Workload:        0.0%
+  Bottleneck:           6.0%
+
+Algorithm: Agglomerative (Ward)
+  Concentrated Reading: 0.8%
+  Cognitive Fatigue:    97.2%
+  High Workload:        0.0%
+  Bottleneck:           2.0%
+
+Algorithm: BIRCH
+  Concentrated Reading: 96.4%
+  Cognitive Fatigue:    0.0%
+  High Workload:        0.0%
+  Bottleneck:           3.6%
+

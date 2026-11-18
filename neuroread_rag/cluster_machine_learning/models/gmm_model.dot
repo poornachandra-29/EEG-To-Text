@@ -1,0 +1,12 @@
+// gmm_model.dot — Gaussian Mixture Model (Full Covariance) Dataflow
+digraph GMM_Model {
+    rankdir=TB;
+    node [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=10];
+
+    Input [label="Input: 10-Dimensional Normalized Features\n(EEI, FMT, ASM, GD, TRT, FFD, PupilSize, FixCount, Alpha, Beta)", fillcolor="#dbeafe", color="#2563eb"];
+    EM_Step [label="Expectation-Maximization (EM) Algorithm\n- E-step: Posterior responsibilities gamma_ik\n- M-step: Update weights pi_k, means mu_k, full cov Sigma_k", fillcolor="#fef3c7", color="#d97706"];
+    Covariance [label="Full Anisotropic Covariance Modeling\nCaptures cross-modal feature interactions (GD vs TRT, Theta vs Alpha)", fillcolor="#e0e7ff", color="#4f46e5"];
+    Output [label="Outputs:\n- Continuous Soft Probabilities P(C_k | x)\n- Hard Cluster Prediction: argmax_k P(C_k | x)\n- Gaussian Centroid Vectors mu_k", fillcolor="#dcfce7", color="#16a34a"];
+
+    Input -> EM_Step -> Covariance -> Output;
+}

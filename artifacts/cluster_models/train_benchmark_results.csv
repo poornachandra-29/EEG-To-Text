@@ -1,0 +1,7 @@
+algorithm,source_file,n_training_samples,n_clusters,train_silhouette,train_calinski_harabasz,train_davies_bouldin,fit_time_sec,model_file
+GMM,gmm_model.py,3243,5,0.1428,893.95,2.0858,1.1115,gmm.joblib
+HDBSCAN,hdbscan_model.py,3243,5,0.2402,563.74,1.0608,0.0753,hdbscan.joblib
+K-Means,kmeans_model.py,3243,5,0.2187,1290.03,1.4187,0.0793,k_means.joblib
+Fuzzy C-Means,fuzzy_c_means_model.py,3243,5,0.2069,1285.22,1.449,0.0478,fuzzy_c_means.joblib
+Agglomerative Clustering,agglomerative_model.py,3243,5,0.1966,1134.76,1.4973,0.1037,agglomerative_clustering.joblib
+BIRCH,birch_model.py,3243,5,0.1946,1138.02,1.4911,0.0942,birch.joblib

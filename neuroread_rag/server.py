@@ -401,11 +401,20 @@ class NeuroReadRequestHandler(SimpleHTTPRequestHandler):
         self.wfile.write(content)
 
 
-def run_server(port: int = 8080, host: str = "127.0.0.1", csv_path: Optional[Path] = None):
+class ReusableHTTPServer(HTTPServer):
+    allow_reuse_address = True
+
+
+def run_server(port: int = 8080, host: str = "0.0.0.0", csv_path: Optional[Path] = None):
     """Launch the NeuroRead RAG server."""
     NeuroReadRequestHandler.initialize_pipeline(csv_path=csv_path)
-    server_address = (host, port)
-    httpd = HTTPServer(server_address, NeuroReadRequestHandler)
+    try:
+        server_address = (host, port)
+        httpd = ReusableHTTPServer(server_address, NeuroReadRequestHandler)
+    except OSError:
+        host = "127.0.0.1"
+        server_address = (host, port)
+        httpd = ReusableHTTPServer(server_address, NeuroReadRequestHandler)
     print(f"\n=======================================================")
     print(f" NeuroRead AI RAG Dashboard Server Running!")
     print(f" Dashboard URL: http://{host}:{port}/")

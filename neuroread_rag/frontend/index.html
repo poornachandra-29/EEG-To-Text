@@ -40,14 +40,8 @@
                 <a href="#focus-attention" class="nav-item" data-section="focus-attention">
                     <span class="icon">🎯</span> Focus & Attention Report
                 </a>
-                <a href="#cognitive-workload" class="nav-item" data-section="cognitive-workload">
-                    <span class="icon">⚡</span> Cognitive Workload Report
-                </a>
                 <a href="#metric-assessment" class="nav-item" data-section="metric-assessment">
                     <span class="icon">🔬</span> Metric Scientific Assessment
-                </a>
-                <a href="#research-comparison" class="nav-item" data-section="research-comparison">
-                    <span class="icon">⚖️</span> Research Evidence Comparison
                 </a>
                 <a href="#research-explorer" class="nav-item" data-section="research-explorer">
                     <span class="icon">🔍</span> Research Explorer
@@ -72,12 +66,18 @@
         <main class="main-content">
             <!-- Header Bar -->
             <header class="top-bar">
-                <div class="participant-badge">
-                    <span class="label">Student:</span>
+                <div class="participant-badge" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                    <span class="label" style="font-weight: 600; color: #475569;">Student:</span>
                     <span id="header-patient-name" style="font-weight: 700; font-family: var(--font-mono); font-size: 14px; color: #1e3a8a; background: #e0e7ff; padding: 4px 12px; border-radius: 6px; border: 1px solid #c7d2fe; display: inline-block;">
                         Loading...
                     </span>
-                    <span class="pill" id="total-sentences-display">406 Sentences</span>
+                    <span class="pill" id="total-sentences-display">-- Sentences</span>
+                    <div style="display: flex; align-items: center; gap: 6px; margin-left: 6px; border-left: 2px solid #cbd5e1; padding-left: 10px;">
+                        <span style="font-size: 12px; font-weight: 600; color: #475569;">Switch:</span>
+                        <select id="top-switch-patient-select" style="padding: 5px 10px; font-weight: 700; font-family: var(--font-mono); border-radius: 6px; border: 1px solid #3b82f6; background: #ffffff; color: #1e3a8a; cursor: pointer; font-size: 12px; box-shadow: 0 1px 3px rgba(37,99,235,0.15);">
+                            <option value="">Select Student...</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="header-actions">
                     <button class="btn btn-outline" id="btn-download-md">📥 Download Markdown</button>
@@ -168,9 +168,9 @@
                                     <div style="font-size: 11px; color: #94a3b8;">Fluent Progression</div>
                                 </div>
                                 <div style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); padding: 12px 16px; border-radius: 8px; min-width: 120px;">
-                                    <div style="font-size: 11px; text-transform: uppercase; color: #94a3b8; font-weight: 600;">Cadence Stability</div>
-                                    <div id="les-cadence-val" style="font-size: 22px; font-weight: 700; color: #4ade80; font-family: var(--font-mono); margin-top: 2px;">--%</div>
-                                    <div style="font-size: 11px; color: #94a3b8;">Ocular-EEG Rhythm</div>
+                                    <div style="font-size: 11px; text-transform: uppercase; color: #94a3b8; font-weight: 600;">Cognitive Ease</div>
+                                    <div id="les-ease-val" style="font-size: 22px; font-weight: 700; color: #4ade80; font-family: var(--font-mono); margin-top: 2px;">--%</div>
+                                    <div style="font-size: 11px; color: #94a3b8;">Working Memory Margin</div>
                                 </div>
                                 <div style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); padding: 12px 16px; border-radius: 8px; min-width: 120px;">
                                     <div style="font-size: 11px; text-transform: uppercase; color: #94a3b8; font-weight: 600;">Study Block</div>
@@ -235,7 +235,7 @@
                 <section id="focus-attention" class="dashboard-section">
                     <div class="section-header">
                         <h2>2. Focus and Attention Assessment</h2>
-                        <p class="section-desc">Sustained attention proxies, reading cadence stability, and cognitive pattern frequencies.</p>
+                        <p class="section-desc">Heuristic cognitive pattern distribution and fatigue-compatible sentence analysis.</p>
                     </div>
 
                     <div class="grid-2-col">
@@ -246,49 +246,58 @@
                             </div>
                         </div>
 
-                        <div class="card">
-                            <h3>Cadence & Stability Indicators</h3>
-                            <div class="stability-stats" id="focus-stats-container">
-                                <!-- Populated dynamically -->
+                        <div class="card" style="display:flex; flex-direction:column; gap:12px;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                                <div>
+                                    <h3 style="margin:0; color:#b91c1c; display:flex; align-items:center; gap:8px;">
+                                        <span>⚠️ Fatigue-Compatible EEG Pattern Sentences</span>
+                                    </h3>
+                                    <p style="font-size:12.5px; color:#64748b; margin:4px 0 0 0;">
+                                        Inspect trials exhibiting reduced vigilance, elevated theta-alpha power, or rereading regressions to assess where mistakes occurred.
+                                    </p>
+                                </div>
+                                <span id="fatigue-count-badge" class="badge" style="background:#fee2e2; color:#b91c1c; font-weight:700; font-size:12px; padding:4px 10px; border-radius:12px; border:1px solid #fca5a5;">0 Sentences</span>
+                            </div>
+
+                            <!-- Sentence Selector Dropdown -->
+                            <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px; padding:12px;">
+                                <label for="fatigue-sentence-dropdown" style="display:block; font-size:12px; font-weight:700; color:#1e293b; margin-bottom:6px;">
+                                    🎯 Select Sentence from Dropdown to Assess Mistakes:
+                                </label>
+                                <select id="fatigue-sentence-dropdown" onchange="onSelectFatigueSentence(this.value)" style="width:100%; padding:8px 12px; font-size:13px; font-weight:600; border:1.5px solid #ef4444; border-radius:6px; background:#ffffff; color:#991b1b; cursor:pointer; outline:none; box-shadow:0 1px 2px rgba(239,68,68,0.1);">
+                                    <option value="">-- Choose a fatigue sentence to inspect mistake --</option>
+                                </select>
+                            </div>
+
+                            <!-- Single Sentence Mistake Diagnosis Box -->
+                            <div id="fatigue-single-sentence-preview" style="background:#fff1f2; border:1.5px solid #fecaca; border-radius:8px; padding:14px;">
+                                <div style="font-size:13px; color:#64748b; text-align:center; padding:10px;">
+                                    Select a sentence from the dropdown above or click the button below to inspect mistake analysis.
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons: Toggle Full List & Step Next -->
+                            <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:2px;">
+                                <button id="btn-toggle-fatigue-ui" class="btn btn-secondary" onclick="toggleFatigueSentencesUI()" style="font-size:12px; padding:7px 14px; cursor:pointer; border-radius:6px; background:#ffffff; color:#b91c1c; border:1.5px solid #ef4444; font-weight:600; display:inline-flex; align-items:center; gap:6px;">
+                                    🔍 <span id="toggle-btn-label">View All Fatigue Sentences Table</span>
+                                </button>
+                                <button id="btn-next-fatigue" class="btn btn-outline" onclick="selectNextFatigueSentence()" style="font-size:12px; padding:7px 12px; cursor:pointer; border-radius:6px; border:1px solid #cbd5e1; color:#475569; font-weight:600;">
+                                    Next Sentence ⏭️
+                                </button>
+                            </div>
+
+                            <!-- Full Scrollable List Container -->
+                            <div id="fatigue-sentences-container" style="display:none; max-height:360px; overflow-y:auto; border-top:1px solid #e2e8f0; padding-top:12px; margin-top:4px;">
+                                <!-- Dynamically populated by app.js -->
                             </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- 3. Cognitive Workload Report -->
-                <section id="cognitive-workload" class="dashboard-section">
-                    <div class="section-header">
-                        <h2>3. Cognitive Workload Report</h2>
-                        <p class="section-desc">Multimodal workload assessment combining frontal theta oscillations, pupillary dilation, and reading dwell times.</p>
-                    </div>
-
-                    <div class="card">
-                        <div class="workload-banner" id="workload-overview-banner">
-                            <!-- Populated dynamically -->
-                        </div>
-                    </div>
-
-                    <div class="grid-2-col">
-                        <div class="card">
-                            <h3>Workload Contributing Factors</h3>
-                            <div class="workload-factors" id="workload-factors-list">
-                                <!-- Populated dynamically -->
-                            </div>
-                        </div>
-
-                        <div class="card">
-                            <h3>GMM Cluster Workload Profiles</h3>
-                            <div class="cluster-list" id="cluster-profiles-list">
-                                <!-- Populated dynamically -->
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- 4. Metric-wise Scientific Assessment -->
+                <!-- 3. Metric-wise Scientific Assessment -->
                 <section id="metric-assessment" class="dashboard-section">
                     <div class="section-header">
-                        <h2>4. Metric-wise Scientific Assessment</h2>
+                        <h2>3. Metric-wise Scientific Assessment</h2>
                         <p class="section-desc">Explore all 18 physiological metrics with individual baselines, relative deviations, and literature compatibility.</p>
                     </div>
 
@@ -306,36 +315,10 @@
                     </div>
                 </section>
 
-                <!-- 5. Research Evidence Comparison -->
-                <section id="research-comparison" class="dashboard-section">
-                    <div class="section-header">
-                        <h2>5. Research Evidence Comparison Table</h2>
-                        <p class="section-desc">Direct programmatic comparison between participant measurements and peer-reviewed literature findings.</p>
-                    </div>
-
-                    <div class="card table-card">
-                        <table class="data-table" id="comparison-table">
-                            <thead>
-                                <tr>
-                                    <th>Metric</th>
-                                    <th>Observed Value</th>
-                                    <th>Session Baseline</th>
-                                    <th>Deviation Status</th>
-                                    <th>Key Published Reference</th>
-                                    <th>Scientific Compatibility</th>
-                                </tr>
-                            </thead>
-                            <tbody id="comparison-table-body">
-                                <!-- Populated dynamically -->
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
-
-                <!-- 6. Research Explorer -->
+                <!-- 4. Research Explorer -->
                 <section id="research-explorer" class="dashboard-section">
                     <div class="section-header">
-                        <h2>6. Research Explorer (RAG Engine)</h2>
+                        <h2>4. Research Explorer (RAG Engine)</h2>
                         <p class="section-desc">Query the multi-source vector store (OpenAlex, Semantic Scholar, PubMed, Europe PMC, Crossref).</p>
                     </div>
 
@@ -351,7 +334,7 @@
                                 <option value="TRT">TRT (Total Reading Time)</option>
                                 <option value="CWI">CWI (Cognitive Workload)</option>
                                 <option value="SAI">SAI (Sustained Attention)</option>
-                                <option value="MWLI_proxy">MWLI (Cadence Instability)</option>
+                                <option value="MWLI_proxy">MWLI (Attention Instability)</option>
                             </select>
                             <button class="btn btn-primary" id="btn-research-search">Search Literature</button>
                         </div>
@@ -362,10 +345,10 @@
                     </div>
                 </section>
 
-                <!-- 7. Personalized Recommendations -->
+                <!-- 6. Personalized Recommendations -->
                 <section id="recommendations" class="dashboard-section">
                     <div class="section-header">
-                        <h2>7. Personalized Evidence-Based Recommendations</h2>
+                        <h2>6. Personalized Evidence-Based Recommendations</h2>
                         <p class="section-desc">Actionable cognitive and reading pacing strategies grounded in empirical participant data and scientific citations.</p>
                     </div>
 
@@ -374,10 +357,10 @@
                     </div>
                 </section>
 
-                <!-- 8. Complete AI Assessment Report -->
+                <!-- 7. Complete AI Assessment Report -->
                 <section id="full-report" class="dashboard-section">
                     <div class="section-header">
-                        <h2>8. Complete AI Assessment Report (Print / PDF View)</h2>
+                        <h2>7. Complete AI Assessment Report (Print / PDF View)</h2>
                         <p class="section-desc">Standardized 10-section report formatted for professional review and PDF export.</p>
                     </div>
 
@@ -390,6 +373,6 @@
         </main>
     </div>
 
-    <script src="app.js"></script>
+    <script src="app.js?v=2.2"></script>
 </body>
 </html>

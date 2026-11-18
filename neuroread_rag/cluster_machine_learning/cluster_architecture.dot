@@ -1,0 +1,96 @@
+// cluster_architecture.dot — Multi-Algorithm Clustering & Cognitive State Discovery Architecture
+digraph NeuroReadClustering {
+    rankdir=LR;
+    node [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=10];
+    edge [fontname="Helvetica", fontsize=9];
+
+    // Data Ingestion
+    subgraph cluster_data {
+        label = "1. Multimodal Signal Ingestion";
+        style = "dashed";
+        color = "#64748b";
+        EEG [label="EEG Signals\n- EEI (Beta/(Alpha+Theta))\n- FMT (Frontal Theta 4-8Hz)\n- ASM (Alpha Asymmetry)\n- Alpha Power (8-13Hz)\n- Beta Power (13-30Hz)", fillcolor="#dbeafe", color="#3b82f6"];
+        Eye [label="Eye-Tracking\n- GD (Gaze Duration)\n- TRT (Total Reading Time)\n- FFD (First Fixation Dur)\n- PupilSize (Diameter)\n- FixationCount (Pauses)", fillcolor="#e0e7ff", color="#6366f1"];
+    }
+
+    // Preprocessing
+    subgraph cluster_prep {
+        label = "2. Normalization & Preprocessing";
+        style = "dashed";
+        color = "#64748b";
+        CohortTrain [label="11-Patient Training Cohort\n(3,243 Sentence Trials)", fillcolor="#f1f5f9", color="#94a3b8"];
+        Scaler [label="Train-Fitted Pipeline\n- SimpleImputer (Median)\n- RobustScaler (Median/IQR)", fillcolor="#fef3c7", color="#f59e0b"];
+        TestPatient [label="Held-Out Test Patient (ZPH)\n(250 Sentence Trials)", fillcolor="#fee2e2", color="#ef4444"];
+    }
+
+    // Clustering Models Suite
+    subgraph cluster_models {
+        label = "3. Clustering Algorithms Suite (models/*.py & models/*.dot)";
+        style = "filled";
+        color = "#f8fafc";
+        fillcolor = "#f1f5f9";
+        
+        M_GMM [label="GMM (Full Covariance)\n[gmm_model.py]\np(x) = sum pi_k N(mu_k, Sigma_k)", fillcolor="#ffffff", color="#0284c7"];
+        M_HDBSCAN [label="HDBSCAN (Density-Based)\n[hdbscan_model.py]\nMutual Reachability Graph", fillcolor="#ffffff", color="#0284c7"];
+        M_KMeans [label="K-Means (k-means++)\n[kmeans_model.py]\nMinimizes Inertia WCSS", fillcolor="#ffffff", color="#0284c7"];
+        M_FCM [label="Fuzzy C-Means (Soft)\n[fuzzy_c_means_model.py]\nMembership u_ik in [0,1] [CHAMPION]", fillcolor="#dcfce7", color="#16a34a", penwidth=2.0];
+        M_Agglom [label="Agglomerative Hierarchical\n[agglomerative_model.py]\nWard Variance Linkage", fillcolor="#ffffff", color="#0284c7"];
+        M_Birch [label="BIRCH (CF-Tree)\n[birch_model.py]\nClustering Feature Tree", fillcolor="#ffffff", color="#0284c7"];
+    }
+
+    // Cluster Mapping & Hungarian Matching
+    subgraph cluster_mapping {
+        label = "4. Hungarian Optimal Bipartite State Mapping (cluster_mapping/)";
+        style = "dashed";
+        color = "#64748b";
+        Hungarian [label="Kuhn-Munkres Bipartite Matcher\nMax Total Centroid Affinity\nwith Physiological Guardrails", fillcolor="#fdf4ff", color="#c026d3"];
+        C_Fluent [label="Concentrated Fluent Reading\n(EEI >= 0, TRT < 0, Alpha < 0)", fillcolor="#dcfce7", color="#22c55e"];
+        C_Deep [label="Deep Cognitive Processing\n(EEI >= 0, TRT > 0, GD > 0)", fillcolor="#dbeafe", color="#3b82f6"];
+        C_Fatigue [label="Cognitive Fatigue\n(EEI < 0, Alpha > 0, Pupil < 0)", fillcolor="#fee2e2", color="#ef4444"];
+        C_Workload [label="High Cognitive Workload\n(FMT >> 0, Pupil >> 0, Beta > 0)", fillcolor="#ffedd5", color="#f97316"];
+        C_Bottleneck [label="Comprehension Bottleneck\n(TRT >> 0, Fix >> 0, Regressions)", fillcolor="#ede9fe", color="#8b5cf6"];
+    }
+
+    // Diagnostics & S-RAG
+    subgraph cluster_output {
+        label = "5. Diagnostic Dashboard & RAG Actions";
+        style = "dashed";
+        color = "#64748b";
+        Dashboard [label="Student Diagnostic Report\n% Concentrated Sentences\n% Fatigued Sentences (94.8%)", fillcolor="#fef9c3", color="#ca8a04"];
+        SRAG [label="Scientific RAG Engine\n- Micro-Break Intervention\n- Syntax Chunking / Simplification", fillcolor="#ecfdf5", color="#059669"];
+    }
+
+    // Data Flow Connections
+    EEG -> CohortTrain;
+    Eye -> CohortTrain;
+    CohortTrain -> Scaler;
+    Scaler -> M_GMM;
+    Scaler -> M_HDBSCAN;
+    Scaler -> M_KMeans;
+    Scaler -> M_FCM;
+    Scaler -> M_Agglom;
+    Scaler -> M_Birch;
+
+    TestPatient -> Scaler;
+
+    M_GMM -> Hungarian;
+    M_HDBSCAN -> Hungarian;
+    M_KMeans -> Hungarian;
+    M_FCM -> Hungarian;
+    M_Agglom -> Hungarian;
+    M_Birch -> Hungarian;
+
+    Hungarian -> C_Fluent;
+    Hungarian -> C_Deep;
+    Hungarian -> C_Fatigue;
+    Hungarian -> C_Workload;
+    Hungarian -> C_Bottleneck;
+
+    C_Fluent -> Dashboard;
+    C_Deep -> Dashboard;
+    C_Fatigue -> Dashboard;
+    C_Workload -> Dashboard;
+    C_Bottleneck -> Dashboard;
+
+    Dashboard -> SRAG;
+}

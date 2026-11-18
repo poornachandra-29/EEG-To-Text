@@ -1,0 +1,12 @@
+// kmeans_model.dot — K-Means (k-means++) Dataflow
+digraph KMeans_Model {
+    rankdir=TB;
+    node [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=10];
+
+    Input [label="Input: 10-Dimensional Normalized Features", fillcolor="#dbeafe", color="#2563eb"];
+    Seeding [label="k-means++ Seeding\nInitializes 5 centers with prob proportional to squared distance", fillcolor="#fef3c7", color="#d97706"];
+    Lloyd [label="Lloyd's Alternating Optimization\n1. Assignment: Assign sample to closest center mu_k\n2. Update: Recompute mu_k as mean of assigned points", fillcolor="#e0e7ff", color="#4f46e5"];
+    Output [label="Outputs:\n- Hard Voronoi Partitions (0..4)\n- Centroids mu_k\n- Total Within-Cluster Sum of Squares (Inertia)", fillcolor="#dcfce7", color="#16a34a"];
+
+    Input -> Seeding -> Lloyd -> Output;
+}

@@ -1,6 +1,7 @@
 """
 Self-contained Feature Extraction and Preprocessing Module for NeuroRead RAG.
-Operates independently within the neuroread_rag package without requiring external root modules.
+Implements Phase 1: Frontal Midline Theta (FMT), window reliability gating,
+artifact detection, and log-transformed spectral powers.
 """
 
 from pathlib import Path
@@ -11,7 +12,12 @@ import scipy.io as sio
 from scipy.signal import welch
 import joblib
 
+# Configuration defaults (aligns with config.yaml)
 EPSILON = 1e-8
+FS_DEFAULT = 500.0
+FRONTAL_MIDLINE_CHANNELS = [5, 10]  # E6 (FCz), E11 (Fz) in 105 scalp channel set
+PEAK_TO_PEAK_THRESHOLD = 150.0  # µV amplitude threshold for artifact detection
+ARTIFACT_THRESHOLD_FRACTION = 0.20
 
 MODEL_FEATURES = [
     "EEI", "FMT", "ASM", "GD", "TRT", "FFD",
@@ -20,7 +26,9 @@ MODEL_FEATURES = [
 
 EXTRA_DIAGNOSTIC_COLUMNS = [
     "ThetaPower", "AlphaPower", "BetaPower",
-    "ParticipantAlphaBaseline"
+    "ParticipantAlphaBaseline", "theta_global", "theta_fm",
+    "eeg_duration_s", "eeg_reliability", "artifact_fraction",
+    "log_theta", "log_alpha", "log_beta"
 ]
 
 
@@ -62,47 +70,141 @@ def safe_float(value):
         return np.nan
 
 
-def compute_psd_bands(eeg_signal, fs=500.0) -> Tuple[float, float, float]:
-    """Calculate mean channel-wise absolute band power using Welch PSD."""
+def compute_eeg_reliability(signal_shape: Tuple[int, int], fs: float = 500.0) -> Tuple[str, int]:
+    """
+    Determine window reliability and Welch segment length based on duration.
+    - Duration >= 4.0s (>= 2000 samples): 'full' reliability, nperseg=512.
+    - Duration 2.0s to 4.0s (1000 to 2000 samples): 'low' reliability, nperseg=256.
+    - Duration < 2.0s (< 1000 samples): 'insufficient' signal, nperseg=0 (skip).
+    """
+    n_samples = signal_shape[1] if signal_shape[0] < signal_shape[1] else signal_shape[0]
+    duration_s = n_samples / fs
+    if duration_s < 2.0:
+        return "insufficient", 0
+    elif duration_s < 4.0:
+        return "low", 256
+    else:
+        return "full", 512
+
+
+def detect_artifacts(signal: np.ndarray, threshold_uv: float = PEAK_TO_PEAK_THRESHOLD) -> float:
+    """
+    Calculate fraction of samples affected by amplitude artifacts (e.g. > threshold_uv).
+    Returns fraction between 0.0 and 1.0.
+    """
+    if signal.size == 0:
+        return 1.0
+    ptp = np.ptp(signal, axis=-1)  # peak-to-peak per channel
+    bad_channels = np.mean(ptp > threshold_uv)
+    return float(bad_channels)
+
+
+def compute_psd_bands(
+    eeg_signal,
+    fs: float = 500.0,
+    frontal_channels: Optional[List[int]] = None
+) -> Dict[str, Any]:
+    """
+    Calculate channel-wise and frontal-midline absolute band powers using Welch PSD.
+    Implements sentence duration gating and artifact rejection.
+    """
+    out = {
+        "theta_global": np.nan,
+        "alpha_global": np.nan,
+        "beta_global": np.nan,
+        "theta_fm": np.nan,
+        "eeg_duration_s": 0.0,
+        "eeg_reliability": "insufficient",
+        "artifact_fraction": 0.0,
+        "log_theta": np.nan,
+        "log_alpha": np.nan,
+        "log_beta": np.nan
+    }
+    
+    if eeg_signal is None:
+        return out
+
     try:
         signal = np.asarray(eeg_signal, dtype=float)
         signal = np.squeeze(signal)
 
         if signal.ndim != 2:
-            return np.nan, np.nan, np.nan
+            return out
 
         if signal.shape[0] > signal.shape[1]:
             signal = signal.T
 
-        if signal.shape[0] < 1 or signal.shape[1] < fs:
-            return np.nan, np.nan, np.nan
+        n_channels, n_samples = signal.shape
+        duration_s = n_samples / fs
+        out["eeg_duration_s"] = float(duration_s)
+
+        reliability, nperseg = compute_eeg_reliability(signal.shape, fs=fs)
+        out["eeg_reliability"] = reliability
+
+        # Check amplitude artifact fraction
+        artifact_frac = detect_artifacts(signal)
+        out["artifact_fraction"] = artifact_frac
+        if artifact_frac > ARTIFACT_THRESHOLD_FRACTION:
+            out["eeg_reliability"] = "insufficient"
+
+        if out["eeg_reliability"] == "insufficient" or nperseg == 0:
+            return out
 
         signal = np.where(np.isfinite(signal), signal, np.nan)
         valid_channels = np.all(np.isfinite(signal), axis=1)
-        signal = signal[valid_channels]
-        if signal.size == 0:
-            return np.nan, np.nan, np.nan
+        if not np.any(valid_channels):
+            return out
 
         freqs, psd = welch(
             signal,
             fs=fs,
             axis=-1,
-            nperseg=min(512, signal.shape[1])
+            nperseg=min(nperseg, n_samples)
         )
 
-        def band_power(low, high):
-            mask = (freqs >= low) & (freqs <= high)
-            if np.count_nonzero(mask) < 2:
+        def band_power(low: float, high: float, channels_mask=None) -> float:
+            f_mask = (freqs >= low) & (freqs <= high)
+            if np.count_nonzero(f_mask) < 2:
                 return np.nan
-            return float(np.mean(np.trapz(psd[:, mask], freqs[mask], axis=-1)))
+            subset_psd = psd if channels_mask is None else psd[channels_mask]
+            if subset_psd.size == 0 or not np.any(np.isfinite(subset_psd)):
+                return np.nan
+            return float(np.nanmean(np.trapz(subset_psd[:, f_mask], freqs[f_mask], axis=-1)))
 
-        return band_power(4.0, 8.0), band_power(8.0, 13.0), band_power(13.0, 30.0)
+        th_glob = band_power(4.0, 8.0)
+        al_glob = band_power(8.0, 13.0)
+        be_glob = band_power(13.0, 30.0)
+
+        out["theta_global"] = th_glob
+        out["alpha_global"] = al_glob
+        out["beta_global"] = be_glob
+
+        if np.isfinite(th_glob) and th_glob > 0:
+            out["log_theta"] = float(np.log10(th_glob))
+        if np.isfinite(al_glob) and al_glob > 0:
+            out["log_alpha"] = float(np.log10(al_glob))
+        if np.isfinite(be_glob) and be_glob > 0:
+            out["log_beta"] = float(np.log10(be_glob))
+
+        # Frontal midline theta (FMT): channels nearest Fz/FCz (e.g. E6, E11)
+        fm_channels = frontal_channels or FRONTAL_MIDLINE_CHANNELS
+        valid_fm = [c for c in fm_channels if 0 <= c < n_channels and valid_channels[c]]
+        if valid_fm:
+            out["theta_fm"] = band_power(4.0, 8.0, channels_mask=valid_fm)
+        else:
+            out["theta_fm"] = th_glob
+
+        return out
 
     except Exception:
-        return np.nan, np.nan, np.nan
+        return out
 
 
-def extract_patient_nrei(mat_path: Path, fs: float = 500.0) -> List[Dict[str, Any]]:
+def extract_patient_nrei(
+    mat_path: Path,
+    fs: float = 500.0,
+    frontal_channels: Optional[List[int]] = None
+) -> List[Dict[str, Any]]:
     """Extract sentence-level features from one participant MATLAB .mat file."""
     mat_path = Path(mat_path)
     try:
@@ -126,39 +228,45 @@ def extract_patient_nrei(mat_path: Path, fs: float = 500.0) -> List[Dict[str, An
         raw_data = _field(sentence, "rawData", None)
 
         if raw_data is not None:
-            theta, alpha, beta = compute_psd_bands(raw_data, fs=fs)
+            psd_res = compute_psd_bands(raw_data, fs=fs, frontal_channels=frontal_channels)
         else:
-            theta, alpha, beta = np.nan, np.nan, np.nan
+            psd_res = {
+                "theta_global": np.nan, "alpha_global": np.nan, "beta_global": np.nan,
+                "theta_fm": np.nan, "eeg_duration_s": 0.0, "eeg_reliability": "insufficient",
+                "artifact_fraction": 0.0, "log_theta": np.nan, "log_alpha": np.nan, "log_beta": np.nan
+            }
 
-        if np.isfinite(alpha):
-            alpha_values.append(alpha)
+        alpha_val = psd_res["alpha_global"]
+        if np.isfinite(alpha_val):
+            alpha_values.append(alpha_val)
 
         parsed.append({
             "sentence_index": sentence_index,
             "sentence_text": str(content) if content is not None else "",
             "sentence_obj": sentence,
-            "ThetaPower": theta,
-            "AlphaPower": alpha,
-            "BetaPower": beta,
+            "psd": psd_res,
         })
 
     baseline_alpha = float(np.median(alpha_values)) if alpha_values else np.nan
     records = []
 
     for item in parsed:
-        theta = item["ThetaPower"]
-        alpha = item["AlphaPower"]
-        beta = item["BetaPower"]
+        psd = item["psd"]
+        theta_glob = psd["theta_global"]
+        alpha_glob = psd["alpha_global"]
+        beta_glob = psd["beta_global"]
+        theta_fm = psd["theta_fm"]
 
         eei = (
-            beta / (alpha + theta + EPSILON)
-            if np.isfinite(beta) and np.isfinite(alpha) and np.isfinite(theta)
+            beta_glob / (alpha_glob + theta_glob + EPSILON)
+            if np.isfinite(beta_glob) and np.isfinite(alpha_glob) and np.isfinite(theta_glob)
             else np.nan
         )
-        fmt = theta
+        # FMT defaults to true frontal midline theta (theta_fm); fallback to theta_global
+        fmt = theta_fm if np.isfinite(theta_fm) else theta_glob
         asm = (
-            (baseline_alpha - alpha) / (baseline_alpha + EPSILON)
-            if np.isfinite(baseline_alpha) and np.isfinite(alpha)
+            (baseline_alpha - alpha_glob) / (baseline_alpha + EPSILON)
+            if np.isfinite(baseline_alpha) and np.isfinite(alpha_glob)
             else np.nan
         )
 
@@ -191,9 +299,17 @@ def extract_patient_nrei(mat_path: Path, fs: float = 500.0) -> List[Dict[str, An
             "FFD": mean_or_nan(ffd),
             "PupilSize": mean_or_nan(pupil),
             "FixationCount": mean_or_nan(fixations),
-            "ThetaPower": theta,
-            "AlphaPower": alpha,
-            "BetaPower": beta,
+            "ThetaPower": theta_glob,
+            "AlphaPower": alpha_glob,
+            "BetaPower": beta_glob,
+            "theta_global": theta_glob,
+            "theta_fm": theta_fm,
+            "eeg_duration_s": psd["eeg_duration_s"],
+            "eeg_reliability": psd["eeg_reliability"],
+            "artifact_fraction": psd["artifact_fraction"],
+            "log_theta": psd["log_theta"],
+            "log_alpha": psd["log_alpha"],
+            "log_beta": psd["log_beta"],
             "ParticipantAlphaBaseline": baseline_alpha,
         })
 

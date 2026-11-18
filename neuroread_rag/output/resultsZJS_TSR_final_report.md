@@ -1,6 +1,6 @@
 # NeuroRead AI: Student Cognitive Learning Assessment Report
 
-**Student ID:** `resultsZJS_TSR` | **Sentences Analyzed:** 406 | **Generated:** 2026-11-12
+**Student ID:** `resultsZJS_TSR` | **Sentences Analyzed:** 406 | **Generated:** 2026-11-16
 
 > **IMPORTANT NOTICE**: This document provides research-grounded cognitive intake observations derived from simultaneous EEG and eye tracking. It evaluates learning cadence, working memory load, and attentional stamina to optimize personal study habits.
 
@@ -14,8 +14,8 @@ This student cognitive learning assessment analyzes student resultsZJS_TSR acros
 - **Flow Factor:** 73.9% (effortless reading progression)
 - **Cadence Stability:** 86.4% (low ocular/EEG variance)
 - **Cognitive Ease Factor:** 87.1% (working memory margin)
-- **Attentive Stamina Horizon:** Sentences 1–150 (~18 min)
-- **Optimal Study Block:** 18 minutes (calibrated Pomodoro)
+- **Attentive Stamina Horizon:** Sentences 1–150 (~0 min)
+- **Optimal Study Block:** 15 minutes (calibrated Pomodoro)
 
 ## 2. Focus and Attention Assessment
 
@@ -53,6 +53,118 @@ For consistent reading performance, your engagement signal ideally stays above 0
 | **Theta / Alpha Ratio (Theta_Alpha_Ratio)** | EEG | 0.5953 ratio | 0.5335 | +11.6% | Within Typical Range |
 | **Theta / Beta Ratio (Theta_Beta_Ratio)** | EEG | 0.4681 ratio | 0.4391 | +6.6% | Within Typical Range |
 
+#### 🔍 Personalized Specification: EEG Engagement Index (EEI)
+- **🎯 What Does It Do:** Tracks your real-time mental alertness and active cortical engagement across sentences.
+- **🔬 What Is It Actually:** A spectral band ratio calculated as Beta / (Alpha + Theta) power. Higher values indicate active cortical vigilance; lower values reflect drowsiness or mind-wandering (Pope et al., 1995).
+- **👤 What It Says About You:** Your EEI averaged 0.865 ratio (Beta / (Alpha + Theta)) (+67.0% above your session baseline of 0.518). This shows you maintained high active vigilance and mental concentration throughout your study trials.
+- **📚 Readability & Text Connection:** On simple sentences, your EEI averaged 0.858, while on dense multi-clause sentences it reached 0.868 (+1.2%). This illustrates how syntactic overload challenges your attentional stability.
+- **⚠️ Diagnosed Mistake / Friction Trial (Sentence #57 — 🟡 Outlier Friction):**
+  - *"He was a first round draft pick in 1992, out of Georgia Tech."*
+  - **Linguistics:** Grade Level 1.3 | Flesch Ease: 100.0 | Complex Words: 0%
+  - **Observed Metric:** 3.194 (Robust Z: +7.22)
+  - **Cognitive Diagnosis:** On Sentence #57, your EEI exhibited its peak session deviation (+7.22 robust SDs). Text characteristics (Flesch Ease: 100.0, Grade: 1.3) indicate high syntactic density where your reading speed slowed noticeably to integrate meaning.
+- **💡 How To Resolve It:**
+  - **Punctuation Chunking Strategy**: When encountering sentences with >20 words, mentally pause at commas and semicolons. This allows your working memory buffer to consolidate the preceding clause before processing new syntactic elements.
+  - **Active Engagement Trigger**: If your engagement drops on descriptive passages, summarize each paragraph in 3 keywords in your notes to stimulate cortical beta oscillations and maintain focus.
+
+#### 🔍 Personalized Specification: Frontal Midline Theta (FMT)
+- **🎯 What Does It Do:** Measures executive cognitive control and working memory load during complex semantic integration.
+- **🔬 What Is It Actually:** Frontal Midline Theta (4–8 Hz) spectral power recorded at electrodes Fz and FCz (E11, E6). Synchronizes when the prefrontal cortex actively maintains multi-element context in working memory (Cavanagh & Frank, 2014).
+- **👤 What It Says About You:** Your FMT averaged 0.464 µV² (-80.2% below baseline), indicating reduced physiological demand.
+- **📚 Readability & Text Connection:** On simple sentences, your FMT averaged 0.478, shifting to 0.458 (-4.1%) on challenging sentences, confirming strong text-level sensitivity.
+- **⚠️ Diagnosed Mistake / Friction Trial (Sentence #242 — 🟡 Outlier Friction):**
+  - *"Sir Charles Galton Darwin, FRS (December 18, 1887 - December 13, 1962) was the English physicist grandson of Charles Darwin who served as director of the National Physical Laboratory (NPL) during World War II."*
+  - **Linguistics:** Grade Level 16.4 | Flesch Ease: 38.0 | Complex Words: 21%
+  - **Observed Metric:** 2.907 (Robust Z: +13.36)
+  - **Cognitive Diagnosis:** On Sentence #242, your FMT exhibited its peak session deviation (+13.36 robust SDs). Text characteristics (Flesch Ease: 38.0, Grade: 16.4) indicate high syntactic density where your reading speed slowed noticeably to integrate meaning.
+- **💡 How To Resolve It:**
+  - **Cognitive Load Pacing**: Elevated frontal theta signals heavy working memory demand. Break down paragraphs into 2-sentence digestible units and take a 10-second mental consolidation breath after complex sections.
+  - **Visual Spacing**: Enlarge text line spacing (1.5×) or use a finger/stylus guide to reduce visual crowding and ease cognitive workload.
+
+#### 🔍 Personalized Specification: Alpha Asymmetry Metric (ASM)
+- **🎯 What Does It Do:** Tracks Frontal Alpha Asymmetry, indexing approach-oriented reading motivation versus cognitive withdrawal.
+- **🔬 What Is It Actually:** Frontal Alpha Asymmetry calculated as ln(Right Alpha) - ln(Left Alpha). Higher values indicate left-frontal activation associated with approach motivation and active problem-solving (Davidson, 2004).
+- **👤 What It Says About You:** Your ASM averaged -0.174 log difference (stable at +0.0% relative to your baseline of 0.000). Your readings stayed within your personal homeostatic range, reflecting balanced and consistent pacing.
+- **📚 Readability & Text Connection:** On simple sentences, your ASM averaged -0.190, shifting to -0.158 (+16.7%) on challenging sentences, confirming strong text-level sensitivity.
+- **⚠️ Diagnosed Mistake / Friction Trial (Sentence #242 — 🟡 Outlier Friction):**
+  - *"Sir Charles Galton Darwin, FRS (December 18, 1887 - December 13, 1962) was the English physicist grandson of Charles Darwin who served as director of the National Physical Laboratory (NPL) during World War II."*
+  - **Linguistics:** Grade Level 16.4 | Flesch Ease: 38.0 | Complex Words: 21%
+  - **Observed Metric:** -4.474 (Robust Z: -8.95)
+  - **Cognitive Diagnosis:** On Sentence #242, your ASM exhibited its peak session deviation (-8.95 robust SDs). Text characteristics (Flesch Ease: 38.0, Grade: 16.4) indicate high syntactic density where your reading speed slowed noticeably to integrate meaning.
+- **💡 How To Resolve It:**
+  - **Structured Pomodoro Pacing**: Study in focused 25-minute blocks followed by 5-minute visual relaxation breaks (gazing 20 feet away to relax ciliary muscles and reset cortical baseline).
+  - **Dual-Coding**: Convert abstract prose descriptions into simple rough diagrams or bulleted flowcharts to reinforce retention.
+
+#### 🔍 Personalized Specification: Theta Band Power (ThetaPower)
+- **🎯 What Does It Do:** Monitors slow theta brain rhythms linked to working memory maintenance and mental fatigue.
+- **🔬 What Is It Actually:** Total spectral power in the 4–8 Hz band across scalp channels, indexing cognitive workload and sustained effort.
+- **👤 What It Says About You:** Your ThetaPower averaged 0.464 µV² (-80.2% below baseline), indicating reduced physiological demand.
+- **📚 Readability & Text Connection:** Your ThetaPower remained relatively steady across varying levels of sentence difficulty.
+- **⚠️ Diagnosed Mistake / Friction Trial (Sentence #1 — 🟡 Outlier Friction):**
+  - *"He won the Gold Medal of the Royal Astronomical Society in 1892, and also later served as president of that organization."*
+  - **Linguistics:** Grade Level 12.8 | Flesch Ease: 40.5 | Complex Words: 19%
+  - **Observed Metric:** 0.0 (Robust Z: +0.00)
+  - **Cognitive Diagnosis:** On Sentence #1, your ThetaPower exhibited its peak session deviation (+0.00 robust SDs). Text characteristics (Flesch Ease: 40.5, Grade: 12.8) indicate high syntactic density where your reading speed slowed noticeably to integrate meaning.
+- **💡 How To Resolve It:**
+  - **Cognitive Load Pacing**: Elevated frontal theta signals heavy working memory demand. Break down paragraphs into 2-sentence digestible units and take a 10-second mental consolidation breath after complex sections.
+  - **Visual Spacing**: Enlarge text line spacing (1.5×) or use a finger/stylus guide to reduce visual crowding and ease cognitive workload.
+
+#### 🔍 Personalized Specification: Alpha Band Power (AlphaPower)
+- **🎯 What Does It Do:** Captures posterior alpha oscillations, reflecting sensory gating and wakeful cognitive idling.
+- **🔬 What Is It Actually:** Total spectral power in the 8–13 Hz band, inversely related to active cortical sensory processing (Klimesch, 1999).
+- **👤 What It Says About You:** Your AlphaPower averaged 0.894 µV² (-63.3% below baseline), indicating reduced physiological demand.
+- **📚 Readability & Text Connection:** Your AlphaPower remained relatively steady across varying levels of sentence difficulty.
+- **⚠️ Diagnosed Mistake / Friction Trial (Sentence #1 — 🟡 Outlier Friction):**
+  - *"He won the Gold Medal of the Royal Astronomical Society in 1892, and also later served as president of that organization."*
+  - **Linguistics:** Grade Level 12.8 | Flesch Ease: 40.5 | Complex Words: 19%
+  - **Observed Metric:** 0.0 (Robust Z: +0.00)
+  - **Cognitive Diagnosis:** On Sentence #1, your AlphaPower exhibited its peak session deviation (+0.00 robust SDs). Text characteristics (Flesch Ease: 40.5, Grade: 12.8) indicate high syntactic density where your reading speed slowed noticeably to integrate meaning.
+- **💡 How To Resolve It:**
+  - **Structured Pomodoro Pacing**: Study in focused 25-minute blocks followed by 5-minute visual relaxation breaks (gazing 20 feet away to relax ciliary muscles and reset cortical baseline).
+  - **Dual-Coding**: Convert abstract prose descriptions into simple rough diagrams or bulleted flowcharts to reinforce retention.
+
+#### 🔍 Personalized Specification: Beta Band Power (BetaPower)
+- **🎯 What Does It Do:** Tracks fast cortical beta activity, indicating active analytical thinking and problem-solving.
+- **🔬 What Is It Actually:** Total spectral power in the 13–30 Hz band, reflecting active mental concentration and task execution.
+- **👤 What It Says About You:** Your BetaPower averaged 1.091 µV² (-56.5% below your session baseline of 2.510). This indicates intermittent attentional drift or neural fatigue, where cortical focus momentarily waned during reading.
+- **📚 Readability & Text Connection:** Your BetaPower remained relatively steady across varying levels of sentence difficulty.
+- **⚠️ Diagnosed Mistake / Friction Trial (Sentence #1 — 🟡 Outlier Friction):**
+  - *"He won the Gold Medal of the Royal Astronomical Society in 1892, and also later served as president of that organization."*
+  - **Linguistics:** Grade Level 12.8 | Flesch Ease: 40.5 | Complex Words: 19%
+  - **Observed Metric:** 0.0 (Robust Z: +0.00)
+  - **Cognitive Diagnosis:** On Sentence #1, your BetaPower exhibited its peak session deviation (+0.00 robust SDs). Text characteristics (Flesch Ease: 40.5, Grade: 12.8) indicate high syntactic density where your reading speed slowed noticeably to integrate meaning.
+- **💡 How To Resolve It:**
+  - **Structured Pomodoro Pacing**: Study in focused 25-minute blocks followed by 5-minute visual relaxation breaks (gazing 20 feet away to relax ciliary muscles and reset cortical baseline).
+  - **Dual-Coding**: Convert abstract prose descriptions into simple rough diagrams or bulleted flowcharts to reinforce retention.
+
+#### 🔍 Personalized Specification: Theta / Alpha Ratio (Theta_Alpha_Ratio)
+- **🎯 What Does It Do:** Measures the balance between working memory load and cortical relaxation.
+- **🔬 What Is It Actually:** Ratio of 4–8 Hz to 8–13 Hz power, indexing the balance between mental exertion and sensory idling.
+- **👤 What It Says About You:** Your Theta_Alpha_Ratio averaged 0.595 ratio (stable at +11.6% relative to your baseline of 0.533). Your readings stayed within your personal homeostatic range, reflecting balanced and consistent pacing.
+- **📚 Readability & Text Connection:** Your Theta_Alpha_Ratio remained relatively steady across varying levels of sentence difficulty.
+- **⚠️ Diagnosed Mistake / Friction Trial (Sentence #1 — 🟡 Outlier Friction):**
+  - *"He won the Gold Medal of the Royal Astronomical Society in 1892, and also later served as president of that organization."*
+  - **Linguistics:** Grade Level 12.8 | Flesch Ease: 40.5 | Complex Words: 19%
+  - **Observed Metric:** 0.0 (Robust Z: +0.00)
+  - **Cognitive Diagnosis:** On Sentence #1, your Theta_Alpha_Ratio exhibited its peak session deviation (+0.00 robust SDs). Text characteristics (Flesch Ease: 40.5, Grade: 12.8) indicate high syntactic density where your reading speed slowed noticeably to integrate meaning.
+- **💡 How To Resolve It:**
+  - **Structured Pomodoro Pacing**: Study in focused 25-minute blocks followed by 5-minute visual relaxation breaks (gazing 20 feet away to relax ciliary muscles and reset cortical baseline).
+  - **Dual-Coding**: Convert abstract prose descriptions into simple rough diagrams or bulleted flowcharts to reinforce retention.
+
+#### 🔍 Personalized Specification: Theta / Beta Ratio (Theta_Beta_Ratio)
+- **🎯 What Does It Do:** Calculates the ratio of slow theta to fast beta waves, a canonical marker of attentional control.
+- **🔬 What Is It Actually:** Ratio of theta (4–8 Hz) to beta (13–30 Hz) power, a standard electrophysiological marker of executive control.
+- **👤 What It Says About You:** Your Theta_Beta_Ratio averaged 0.468 ratio (stable at +6.6% relative to your baseline of 0.439). Your readings stayed within your personal homeostatic range, reflecting balanced and consistent pacing.
+- **📚 Readability & Text Connection:** Your Theta_Beta_Ratio remained relatively steady across varying levels of sentence difficulty.
+- **⚠️ Diagnosed Mistake / Friction Trial (Sentence #1 — 🟡 Outlier Friction):**
+  - *"He won the Gold Medal of the Royal Astronomical Society in 1892, and also later served as president of that organization."*
+  - **Linguistics:** Grade Level 12.8 | Flesch Ease: 40.5 | Complex Words: 19%
+  - **Observed Metric:** 0.0 (Robust Z: +0.00)
+  - **Cognitive Diagnosis:** On Sentence #1, your Theta_Beta_Ratio exhibited its peak session deviation (+0.00 robust SDs). Text characteristics (Flesch Ease: 40.5, Grade: 12.8) indicate high syntactic density where your reading speed slowed noticeably to integrate meaning.
+- **💡 How To Resolve It:**
+  - **Structured Pomodoro Pacing**: Study in focused 25-minute blocks followed by 5-minute visual relaxation breaks (gazing 20 feet away to relax ciliary muscles and reset cortical baseline).
+  - **Dual-Coding**: Convert abstract prose descriptions into simple rough diagrams or bulleted flowcharts to reinforce retention.
+
 ## 4. Eye-Tracking Analysis
 
 **🔴 What Is Happening:**
@@ -71,6 +183,75 @@ Effortless reading typically shows first fixation under 91.0 ms and total senten
 | **Total Reading Time (TRT)** | Eye-Tracking | 138.8694 ms | 192.775 | -28.0% | Within Typical Range |
 | **Mean Pupil Diameter (PupilSize)** | Eye-Tracking | 1106.801 arbitrary units / px | 281.4277 | +293.3% | Elevated Above Baseline |
 | **Fixation Count (FixationCount)** | Eye-Tracking | 1.285 count | 1.6821 | -23.6% | Within Typical Range |
+
+#### 🔍 Personalized Specification: Gaze Duration (GD)
+- **🎯 What Does It Do:** Captures first-pass gaze duration before saccading away, reflecting initial word recognition difficulty.
+- **🔬 What Is It Actually:** Gaze Duration in milliseconds: the sum of all fixations on a word during first-pass reading before moving to other words (Just & Carpenter, 1980).
+- **👤 What It Says About You:** Your GD averaged 118.665 ms (stable at -12.2% relative to your baseline of 135.184). Your readings stayed within your personal homeostatic range, reflecting balanced and consistent pacing.
+- **📚 Readability & Text Connection:** On concise sentences (Grade Level ≤ 8.0), your GD averaged 119.7. On dense sentences (Grade Level ≥ 12.0 with >20% complex vocabulary), it shifted by -1.2% to 118.2. This confirms that processing friction was directly triggered by dense multi-clause syntax and technical vocabulary.
+- **⚠️ Diagnosed Mistake / Friction Trial (Sentence #160 — 🟡 Outlier Friction):**
+  - *"In 1997, Coppola founded Zoetrope All-Story, a flashy literary magazine that publishes short stories."*
+  - **Linguistics:** Grade Level 13.5 | Flesch Ease: 23.4 | Complex Words: 36%
+  - **Observed Metric:** 203.5 (Robust Z: +5.46)
+  - **Cognitive Diagnosis:** On Sentence #160, your GD exhibited its peak session deviation (+5.46 robust SDs). Text characteristics (Flesch Ease: 23.4, Grade: 13.5) indicate high syntactic density where your reading speed slowed noticeably to integrate meaning.
+- **💡 How To Resolve It:**
+  - **Pre-Reading Vocabulary Scan**: Skim technical texts for unfamiliar words (>3 syllables) and clarify their meaning before reading. This reduces visual gaze duration (GD) and eliminates unnecessary refixations.
+  - **Subject-Verb Anchoring**: When reading dense biographical or technical prose, first identify the main grammatical subject and action verb before decoding surrounding prepositional clauses.
+
+#### 🔍 Personalized Specification: First Fixation Duration (FFD)
+- **🎯 What Does It Do:** Measures First Fixation Duration during initial visual contact with a word.
+- **🔬 What Is It Actually:** First Fixation Duration in milliseconds: duration of the very first fixation on a word, reflecting early visual and orthographic identification.
+- **👤 What It Says About You:** Your FFD averaged 107.744 ms (stable at +0.7% relative to your baseline of 107.040). Your readings stayed within your personal homeostatic range, reflecting balanced and consistent pacing.
+- **📚 Readability & Text Connection:** On simple sentences, your FFD averaged 109.105, shifting to 107.593 (-1.4%) on challenging sentences, confirming strong text-level sensitivity.
+- **⚠️ Diagnosed Mistake / Friction Trial (Sentence #231 — 🟡 Outlier Friction):**
+  - *"Jorge Amado de Faria (August 10, 1912 - August 6, 2001) was a Brazilian writer of the Modernist school."*
+  - **Linguistics:** Grade Level 6.7 | Flesch Ease: 80.7 | Complex Words: 16%
+  - **Observed Metric:** 170.0 (Robust Z: +4.63)
+  - **Cognitive Diagnosis:** On Sentence #231, your FFD exhibited its peak session deviation (+4.63 robust SDs). Text characteristics (Flesch Ease: 80.7, Grade: 6.7) indicate high syntactic density where your reading speed slowed noticeably to integrate meaning.
+- **💡 How To Resolve It:**
+  - **Subject-Verb Anchoring**: When reading dense biographical or technical prose, first identify the main grammatical subject and action verb before decoding surrounding prepositional clauses.
+
+#### 🔍 Personalized Specification: Total Reading Time (TRT)
+- **🎯 What Does It Do:** Measures cumulative ocular dwell time on a sentence, reflecting both initial reading and syntactic rereading.
+- **🔬 What Is It Actually:** Total Reading Time in milliseconds across all ocular fixations on a sentence, capturing lexical access, syntactic re-reading, and macro-structural comprehension (Rayner, 1998).
+- **👤 What It Says About You:** Your TRT averaged 138.869 ms (stable at -28.0% relative to your baseline of 192.775). Your readings stayed within your personal homeostatic range, reflecting balanced and consistent pacing.
+- **📚 Readability & Text Connection:** On concise sentences (Grade Level ≤ 8.0), your TRT averaged 135.6. On dense sentences (Grade Level ≥ 12.0 with >20% complex vocabulary), it shifted by +3.3% to 140.1. This confirms that processing friction was directly triggered by dense multi-clause syntax and technical vocabulary.
+- **⚠️ Diagnosed Mistake / Friction Trial (Sentence #85 — 🟡 Outlier Friction):**
+  - *"In 1902 Geiger began to study physics and mathematics in Erlangen and later attained a doctorate in 1906."*
+  - **Linguistics:** Grade Level 11.1 | Flesch Ease: 47.6 | Complex Words: 22%
+  - **Observed Metric:** 363.357 (Robust Z: +8.73)
+  - **Cognitive Diagnosis:** On Sentence #85, your TRT exhibited its peak session deviation (+8.73 robust SDs). Text characteristics (Flesch Ease: 47.6, Grade: 11.1) indicate high syntactic density where your reading speed slowed noticeably to integrate meaning.
+- **💡 How To Resolve It:**
+  - **Pre-Reading Vocabulary Scan**: Skim technical texts for unfamiliar words (>3 syllables) and clarify their meaning before reading. This reduces visual gaze duration (GD) and eliminates unnecessary refixations.
+  - **Subject-Verb Anchoring**: When reading dense biographical or technical prose, first identify the main grammatical subject and action verb before decoding surrounding prepositional clauses.
+
+#### 🔍 Personalized Specification: Mean Pupil Diameter (PupilSize)
+- **🎯 What Does It Do:** Monitors pupillary dilation, reflecting autonomic nervous system arousal and peak mental effort.
+- **🔬 What Is It Actually:** Pupillary dilation in millimeters or z-units, driven by locus coeruleus noradrenergic activation under mental load and cognitive conflict (Beatty & Kahneman, 1966).
+- **👤 What It Says About You:** Your PupilSize averaged 1106.801 arbitrary units / px (+293.3% above baseline), showing elevated physiological activation.
+- **📚 Readability & Text Connection:** On simple sentences, your PupilSize averaged 1101.444, shifting to 1110.044 (+0.8%) on challenging sentences, confirming strong text-level sensitivity.
+- **⚠️ Diagnosed Mistake / Friction Trial (Sentence #276 — 🟡 Outlier Friction):**
+  - *"As he once joked, he was the youngest ex-governor in the nation's history."*
+  - **Linguistics:** Grade Level 8.5 | Flesch Ease: 57.0 | Complex Words: 15%
+  - **Observed Metric:** 1464.667 (Robust Z: +4.79)
+  - **Cognitive Diagnosis:** On Sentence #276, your PupilSize exhibited its peak session deviation (+4.79 robust SDs). Text characteristics (Flesch Ease: 57.0, Grade: 8.5) indicate high syntactic density where your reading speed slowed noticeably to integrate meaning.
+- **💡 How To Resolve It:**
+  - **Structured Pomodoro Pacing**: Study in focused 25-minute blocks followed by 5-minute visual relaxation breaks (gazing 20 feet away to relax ciliary muscles and reset cortical baseline).
+  - **Dual-Coding**: Convert abstract prose descriptions into simple rough diagrams or bulleted flowcharts to reinforce retention.
+
+#### 🔍 Personalized Specification: Fixation Count (FixationCount)
+- **🎯 What Does It Do:** Tracks the total number of eye pauses, reflecting lexical processing effort and ocular regressions.
+- **🔬 What Is It Actually:** Total count of individual gaze pauses (typically 200–300 ms each) during sentence reading, indexing lexical processing effort.
+- **👤 What It Says About You:** Your FixationCount averaged 1.285 count (stable at -23.6% relative to your baseline of 1.682). Your readings stayed within your personal homeostatic range, reflecting balanced and consistent pacing.
+- **📚 Readability & Text Connection:** On concise sentences (Grade Level ≤ 8.0), your FixationCount averaged 1.3. On dense sentences (Grade Level ≥ 12.0 with >20% complex vocabulary), it shifted by +3.4% to 1.3. This confirms that processing friction was directly triggered by dense multi-clause syntax and technical vocabulary.
+- **⚠️ Diagnosed Mistake / Friction Trial (Sentence #85 — 🟡 Outlier Friction):**
+  - *"In 1902 Geiger began to study physics and mathematics in Erlangen and later attained a doctorate in 1906."*
+  - **Linguistics:** Grade Level 11.1 | Flesch Ease: 47.6 | Complex Words: 22%
+  - **Observed Metric:** 3.0 (Robust Z: +6.94)
+  - **Cognitive Diagnosis:** On Sentence #85, your FixationCount exhibited its peak session deviation (+6.94 robust SDs). Text characteristics (Flesch Ease: 47.6, Grade: 11.1) indicate high syntactic density where your reading speed slowed noticeably to integrate meaning.
+- **💡 How To Resolve It:**
+  - **Pre-Reading Vocabulary Scan**: Skim technical texts for unfamiliar words (>3 syllables) and clarify their meaning before reading. This reduces visual gaze duration (GD) and eliminates unnecessary refixations.
+  - **Subject-Verb Anchoring**: When reading dense biographical or technical prose, first identify the main grammatical subject and action verb before decoding surrounding prepositional clauses.
 
 ## 5. Cognitive Workload Assessment
 

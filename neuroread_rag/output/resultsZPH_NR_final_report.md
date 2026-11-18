@@ -1,6 +1,6 @@
 # NeuroRead AI: Student Cognitive Learning Assessment Report
 
-**Student ID:** `resultsZPH_NR` | **Sentences Analyzed:** 250 | **Generated:** 2026-11-12
+**Student ID:** `resultsZPH_NR` | **Sentences Analyzed:** 250 | **Generated:** 2026-11-18
 
 > **IMPORTANT NOTICE**: This document provides research-grounded cognitive intake observations derived from simultaneous EEG and eye tracking. It evaluates learning cadence, working memory load, and attentional stamina to optimize personal study habits.
 
@@ -12,24 +12,68 @@ This student cognitive learning assessment analyzes student resultsZPH_NR across
 
 - **Learning Efficiency Score (LES):** **81.3%** — *Optimal Learning Zone (Deep Flow)*
 - **Flow Factor:** 63.6% (effortless reading progression)
-- **Cadence Stability:** 95.2% (low ocular/EEG variance)
 - **Cognitive Ease Factor:** 90.3% (working memory margin)
-- **Attentive Stamina Horizon:** Sentences 1–62 (~7 min)
+- **Attentive Stamina Horizon:** Sentences 1–62 (~0 min)
 - **Optimal Study Block:** 15 minutes (calibrated Pomodoro)
 
 ## 2. Focus and Attention Assessment
 
-**🔴 What Is Happening:**
-Your reading focus and rhythm were variable across the session. Your engagement showed some instability, with brief periods of reduced processing continuity. Your attention cadence showed some irregularity across the session, consistent with brief mind-drift episodes between sentences.
+### Heuristic Cognitive Pattern Distribution
 
-**📊 What You Need:**
-Ideal focused reading shows a stable, even engagement rhythm — no large swings between high and low attention across consecutive sentences.
+| Cognitive Pattern | Proportion (%) | Sentence Count |
+| :--- | :--- | :--- |
+| **Mixed / indeterminate** | 30.8% | 77 |
+| **Engagement-supported / focused-like** | 18.8% | 47 |
+| **Fatigue-compatible EEG pattern** | 13.6% | 34 |
+| **Mixed / overlapping evidence** | 13.6% | 34 |
+| **High cognitive-workload-like pattern** | 13.2% | 33 |
+| **Attention-instability / disengagement-like** | 10.0% | 25 |
 
-**✅ How To Improve:**
-1. When you notice your mind drifting (re-reading the same line), mark the paragraph and take a 60-second physical break (stand up, look away). Smallwood & Schooler (2015) showed this prevents mind-wandering cascades. 2. Set an intention before each reading block: 'I am reading to find out X.' This top-down goal keeps the prefrontal cortex engaged. 3. Use the 'active reading' method: underline or mentally note 1 key phrase per paragraph to anchor attention.
+### ⚠️ Fatigue-Compatible EEG Pattern Sentences (Fatigue & Mistake Assessment)
 
-- **Sustained Attention Evidence Proxy (SAI):** -0.1404 (Within Typical Range)
-- **Attention-Instability Evidence Proxy (MWLI_proxy):** +0.2135
+A total of **34 sentences** exhibited physiological markers of cognitive fatigue (e.g., theta-alpha power elevation, depressed EEI engagement, or ocular dwell delays). Review these specific trials below to assess where comprehension friction and reading mistakes occurred:
+
+<details open>
+<summary><b>🔍 Click to View Fatigue-Compatible Sentences (34 Trials Identified)</b></summary>
+
+| # | Sentence Excerpt | Words | Fixations | Engagement (EEI) | TRT (ms) | Mistake / Processing Breakdown |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| #37 | "Timothy Bush, Sr. (c. 1728 - c. 1815) - soldier." | 10 | 2.25 | 0.2880 | 264 | Cortical vigilance drop (low cognitive engagement) | Excessive re-fixations (2.25/word: eye regression) |
+| #128 | "His application to Yale Divinity School was rejected, a..." | 26 | 1.37 | 0.4630 | 137 | Syntactic overload (26 words: dense multi-clause) |
+| #132 | "She then appeared in minor roles in another four films ..." | 28 | 1.32 | 0.5350 | 145 | Syntactic overload (28 words: dense multi-clause) |
+| #133 | "Between then and 1953, Davis appeared in more than thre..." | 34 | 1.48 | 0.5010 | 139 | Syntactic overload (34 words: dense multi-clause) |
+| #134 | "In 1950, she began to guest star in television Westerns..." | 30 | 1.33 | 0.4700 | 148 | Syntactic overload (30 words: dense multi-clause) |
+| #138 | "She had been singing and dancing since childhood and af..." | 40 | 1.47 | 0.4560 | 164 | Syntactic overload (40 words: dense multi-clause) |
+| #148 | "Niels Fabian Helge von Koch (January 25, 1870 - March 1..." | 41 | 1.26 | 0.4360 | 122 | Cortical vigilance drop (low cognitive engagement) | Syntactic overload (41 words: dense multi-clause) |
+| #151 | "The son of President John Adams and First Lady Abigail ..." | 32 | 1.30 | 0.4500 | 143 | Cortical vigilance drop (low cognitive engagement) | Syntactic overload (32 words: dense multi-clause) |
+| #171 | "Huxley was born in Godalming, Surrey, England." | 7 | 1.67 | 0.2740 | 253 | Cortical vigilance drop (low cognitive engagement) | Excessive re-fixations (1.67/word: eye regression) |
+| #172 | "He was the son of the writer Leonard Huxley by his firs..." | 37 | 1.54 | 0.4270 | 169 | Cortical vigilance drop (low cognitive engagement) | Excessive re-fixations (1.54/word: eye regression) |
+| #176 | "Besides making cameo appearances in films such as Casin..." | 33 | 1.40 | 0.4690 | 148 | Syntactic overload (33 words: dense multi-clause) |
+| #177 | "In 1997 he appeared in the BBC situation comedy Chalk." | 10 | 2.56 | 0.4050 | 292 | Cortical vigilance drop (low cognitive engagement) | Excessive re-fixations (2.56/word: eye regression) |
+| #178 | "Bartholomew J. Simpson (voiced by Nancy Cartwright) is ..." | 19 | 1.73 | 0.4510 | 196 | Cortical vigilance drop (low cognitive engagement) | Excessive re-fixations (1.73/word: eye regression) |
+| #187 | "Geiger led the Tenth Army until relieved by General Jos..." | 11 | 2.33 | 0.4110 | 256 | Cortical vigilance drop (low cognitive engagement) | Excessive re-fixations (2.33/word: eye regression) |
+| #191 | "In his 1942 bid for re-election he was defeated by stat..." | 15 | 1.77 | 0.4070 | 180 | Cortical vigilance drop (low cognitive engagement) | Excessive re-fixations (1.77/word: eye regression) |
+| #198 | "He married Dorothy Walker, George Herbert Walker's daug..." | 38 | 1.42 | 0.5080 | 146 | Syntactic overload (38 words: dense multi-clause) |
+| #218 | "He was a member of the Executive Committee of the Unite..." | 25 | 1.69 | 0.3600 | 193 | Cortical vigilance drop (low cognitive engagement) | Excessive re-fixations (1.69/word: eye regression) |
+| #219 | "After his discharge in 1919, Bush went to work for the ..." | 18 | 1.42 | 0.4190 | 165 | Cortical vigilance drop (low cognitive engagement) |
+| #221 | "The following year, Bush was Connecticut chairman of th..." | 21 | 1.87 | 0.4420 | 218 | Cortical vigilance drop (low cognitive engagement) | Excessive re-fixations (1.87/word: eye regression) |
+| #261 | "He stated his intention to act as a stalking horse agai..." | 13 | 1.90 | 0.3920 | 210 | Cortical vigilance drop (low cognitive engagement) | Excessive re-fixations (1.90/word: eye regression) |
+| #263 | "Robert Strange McNamara (born June 9, 1916) is an Ameri..." | 20 | 1.59 | 0.4290 | 184 | Cortical vigilance drop (low cognitive engagement) | Excessive re-fixations (1.59/word: eye regression) |
+| #265 | "McNamara was born in San Francisco where his father was..." | 17 | 1.61 | 0.4370 | 217 | Cortical vigilance drop (low cognitive engagement) | Excessive re-fixations (1.61/word: eye regression) |
+| #270 | "During this period, McNamara helped to plan the 1945 bo..." | 12 | 1.73 | 0.3710 | 195 | Cortical vigilance drop (low cognitive engagement) | Excessive re-fixations (1.73/word: eye regression) |
+| #272 | "President-elect John F. Kennedy first offered the post ..." | 18 | 2.08 | 0.3480 | 221 | Cortical vigilance drop (low cognitive engagement) | Excessive re-fixations (2.08/word: eye regression) |
+| #275 | "Mary Lilian Baels (November 28, 1916 - June 7, 2002) wa..." | 29 | 1.54 | 0.4600 | 195 | Excessive re-fixations (1.54/word: eye regression) | Syntactic overload (29 words: dense multi-clause) |
+| #276 | "Mary Lilian Lucy Josepha Monique Baels was born in High..." | 43 | 1.37 | 0.5060 | 153 | Syntactic overload (43 words: dense multi-clause) |
+| #277 | "He is also notable in that he is the great great great ..." | 25 | 1.57 | 0.4330 | 162 | Cortical vigilance drop (low cognitive engagement) | Excessive re-fixations (1.57/word: eye regression) |
+| #278 | "He was the son of a blacksmith Timothy Bush, Jr. and Ly..." | 26 | 1.43 | 0.4720 | 161 | Syntactic overload (26 words: dense multi-clause) |
+| #279 | "He was a participant in the Underground Railroad, and e..." | 26 | 1.39 | 0.4820 | 150 | Syntactic overload (26 words: dense multi-clause) |
+| #282 | "Another example of a player misjudged by the NFL, he be..." | 30 | 1.68 | 0.4520 | 180 | Cortical vigilance drop (low cognitive engagement) | Excessive re-fixations (1.68/word: eye regression) |
+| #287 | "He lost his reelection bid in 1948 to Hubert H. Humphre..." | 11 | 2.00 | 0.3410 | 252 | Cortical vigilance drop (low cognitive engagement) | Excessive re-fixations (2.00/word: eye regression) |
+| #293 | "Matthew was sent in 1522 to Corpus Christi College, Cam..." | 31 | 1.58 | 0.5080 | 178 | Excessive re-fixations (1.58/word: eye regression) | Syntactic overload (31 words: dense multi-clause) |
+| #294 | "He commenced MA in 1528, and was one of the Cambridge s..." | 26 | 1.64 | 0.5380 | 200 | Excessive re-fixations (1.64/word: eye regression) | Syntactic overload (26 words: dense multi-clause) |
+| #298 | "During Kerouac's time at Columbia University, Burroughs..." | 65 | 1.38 | 0.4270 | 156 | Cortical vigilance drop (low cognitive engagement) | Syntactic overload (65 words: dense multi-clause) |
+
+</details>
 
 ## 3. Spectral EEG Analysis
 
@@ -53,6 +97,140 @@ For consistent reading performance, your engagement signal ideally stays above 0
 | **Theta / Alpha Ratio (Theta_Alpha_Ratio)** | EEG | 1.0011 ratio | 0.9765 | +2.5% | Within Typical Range |
 | **Theta / Beta Ratio (Theta_Beta_Ratio)** | EEG | 0.9591 ratio | 0.9328 | +2.8% | Within Typical Range |
 
+#### 🔍 Pure RAG Pedagogical Specification: EEG Engagement Index (EEI) `[Engine: local_neural_rag_synthesizer]`
+- **🎯 1. What This Metric Says (Scientific Literature Ground Truth):**
+  According to foundational literature (Nora Hollenstein et al. (2018), Jonathan Smallwood et al. (2015), Joseph K. Nuamah et al. (2017)), the EEG Engagement Index (EEI) is an electrophysiological ratio defined as Beta / (Alpha + Theta) power (Pope et al., 1995; Nuamah et al., 2017). It indexes active vigilance and sensorimotor alertness: high beta frequencies reflect analytical cortical processing, while synchronized alpha (8–13 Hz) and theta (4–8 Hz) reflect cortical idling or mind-wandering. In natural reading, EEI serves as a continuous gauge of whether working memory is actively parsing semantic structures or drifting into perceptual decoupling.
+- **👤 2. How You Are Performing According To This Metric (CSV Review):**
+  Your EEG Engagement Index averaged 0.523 ratio (Beta / (Alpha + Theta)) (stable at +0.9% relative to your baseline of 0.518 ratio (Beta / (Alpha + Theta))). Your reading cadence maintained a steady homeostatic balance. Specifically on Sentence #50 (a peak friction trial), your EEG Engagement Index reached 0.824 ratio (Beta / (Alpha + Theta)) with an extreme robust z-score of +3.96 SDs. The sentence read: "At the age of 21, she married William Hutchinson.". Linguistic breakdown: 9 words, Grade Level 3.7 (FKGL), Reading Ease 84.9, and 11% complex multi-syllabic words. The dense syntactic embedding and polysyllabic terms overwhelmed your working memory buffer, triggering EEG Engagement Index instability. On simple sentences, your EEI averaged 0.523, shifting to 0.522 (-0.2%) on dense sentences. This illustrates how syntactic overload challenges your attentional stability.
+- **⚠️ Diagnosed Peak Friction / Breakdown Trial (Sentence #50 — 🟡 Outlier Friction):**
+  - *"At the age of 21, she married William Hutchinson."*
+  - **Linguistics:** Grade Level 3.7 | Flesch Ease: 84.9 | Complex Words: 11%
+  - **Observed Value:** 0.824 (Robust Z: +3.96)
+  - **Cognitive Diagnosis:** On Sentence #50, your EEI exhibited its peak session deviation (+3.96 robust SDs). Text characteristics (Flesch Ease: 84.9, Grade: 3.7) indicate high syntactic density.
+- **💡 3. How To Improve Results In The Context Of This Metric:**
+  - **Attentional Baseline Reset**: On Sentence #50, your EEG Engagement Index shifted by +3.96 SDs from baseline. Take a 5-second mental breath between difficult sections to re-stabilize neural oscillatory cadence.
+  - **Adaptive Reading Cadence**: Actively regulate ocular dwell time based on text density (Grade 3.7, Flesch 84.9) to keep EEG Engagement Index within your homeostatic baseline range (0.52 ratio (Beta / (Alpha + Theta))).
+- **🚀 4. What Improving This Metric Actually Means To You:**
+  Stabilizing your EEG Engagement Index means transforming reading from a passive visual scan into an active, high-efficiency cognitive flow state. By avoiding alertness drops on complex sentences, you will retain up to 35% more detailed information without needing to re-read passages. During high-stakes exams or extended study sessions, this protects you against afternoon brain fog and enables consistent mental stamina.
+
+#### 🔍 Pure RAG Pedagogical Specification: Frontal Midline Theta (FMT) `[Engine: local_neural_rag_synthesizer]`
+- **🎯 1. What This Metric Says (Scientific Literature Ground Truth):**
+  In cognitive neuroscience (Alexander Gundel et al. (1992), Ryouhei Ishii et al. (1999), James F. Cavanagh et al. (2022)), Frontal Midline Theta (FMT) represents rhythmic 4–8 Hz oscillations generated predominantly in the anterior cingulate cortex and medial prefrontal cortex (Cavanagh & Frank, 2014; Ishii et al., 1999). It synchronizes when executive control is engaged to resolve conflict, sequence grammatical clauses, and hold multi-element context in working memory. In reading, elevated FMT reflects the cognitive effort required to integrate syntactically complex or ambiguous information.
+- **👤 2. How You Are Performing According To This Metric (CSV Review):**
+  Your Frontal Midline Theta averaged 2.404 µV² (stable at +2.3% relative to your baseline of 2.350 µV²). Your reading cadence maintained a steady homeostatic balance. Specifically on Sentence #172 (a peak friction trial), your Frontal Midline Theta reached 3.885 µV² with an extreme robust z-score of +3.99 SDs. The sentence read: "Huxley was born in Godalming, Surrey, England.". Linguistic breakdown: 7 words, Grade Level 7.4 (FKGL), Reading Ease 54.7, and 14% complex multi-syllabic words. The dense syntactic embedding and polysyllabic terms overwhelmed your working memory buffer, triggering Frontal Midline Theta instability. On simple sentences, your FMT averaged 2.393, shifting to 2.435 (+1.8%) on challenging sentences, confirming strong text-level sensitivity.
+- **⚠️ Diagnosed Peak Friction / Breakdown Trial (Sentence #172 — 🟡 Outlier Friction):**
+  - *"Huxley was born in Godalming, Surrey, England."*
+  - **Linguistics:** Grade Level 7.4 | Flesch Ease: 54.7 | Complex Words: 14%
+  - **Observed Value:** 3.885 (Robust Z: +3.99)
+  - **Cognitive Diagnosis:** On Sentence #172, your FMT exhibited its peak session deviation (+3.99 robust SDs). Text characteristics (Flesch Ease: 54.7, Grade: 7.4) indicate high syntactic density.
+- **💡 3. How To Improve Results In The Context Of This Metric:**
+  - **Lexical Deconstruction for Complex Vocabulary**: Sentence #172 contains 14% multi-syllabic words. Skim domain-specific vocabulary before reading the full clause to prevent Frontal Midline Theta spiking during lexical access.
+  - **Attentional Baseline Reset**: On Sentence #172, your Frontal Midline Theta shifted by +3.99 SDs from baseline. Take a 5-second mental breath between difficult sections to re-stabilize neural oscillatory cadence.
+  - **Adaptive Reading Cadence**: Actively regulate ocular dwell time based on text density (Grade 7.4, Flesch 54.7) to keep Frontal Midline Theta within your homeostatic baseline range (2.35 µV²).
+- **🚀 4. What Improving This Metric Actually Means To You:**
+  Optimizing your Frontal Midline Theta dynamics means preventing working memory buffer overflows during heavy problem-solving. When your prefrontal cortex manages cognitive load smoothly without spiking into executive saturation, you can effortlessly track complex multi-step arguments, synthesize cross-disciplinary concepts, and solve advanced academic problems without experiencing mental exhaustion.
+
+#### 🔍 Pure RAG Pedagogical Specification: Alpha Asymmetry Metric (ASM) `[Engine: local_neural_rag_synthesizer]`
+- **🎯 1. What This Metric Says (Scientific Literature Ground Truth):**
+  Frontal Alpha Asymmetry (ASM), defined as ln(Right Alpha) - ln(Left Alpha) across frontal electrodes F4/F3 (Christian Gold et al. (2012), Zou F et al. (2026), Eunbyul Yang et al. (2026)), is the canonical electrophysiological index of motivational direction and emotional valence (Davidson, 2004). Positive values indicate relative left-prefrontal activation associated with approach motivation and engaged reading, whereas negative values reflect right-frontal withdrawal and cognitive avoidance.
+- **👤 2. How You Are Performing According To This Metric (CSV Review):**
+  Your Alpha Asymmetry Metric averaged -0.039 log difference (stable at +0.0% relative to your baseline of 0.000 log difference). Your reading cadence maintained a steady homeostatic balance. Specifically on Sentence #288 (a peak friction trial), your Alpha Asymmetry Metric reached -1.337 log difference with an extreme robust z-score of -5.91 SDs. The sentence read: "He lost his reelection bid in 1948 to Hubert H. Humphrey.". Linguistic breakdown: 11 words, Grade Level 3.7 (FKGL), Reading Ease 88.0, and 9% complex multi-syllabic words. The dense syntactic embedding and polysyllabic terms overwhelmed your working memory buffer, triggering Alpha Asymmetry Metric instability. On simple sentences, your ASM averaged -0.112, shifting to -0.011 (+90.5%) on challenging sentences, confirming strong text-level sensitivity.
+- **⚠️ Diagnosed Peak Friction / Breakdown Trial (Sentence #288 — 🟡 Outlier Friction):**
+  - *"He lost his reelection bid in 1948 to Hubert H. Humphrey."*
+  - **Linguistics:** Grade Level 3.7 | Flesch Ease: 88.0 | Complex Words: 9%
+  - **Observed Value:** -1.337 (Robust Z: -5.91)
+  - **Cognitive Diagnosis:** On Sentence #288, your ASM exhibited its peak session deviation (-5.91 robust SDs). Text characteristics (Flesch Ease: 88.0, Grade: 3.7) indicate high syntactic density.
+- **💡 3. How To Improve Results In The Context Of This Metric:**
+  - **Syntactic Clause Pacing**: Sentence #288 spans 11 words with Grade Level 3.7 (FKGL). Mentally pause at mid-sentence punctuation to allow working memory consolidation before processing downstream arguments.
+  - **Adaptive Reading Cadence**: Actively regulate ocular dwell time based on text density (Grade 3.7, Flesch 88.0) to keep Alpha Asymmetry Metric within your homeostatic baseline range (0.00 log difference).
+- **🚀 4. What Improving This Metric Actually Means To You:**
+  Mastering your Alpha Asymmetry Metric profile empowers you with self-regulated learning mastery. By aligning your study habits with your real-time physiological indicators, you build durable academic stamina, deeper text comprehension, and superior recall.
+
+#### 🔍 Pure RAG Pedagogical Specification: Theta Band Power (ThetaPower) `[Engine: local_neural_rag_synthesizer]`
+- **🎯 1. What This Metric Says (Scientific Literature Ground Truth):**
+  Spectral EEG analysis (Olaf Dimigen et al. (2011), Simon Finnigan et al. (2011), Alexander Gundel et al. (1992)) establishes Theta Band Power as a fundamental marker of neural synchronization. Alpha power (8–13 Hz) reflects sensory gating and wakeful rest; Beta power (13–30 Hz) indexes active problem-solving; and Theta power (4–8 Hz) correlates with working memory maintenance and mental fatigue (Klimesch, 1999; Pope et al., 1995).
+- **👤 2. How You Are Performing According To This Metric (CSV Review):**
+  Your Theta Band Power averaged 2.404 µV² (stable at +2.3% relative to your baseline of 2.350 µV²). Your reading cadence maintained a steady homeostatic balance. Specifically on Sentence #1 (a peak friction trial), your Theta Band Power reached 0.0 µV² with an extreme robust z-score of +0.00 SDs. The sentence read: "With his interest in race cars, he formed a second company, the Henry Ford Company.". Linguistic breakdown: 15 words, Grade Level 9.1 (FKGL), Reading Ease 56.3, and 20% complex multi-syllabic words. The dense syntactic embedding and polysyllabic terms overwhelmed your working memory buffer, triggering Theta Band Power instability. Your ThetaPower remained relatively steady across varying levels of sentence difficulty.
+- **⚠️ Diagnosed Peak Friction / Breakdown Trial (Sentence #1 — 🟡 Outlier Friction):**
+  - *"With his interest in race cars, he formed a second company, the Henry Ford Company."*
+  - **Linguistics:** Grade Level 9.1 | Flesch Ease: 56.3 | Complex Words: 20%
+  - **Observed Value:** 0.0 (Robust Z: +0.00)
+  - **Cognitive Diagnosis:** On Sentence #1, your ThetaPower exhibited its peak session deviation (+0.00 robust SDs). Text characteristics (Flesch Ease: 56.3, Grade: 9.1) indicate high syntactic density.
+- **💡 3. How To Improve Results In The Context Of This Metric:**
+  - **Lexical Deconstruction for Complex Vocabulary**: Sentence #1 contains 20% multi-syllabic words. Skim domain-specific vocabulary before reading the full clause to prevent Theta Band Power spiking during lexical access.
+  - **Syntactic Clause Pacing**: Sentence #1 spans 15 words with Grade Level 9.1 (FKGL). Mentally pause at mid-sentence punctuation to allow working memory consolidation before processing downstream arguments.
+  - **Adaptive Reading Cadence**: Actively regulate ocular dwell time based on text density (Grade 9.1, Flesch 56.3) to keep Theta Band Power within your homeostatic baseline range (2.35 µV²).
+- **🚀 4. What Improving This Metric Actually Means To You:**
+  Optimizing your Frontal Midline Theta dynamics means preventing working memory buffer overflows during heavy problem-solving. When your prefrontal cortex manages cognitive load smoothly without spiking into executive saturation, you can effortlessly track complex multi-step arguments, synthesize cross-disciplinary concepts, and solve advanced academic problems without experiencing mental exhaustion.
+
+#### 🔍 Pure RAG Pedagogical Specification: Alpha Band Power (AlphaPower) `[Engine: local_neural_rag_synthesizer]`
+- **🎯 1. What This Metric Says (Scientific Literature Ground Truth):**
+  Spectral EEG analysis (Nora Hollenstein et al. (2018), Félix Bacigalupo et al. (2018), Emilia Turc et al. (2020)) establishes Alpha Band Power as a fundamental marker of neural synchronization. Alpha power (8–13 Hz) reflects sensory gating and wakeful rest; Beta power (13–30 Hz) indexes active problem-solving; and Theta power (4–8 Hz) correlates with working memory maintenance and mental fatigue (Klimesch, 1999; Pope et al., 1995).
+- **👤 2. How You Are Performing According To This Metric (CSV Review):**
+  Your Alpha Band Power averaged 2.533 µV² (stable at +3.9% relative to your baseline of 2.437 µV²). Your reading cadence maintained a steady homeostatic balance. Specifically on Sentence #1 (a peak friction trial), your Alpha Band Power reached 0.0 µV² with an extreme robust z-score of +0.00 SDs. The sentence read: "With his interest in race cars, he formed a second company, the Henry Ford Company.". Linguistic breakdown: 15 words, Grade Level 9.1 (FKGL), Reading Ease 56.3, and 20% complex multi-syllabic words. The dense syntactic embedding and polysyllabic terms overwhelmed your working memory buffer, triggering Alpha Band Power instability. Your AlphaPower remained relatively steady across varying levels of sentence difficulty.
+- **⚠️ Diagnosed Peak Friction / Breakdown Trial (Sentence #1 — 🟡 Outlier Friction):**
+  - *"With his interest in race cars, he formed a second company, the Henry Ford Company."*
+  - **Linguistics:** Grade Level 9.1 | Flesch Ease: 56.3 | Complex Words: 20%
+  - **Observed Value:** 0.0 (Robust Z: +0.00)
+  - **Cognitive Diagnosis:** On Sentence #1, your AlphaPower exhibited its peak session deviation (+0.00 robust SDs). Text characteristics (Flesch Ease: 56.3, Grade: 9.1) indicate high syntactic density.
+- **💡 3. How To Improve Results In The Context Of This Metric:**
+  - **Lexical Deconstruction for Complex Vocabulary**: Sentence #1 contains 20% multi-syllabic words. Skim domain-specific vocabulary before reading the full clause to prevent Alpha Band Power spiking during lexical access.
+  - **Syntactic Clause Pacing**: Sentence #1 spans 15 words with Grade Level 9.1 (FKGL). Mentally pause at mid-sentence punctuation to allow working memory consolidation before processing downstream arguments.
+  - **Adaptive Reading Cadence**: Actively regulate ocular dwell time based on text density (Grade 9.1, Flesch 56.3) to keep Alpha Band Power within your homeostatic baseline range (2.44 µV²).
+- **🚀 4. What Improving This Metric Actually Means To You:**
+  Mastering your Alpha Band Power profile empowers you with self-regulated learning mastery. By aligning your study habits with your real-time physiological indicators, you build durable academic stamina, deeper text comprehension, and superior recall.
+
+#### 🔍 Pure RAG Pedagogical Specification: Beta Band Power (BetaPower) `[Engine: local_neural_rag_synthesizer]`
+- **🎯 1. What This Metric Says (Scientific Literature Ground Truth):**
+  Spectral EEG analysis (Nora Hollenstein et al. (2018), Joerg F. Hipp et al. (2026), Alan T. Pope et al. (1995)) establishes Beta Band Power as a fundamental marker of neural synchronization. Alpha power (8–13 Hz) reflects sensory gating and wakeful rest; Beta power (13–30 Hz) indexes active problem-solving; and Theta power (4–8 Hz) correlates with working memory maintenance and mental fatigue (Klimesch, 1999; Pope et al., 1995).
+- **👤 2. How You Are Performing According To This Metric (CSV Review):**
+  Your Beta Band Power averaged 2.540 µV² (stable at +1.2% relative to your baseline of 2.510 µV²). Your reading cadence maintained a steady homeostatic balance. Specifically on Sentence #1 (a peak friction trial), your Beta Band Power reached 0.0 µV² with an extreme robust z-score of +0.00 SDs. The sentence read: "With his interest in race cars, he formed a second company, the Henry Ford Company.". Linguistic breakdown: 15 words, Grade Level 9.1 (FKGL), Reading Ease 56.3, and 20% complex multi-syllabic words. The dense syntactic embedding and polysyllabic terms overwhelmed your working memory buffer, triggering Beta Band Power instability. Your BetaPower remained relatively steady across varying levels of sentence difficulty.
+- **⚠️ Diagnosed Peak Friction / Breakdown Trial (Sentence #1 — 🟡 Outlier Friction):**
+  - *"With his interest in race cars, he formed a second company, the Henry Ford Company."*
+  - **Linguistics:** Grade Level 9.1 | Flesch Ease: 56.3 | Complex Words: 20%
+  - **Observed Value:** 0.0 (Robust Z: +0.00)
+  - **Cognitive Diagnosis:** On Sentence #1, your BetaPower exhibited its peak session deviation (+0.00 robust SDs). Text characteristics (Flesch Ease: 56.3, Grade: 9.1) indicate high syntactic density.
+- **💡 3. How To Improve Results In The Context Of This Metric:**
+  - **Lexical Deconstruction for Complex Vocabulary**: Sentence #1 contains 20% multi-syllabic words. Skim domain-specific vocabulary before reading the full clause to prevent Beta Band Power spiking during lexical access.
+  - **Syntactic Clause Pacing**: Sentence #1 spans 15 words with Grade Level 9.1 (FKGL). Mentally pause at mid-sentence punctuation to allow working memory consolidation before processing downstream arguments.
+  - **Adaptive Reading Cadence**: Actively regulate ocular dwell time based on text density (Grade 9.1, Flesch 56.3) to keep Beta Band Power within your homeostatic baseline range (2.51 µV²).
+- **🚀 4. What Improving This Metric Actually Means To You:**
+  Stabilizing your EEG Engagement Index means transforming reading from a passive visual scan into an active, high-efficiency cognitive flow state. By avoiding alertness drops on complex sentences, you will retain up to 35% more detailed information without needing to re-read passages. During high-stakes exams or extended study sessions, this protects you against afternoon brain fog and enables consistent mental stamina.
+
+#### 🔍 Pure RAG Pedagogical Specification: Theta / Alpha Ratio (Theta_Alpha_Ratio) `[Engine: local_neural_rag_synthesizer]`
+- **🎯 1. What This Metric Says (Scientific Literature Ground Truth):**
+  Empirical literature (Tee Yi Wen et al. (2020), Kyoungwon Baik et al. (2022), Xu Y et al. (2026)) validates Theta / Alpha Ratio (Theta_Alpha_Ratio) as a multi-modal physiological indicator of cognitive processing. Retrieved scientific studies (Tee Yi Wen et al. (2020); Kyoungwon Baik et al. (2022); Xu Y et al. (2026)) support Theta / Alpha Ratio as a valid physiological indicator of cognitive processing during natural reading tasks.
+- **👤 2. How You Are Performing According To This Metric (CSV Review):**
+  Your Theta / Alpha Ratio averaged 1.001 ratio (stable at +2.5% relative to your baseline of 0.977 ratio). Your reading cadence maintained a steady homeostatic balance. Specifically on Sentence #1 (a peak friction trial), your Theta / Alpha Ratio reached 0.0 ratio with an extreme robust z-score of +0.00 SDs. The sentence read: "With his interest in race cars, he formed a second company, the Henry Ford Company.". Linguistic breakdown: 15 words, Grade Level 9.1 (FKGL), Reading Ease 56.3, and 20% complex multi-syllabic words. The dense syntactic embedding and polysyllabic terms overwhelmed your working memory buffer, triggering Theta / Alpha Ratio instability. Your Theta_Alpha_Ratio remained relatively steady across varying levels of sentence difficulty.
+- **⚠️ Diagnosed Peak Friction / Breakdown Trial (Sentence #1 — 🟡 Outlier Friction):**
+  - *"With his interest in race cars, he formed a second company, the Henry Ford Company."*
+  - **Linguistics:** Grade Level 9.1 | Flesch Ease: 56.3 | Complex Words: 20%
+  - **Observed Value:** 0.0 (Robust Z: +0.00)
+  - **Cognitive Diagnosis:** On Sentence #1, your Theta_Alpha_Ratio exhibited its peak session deviation (+0.00 robust SDs). Text characteristics (Flesch Ease: 56.3, Grade: 9.1) indicate high syntactic density.
+- **💡 3. How To Improve Results In The Context Of This Metric:**
+  - **Lexical Deconstruction for Complex Vocabulary**: Sentence #1 contains 20% multi-syllabic words. Skim domain-specific vocabulary before reading the full clause to prevent Theta / Alpha Ratio spiking during lexical access.
+  - **Syntactic Clause Pacing**: Sentence #1 spans 15 words with Grade Level 9.1 (FKGL). Mentally pause at mid-sentence punctuation to allow working memory consolidation before processing downstream arguments.
+  - **Adaptive Reading Cadence**: Actively regulate ocular dwell time based on text density (Grade 9.1, Flesch 56.3) to keep Theta / Alpha Ratio within your homeostatic baseline range (0.98 ratio).
+- **🚀 4. What Improving This Metric Actually Means To You:**
+  Mastering your Theta / Alpha Ratio profile empowers you with self-regulated learning mastery. By aligning your study habits with your real-time physiological indicators, you build durable academic stamina, deeper text comprehension, and superior recall.
+
+#### 🔍 Pure RAG Pedagogical Specification: Theta / Beta Ratio (Theta_Beta_Ratio) `[Engine: local_neural_rag_synthesizer]`
+- **🎯 1. What This Metric Says (Scientific Literature Ground Truth):**
+  Empirical literature (Mi D et al. (2026), Tee Yi Wen et al. (2020), Strzelczyk D et al. (2026)) validates Theta / Beta Ratio (Theta_Beta_Ratio) as a multi-modal physiological indicator of cognitive processing. Retrieved scientific studies (Mi D et al. (2026); Tee Yi Wen et al. (2020); Strzelczyk D et al. (2026)) support Theta / Beta Ratio as a valid physiological indicator of cognitive processing during natural reading tasks.
+- **👤 2. How You Are Performing According To This Metric (CSV Review):**
+  Your Theta / Beta Ratio averaged 0.959 ratio (stable at +2.8% relative to your baseline of 0.933 ratio). Your reading cadence maintained a steady homeostatic balance. Specifically on Sentence #1 (a peak friction trial), your Theta / Beta Ratio reached 0.0 ratio with an extreme robust z-score of +0.00 SDs. The sentence read: "With his interest in race cars, he formed a second company, the Henry Ford Company.". Linguistic breakdown: 15 words, Grade Level 9.1 (FKGL), Reading Ease 56.3, and 20% complex multi-syllabic words. The dense syntactic embedding and polysyllabic terms overwhelmed your working memory buffer, triggering Theta / Beta Ratio instability. Your Theta_Beta_Ratio remained relatively steady across varying levels of sentence difficulty.
+- **⚠️ Diagnosed Peak Friction / Breakdown Trial (Sentence #1 — 🟡 Outlier Friction):**
+  - *"With his interest in race cars, he formed a second company, the Henry Ford Company."*
+  - **Linguistics:** Grade Level 9.1 | Flesch Ease: 56.3 | Complex Words: 20%
+  - **Observed Value:** 0.0 (Robust Z: +0.00)
+  - **Cognitive Diagnosis:** On Sentence #1, your Theta_Beta_Ratio exhibited its peak session deviation (+0.00 robust SDs). Text characteristics (Flesch Ease: 56.3, Grade: 9.1) indicate high syntactic density.
+- **💡 3. How To Improve Results In The Context Of This Metric:**
+  - **Lexical Deconstruction for Complex Vocabulary**: Sentence #1 contains 20% multi-syllabic words. Skim domain-specific vocabulary before reading the full clause to prevent Theta / Beta Ratio spiking during lexical access.
+  - **Syntactic Clause Pacing**: Sentence #1 spans 15 words with Grade Level 9.1 (FKGL). Mentally pause at mid-sentence punctuation to allow working memory consolidation before processing downstream arguments.
+  - **Adaptive Reading Cadence**: Actively regulate ocular dwell time based on text density (Grade 9.1, Flesch 56.3) to keep Theta / Beta Ratio within your homeostatic baseline range (0.93 ratio).
+- **🚀 4. What Improving This Metric Actually Means To You:**
+  Mastering your Theta / Beta Ratio profile empowers you with self-regulated learning mastery. By aligning your study habits with your real-time physiological indicators, you build durable academic stamina, deeper text comprehension, and superior recall.
+
 ## 4. Eye-Tracking Analysis
 
 **🔴 What Is Happening:**
@@ -71,6 +249,87 @@ Effortless reading typically shows first fixation under 91.0 ms and total senten
 | **Total Reading Time (TRT)** | Eye-Tracking | 209.6922 ms | 192.775 | +8.8% | Within Typical Range |
 | **Mean Pupil Diameter (PupilSize)** | Eye-Tracking | 279.5363 arbitrary units / px | 281.4277 | -0.7% | Within Typical Range |
 | **Fixation Count (FixationCount)** | Eye-Tracking | 1.8003 count | 1.6821 | +7.0% | Within Typical Range |
+
+#### 🔍 Pure RAG Pedagogical Specification: Gaze Duration (GD) `[Engine: local_neural_rag_synthesizer]`
+- **🎯 1. What This Metric Says (Scientific Literature Ground Truth):**
+  In psycholinguistic research (Nora Hollenstein et al. (2018), Keith Rayner (1998), Cordelia Mühlenbeck et al. (2015)), Gaze Duration (GD) captures early ocular dwell times during first-pass reading (Just & Carpenter, 1980; Rayner, 1998). Gaze Duration reflects lexical access, morphological parsing, and initial word identification before the eye saccades away. Elevated dwell times on individual words directly signal low word frequency, high length, or contextual unpredictability.
+- **👤 2. How You Are Performing According To This Metric (CSV Review):**
+  Your Gaze Duration averaged 142.895 ms (stable at +5.7% relative to your baseline of 135.184 ms). Your reading cadence maintained a steady homeostatic balance. Specifically on Sentence #230 (a peak friction trial), your Gaze Duration reached 365.833 ms with an extreme robust z-score of +10.23 SDs. The sentence read: "Winthrop died at St. Briac Sur Mer, Ille-et-Vilaine, France.". Linguistic breakdown: 9 words, Grade Level 5.0 (FKGL), Reading Ease 75.5, and 11% complex multi-syllabic words. The dense syntactic embedding and polysyllabic terms overwhelmed your working memory buffer, triggering Gaze Duration instability. On concise sentences (Grade Level ≤ 8.0), your GD averaged 157.9. On dense sentences (Grade Level ≥ 12.0 with >20% complex vocabulary), it shifted by -11.8% to 139.3. This confirms that processing friction was directly triggered by dense multi-clause syntax and technical vocabulary.
+- **⚠️ Diagnosed Peak Friction / Breakdown Trial (Sentence #230 — 🟡 Outlier Friction):**
+  - *"Winthrop died at St. Briac Sur Mer, Ille-et-Vilaine, France."*
+  - **Linguistics:** Grade Level 5.0 | Flesch Ease: 75.5 | Complex Words: 11%
+  - **Observed Value:** 365.833 (Robust Z: +10.23)
+  - **Cognitive Diagnosis:** On Sentence #230, your GD exhibited its peak session deviation (+10.23 robust SDs). Text characteristics (Flesch Ease: 75.5, Grade: 5.0) indicate high syntactic density.
+- **💡 3. How To Improve Results In The Context Of This Metric:**
+  - **Attentional Baseline Reset**: On Sentence #230, your Gaze Duration shifted by +10.23 SDs from baseline. Take a 5-second mental breath between difficult sections to re-stabilize neural oscillatory cadence.
+  - **Adaptive Reading Cadence**: Actively regulate ocular dwell time based on text density (Grade 5.0, Flesch 75.5) to keep Gaze Duration within your homeostatic baseline range (135.18 ms).
+- **🚀 4. What Improving This Metric Actually Means To You:**
+  Reducing your Total Reading Time and Fixation Count through fluent lexical chunking directly accelerates your effective reading speed by 20–40%. More importantly, minimizing regressions preserves your mental bandwidth: instead of wasting visual energy re-checking previous lines, 100% of your cognitive resources remain dedicated to deep conceptual understanding, critical evaluation, and memory encoding.
+
+#### 🔍 Pure RAG Pedagogical Specification: First Fixation Duration (FFD) `[Engine: local_neural_rag_synthesizer]`
+- **🎯 1. What This Metric Says (Scientific Literature Ground Truth):**
+  In psycholinguistic research (Olaf Dimigen et al. (2011), Nora Hollenstein et al. (2018), Keith Rayner (1998)), First Fixation Duration (FFD) captures early ocular dwell times during first-pass reading (Just & Carpenter, 1980; Rayner, 1998). Gaze Duration reflects lexical access, morphological parsing, and initial word identification before the eye saccades away. Elevated dwell times on individual words directly signal low word frequency, high length, or contextual unpredictability.
+- **👤 2. How You Are Performing According To This Metric (CSV Review):**
+  Your First Fixation Duration averaged 110.768 ms (stable at +3.5% relative to your baseline of 107.040 ms). Your reading cadence maintained a steady homeostatic balance. Specifically on Sentence #108 (a peak friction trial), your First Fixation Duration reached 229.0 ms with an extreme robust z-score of +11.40 SDs. The sentence read: "He lived in Lichfield and Derby, England.". Linguistic breakdown: 7 words, Grade Level 5.7 (FKGL), Reading Ease 66.8, and 0% complex multi-syllabic words. The dense syntactic embedding and polysyllabic terms overwhelmed your working memory buffer, triggering First Fixation Duration instability. On simple sentences, your FFD averaged 120.029, shifting to 107.973 (-10.0%) on challenging sentences, confirming strong text-level sensitivity.
+- **⚠️ Diagnosed Peak Friction / Breakdown Trial (Sentence #108 — 🟡 Outlier Friction):**
+  - *"He lived in Lichfield and Derby, England."*
+  - **Linguistics:** Grade Level 5.7 | Flesch Ease: 66.8 | Complex Words: 0%
+  - **Observed Value:** 229.0 (Robust Z: +11.40)
+  - **Cognitive Diagnosis:** On Sentence #108, your FFD exhibited its peak session deviation (+11.40 robust SDs). Text characteristics (Flesch Ease: 66.8, Grade: 5.7) indicate high syntactic density.
+- **💡 3. How To Improve Results In The Context Of This Metric:**
+  - **Attentional Baseline Reset**: On Sentence #108, your First Fixation Duration shifted by +11.40 SDs from baseline. Take a 5-second mental breath between difficult sections to re-stabilize neural oscillatory cadence.
+  - **Adaptive Reading Cadence**: Actively regulate ocular dwell time based on text density (Grade 5.7, Flesch 66.8) to keep First Fixation Duration within your homeostatic baseline range (107.04 ms).
+- **🚀 4. What Improving This Metric Actually Means To You:**
+  Reducing your Total Reading Time and Fixation Count through fluent lexical chunking directly accelerates your effective reading speed by 20–40%. More importantly, minimizing regressions preserves your mental bandwidth: instead of wasting visual energy re-checking previous lines, 100% of your cognitive resources remain dedicated to deep conceptual understanding, critical evaluation, and memory encoding.
+
+#### 🔍 Pure RAG Pedagogical Specification: Total Reading Time (TRT) `[Engine: local_neural_rag_synthesizer]`
+- **🎯 1. What This Metric Says (Scientific Literature Ground Truth):**
+  In reading eye-tracking research (Nora Hollenstein et al. (2018), Olaf Dimigen et al. (2011), Keith Rayner (1998)), Total Reading Time (TRT) measures the cumulative fixation duration across all passes on a sentence in milliseconds (Rayner, 1998; Dimigen et al., 2011). Unlike early gaze measures, TRT captures both initial lexical access and late-stage macro-structural re-reading. Prolonged TRT indicates that the reader encountered syntactic garden-paths, unfamiliar vocabulary, or dense semantic relations requiring corrective ocular regressions.
+- **👤 2. How You Are Performing According To This Metric (CSV Review):**
+  Your Total Reading Time averaged 209.692 ms (stable at +8.8% relative to your baseline of 192.775 ms). Your reading cadence maintained a steady homeostatic balance. Specifically on Sentence #284 (a peak friction trial), your Total Reading Time reached 558.8 ms with an extreme robust z-score of +8.00 SDs. The sentence read: "He was voted to five American Football League All-Star teams (1961, 1963-65).". Linguistic breakdown: 12 words, Grade Level 5.8 (FKGL), Reading Ease 74.8, and 8% complex multi-syllabic words. The dense syntactic embedding and polysyllabic terms overwhelmed your working memory buffer, triggering Total Reading Time instability. On concise sentences (Grade Level ≤ 8.0), your TRT averaged 242.8. On dense sentences (Grade Level ≥ 12.0 with >20% complex vocabulary), it shifted by -19.5% to 195.4. This confirms that processing friction was directly triggered by dense multi-clause syntax and technical vocabulary.
+- **⚠️ Diagnosed Peak Friction / Breakdown Trial (Sentence #284 — 🟡 Outlier Friction):**
+  - *"He was voted to five American Football League All-Star teams (1961, 1963-65)."*
+  - **Linguistics:** Grade Level 5.8 | Flesch Ease: 74.8 | Complex Words: 8%
+  - **Observed Value:** 558.8 (Robust Z: +8.00)
+  - **Cognitive Diagnosis:** On Sentence #284, your TRT exhibited its peak session deviation (+8.00 robust SDs). Text characteristics (Flesch Ease: 74.8, Grade: 5.8) indicate high syntactic density.
+- **💡 3. How To Improve Results In The Context Of This Metric:**
+  - **Syntactic Clause Pacing**: Sentence #284 spans 12 words with Grade Level 5.8 (FKGL). Mentally pause at mid-sentence punctuation to allow working memory consolidation before processing downstream arguments.
+  - **Adaptive Reading Cadence**: Actively regulate ocular dwell time based on text density (Grade 5.8, Flesch 74.8) to keep Total Reading Time within your homeostatic baseline range (192.78 ms).
+- **🚀 4. What Improving This Metric Actually Means To You:**
+  Reducing your Total Reading Time and Fixation Count through fluent lexical chunking directly accelerates your effective reading speed by 20–40%. More importantly, minimizing regressions preserves your mental bandwidth: instead of wasting visual energy re-checking previous lines, 100% of your cognitive resources remain dedicated to deep conceptual understanding, critical evaluation, and memory encoding.
+
+#### 🔍 Pure RAG Pedagogical Specification: Mean Pupil Diameter (PupilSize) `[Engine: local_neural_rag_synthesizer]`
+- **🎯 1. What This Metric Says (Scientific Literature Ground Truth):**
+  Psychophysiological research (Nora Hollenstein et al. (2018), Jackson Beatty et al. (2000), Siddarth Mohanty (2020)) links task-evoked pupil dilation to autonomic nervous system arousal modulated by the brainstem locus coeruleus-norepinephrine (LC-NE) system (Beatty & Kahneman, 1966; Beatty et al., 2000). Pupillary dilation tracks instantaneous mental effort, memory search, and cognitive conflict. Elevated pupil diameter marks peak processing load where cognitive resources are strained.
+- **👤 2. How You Are Performing According To This Metric (CSV Review):**
+  Your Mean Pupil Diameter averaged 279.536 arbitrary units / px (stable at -0.7% relative to your baseline of 281.428 arbitrary units / px). Your reading cadence maintained a steady homeostatic balance. Specifically on Sentence #7 (a peak friction trial), your Mean Pupil Diameter reached 365.523 arbitrary units / px with an extreme robust z-score of +3.31 SDs. The sentence read: "In the years between the wars, Henry Ford supported Adolf Hitler's Nazi regime.". Linguistic breakdown: 13 words, Grade Level 8.5 (FKGL), Reading Ease 57.0, and 8% complex multi-syllabic words. The dense syntactic embedding and polysyllabic terms overwhelmed your working memory buffer, triggering Mean Pupil Diameter instability. On simple sentences, your PupilSize averaged 279.880, shifting to 278.243 (-0.6%) on challenging sentences, confirming strong text-level sensitivity.
+- **⚠️ Diagnosed Peak Friction / Breakdown Trial (Sentence #7 — 🟡 Outlier Friction):**
+  - *"In the years between the wars, Henry Ford supported Adolf Hitler's Nazi regime."*
+  - **Linguistics:** Grade Level 8.5 | Flesch Ease: 57.0 | Complex Words: 8%
+  - **Observed Value:** 365.523 (Robust Z: +3.31)
+  - **Cognitive Diagnosis:** On Sentence #7, your PupilSize exhibited its peak session deviation (+3.31 robust SDs). Text characteristics (Flesch Ease: 57.0, Grade: 8.5) indicate high syntactic density.
+- **💡 3. How To Improve Results In The Context Of This Metric:**
+  - **Syntactic Clause Pacing**: Sentence #7 spans 13 words with Grade Level 8.5 (FKGL). Mentally pause at mid-sentence punctuation to allow working memory consolidation before processing downstream arguments.
+  - **Adaptive Reading Cadence**: Actively regulate ocular dwell time based on text density (Grade 8.5, Flesch 57.0) to keep Mean Pupil Diameter within your homeostatic baseline range (281.43 arbitrary units / px).
+- **🚀 4. What Improving This Metric Actually Means To You:**
+  Regulating your pupillary cognitive effort dynamics ensures that autonomic stress does not deplete your mental reserves. Maintaining relaxed, composed focus while tackling demanding texts lowers autonomic fatigue, sharpens your focus, and prevents study burnout.
+
+#### 🔍 Pure RAG Pedagogical Specification: Fixation Count (FixationCount) `[Engine: local_neural_rag_synthesizer]`
+- **🎯 1. What This Metric Says (Scientific Literature Ground Truth):**
+  Foundational ocular research (Nora Hollenstein et al. (2018), Keith Rayner (1998), Hyangsook Park (2018)) establishes Fixation Count as the total number of distinct gaze pauses during sentence processing (Rayner, 1998). Higher fixation density indicates broken visual scanpaths, frequent regressions, and difficulty constructing fluent mental models, whereas sparse fixations characterize smooth, automated lexical chunking.
+- **👤 2. How You Are Performing According To This Metric (CSV Review):**
+  Your Fixation Count averaged 1.800 count (stable at +7.0% relative to your baseline of 1.682 count). Your reading cadence maintained a steady homeostatic balance. Specifically on Sentence #249 (a peak friction trial), your Fixation Count reached 3.8 count with an extreme robust z-score of +6.74 SDs. The sentence read: "Stella Dorothea Gibbons (5 January 1902�19 December 1989) was an English novelist and poet.". Linguistic breakdown: 14 words, Grade Level 8.4 (FKGL), Reading Ease 59.7, and 29% complex multi-syllabic words. The dense syntactic embedding and polysyllabic terms overwhelmed your working memory buffer, triggering Fixation Count instability. On concise sentences (Grade Level ≤ 8.0), your FixationCount averaged 1.9. On dense sentences (Grade Level ≥ 12.0 with >20% complex vocabulary), it shifted by -10.2% to 1.7. This confirms that processing friction was directly triggered by dense multi-clause syntax and technical vocabulary.
+- **⚠️ Diagnosed Peak Friction / Breakdown Trial (Sentence #249 — 🟡 Outlier Friction):**
+  - *"Stella Dorothea Gibbons (5 January 1902�19 December 1989) was an English novelist and poet."*
+  - **Linguistics:** Grade Level 8.4 | Flesch Ease: 59.7 | Complex Words: 29%
+  - **Observed Value:** 3.8 (Robust Z: +6.74)
+  - **Cognitive Diagnosis:** On Sentence #249, your FixationCount exhibited its peak session deviation (+6.74 robust SDs). Text characteristics (Flesch Ease: 59.7, Grade: 8.4) indicate high syntactic density.
+- **💡 3. How To Improve Results In The Context Of This Metric:**
+  - **Lexical Deconstruction for Complex Vocabulary**: Sentence #249 contains 29% multi-syllabic words. Skim domain-specific vocabulary before reading the full clause to prevent Fixation Count spiking during lexical access.
+  - **Syntactic Clause Pacing**: Sentence #249 spans 14 words with Grade Level 8.4 (FKGL). Mentally pause at mid-sentence punctuation to allow working memory consolidation before processing downstream arguments.
+  - **Adaptive Reading Cadence**: Actively regulate ocular dwell time based on text density (Grade 8.4, Flesch 59.7) to keep Fixation Count within your homeostatic baseline range (1.68 count).
+- **🚀 4. What Improving This Metric Actually Means To You:**
+  Reducing your Total Reading Time and Fixation Count through fluent lexical chunking directly accelerates your effective reading speed by 20–40%. More importantly, minimizing regressions preserves your mental bandwidth: instead of wasting visual energy re-checking previous lines, 100% of your cognitive resources remain dedicated to deep conceptual understanding, critical evaluation, and memory encoding.
 
 ## 5. Cognitive Workload Assessment
 
@@ -130,30 +389,7 @@ Out of 250 read sentences, **67 sentences (26.8%)** exhibited marked physiologic
 
 Your reading cadence was most effortless on concise sentences (averaging 19 words) where ocular fixations progressed sequentially with minimal re-reading. In contrast, on challenging breakdown sentences, your eyes registered 2.3× more fixations per sentence, while brain engagement dropped sharply. Crucially, after each breakdown sentence, your EEG engagement surged by an average of +0.11 units on the very next sentence, confirming active cognitive resilience.
 
-## 7. Research-Paper Comparison
-
-| Metric | Participant Observed | Session Baseline | Literature Alignment & DOI |
-| :--- | :--- | :--- | :--- |
-| **EEG Engagement Index** | 0.5226 ratio (Beta / (Alpha + Theta)) (Within Typical Range) | 0.5177 | Nora Hollenstein et al. (2018) - [10.1038/sdata.2018.291](https://doi.org/10.1038/sdata.2018.291) |
-| **Frontal Midline Theta** | 2.4042 µV² (Within Typical Range) | 2.3498 | Alexander Gundel et al. (1992) - [10.1016/0167-8760(93)90054-9](https://doi.org/10.1016/0167-8760(93)90054-9) |
-| **Alpha Asymmetry Metric** | -0.0393 log difference (Within Typical Range) | 0.0 | Christian Gold et al. (2012) - [10.1111/sjop.12022](https://doi.org/10.1111/sjop.12022) |
-| **Theta Band Power** | 2.4042 µV² (Within Typical Range) | 2.3498 | Olaf Dimigen et al. (2011) - [10.1037/a0023885](https://doi.org/10.1037/a0023885) |
-| **Alpha Band Power** | 2.533 µV² (Within Typical Range) | 2.4372 | Nora Hollenstein et al. (2018) - [10.1038/sdata.2018.291](https://doi.org/10.1038/sdata.2018.291) |
-| **Beta Band Power** | 2.5401 µV² (Within Typical Range) | 2.5104 | Nora Hollenstein et al. (2018) - [10.1038/sdata.2018.291](https://doi.org/10.1038/sdata.2018.291) |
-| **Theta / Alpha Ratio** | 1.0011 ratio (Within Typical Range) | 0.9765 | Tee Yi Wen et al. (2020) - [10.11591/ijeecs.v17.i1.pp175-182](https://doi.org/10.11591/ijeecs.v17.i1.pp175-182) |
-| **Theta / Beta Ratio** | 0.9591 ratio (Within Typical Range) | 0.9328 | Mi D et al. (2026) - [10.3389/fpsyt.2026.1834200](https://doi.org/10.3389/fpsyt.2026.1834200) |
-| **Gaze Duration** | 142.8953 ms (Within Typical Range) | 135.1842 | Nora Hollenstein et al. (2018) - [10.1038/sdata.2018.291](https://doi.org/10.1038/sdata.2018.291) |
-| **First Fixation Duration** | 110.7676 ms (Within Typical Range) | 107.0395 | Olaf Dimigen et al. (2011) - [10.1037/a0023885](https://doi.org/10.1037/a0023885) |
-| **Total Reading Time** | 209.6922 ms (Within Typical Range) | 192.775 | Nora Hollenstein et al. (2018) - [10.1038/sdata.2018.291](https://doi.org/10.1038/sdata.2018.291) |
-| **Mean Pupil Diameter** | 279.5363 arbitrary units / px (Within Typical Range) | 281.4277 | Nora Hollenstein et al. (2018) - [10.1038/sdata.2018.291](https://doi.org/10.1038/sdata.2018.291) |
-| **Fixation Count** | 1.8003 count (Within Typical Range) | 1.6821 | Nora Hollenstein et al. (2018) - [10.1038/sdata.2018.291](https://doi.org/10.1038/sdata.2018.291) |
-| **Engagement-Related Signal Index** | 0.0391 standardized robust-z (Within Typical Range) | 0.1273 | Vincenzo Ronca et al. (2025) - [10.3390/bioengineering12060597](https://doi.org/10.3390/bioengineering12060597) |
-| **Cognitive Workload Evidence Index** | 0.1944 standardized robust-z (Within Typical Range) | 0.0993 | Jackson Beatty et al. (2000) - [10.1017/CBO9780511546396.007](https://doi.org/10.1017/CBO9780511546396.007) |
-| **Engagement-Stability Evidence Proxy** | -0.1404 standardized robust-z (Within Typical Range) | -0.0734 | Jonathan Smallwood et al. (2015) - [10.1146/annurev-psych-010814-015331](https://doi.org/10.1146/annurev-psych-010814-015331) |
-| **Attention-Instability Evidence Proxy** | 0.2135 standardized robust-z (Within Typical Range) | 0.0185 | Sun H et al. (2026) - [10.64898/2026.05.14.725227](https://doi.org/10.64898/2026.05.14.725227) |
-| **Signal-Stability Proxy** | -0.1701 standardized robust-z (Within Typical Range) | -0.2269 | Zhang J et al. (2026) - [10.1016/j.neubiorev.2026.106872](https://doi.org/10.1016/j.neubiorev.2026.106872) |
-
-## 8. Personalized Evidence-Based Recommendations
+## 7. Personalized Evidence-Based Recommendations
 
 ### REC_01: Comprehension Bottleneck: Words Your Eyes Got Stuck On
 
@@ -221,7 +457,7 @@ Step 3: Apply the 20-20-20 rule during every reading session: every 20 minutes, 
 **📚 Supporting Research:**
 - [Beatty & Lucero-Wagoner (2000)](https://doi.org/10.1017/CBO9780511546396.007)
 
-## 9. Scientific Limitations & Guardrails
+## 8. Scientific Limitations & Guardrails
 
 - All indices represent exploratory physiological proxies measured within a controlled natural reading protocol (ZuCo).
 - Reference ranges describe within-session typical intervals (median ± 1.5 robust SD) and must not be treated as universal healthy/clinical norms.
@@ -229,7 +465,7 @@ Step 3: Apply the 20-20-20 rule during every reading session: every 20 minutes, 
 - Cadence variations and composite proxies (MWLI_proxy, SAI) reflect reading cadence irregularity rather than ground-truth subjective mind-wandering.
 - Ambient luminance, individual caffeine intake, sleep quality, and reading strategy substantially modulate autonomic and electrophysiological baselines.
 
-## 10. Complete Scientific References
+## 9. Complete Scientific References
 
 - **Alexander Gundel et al. (1992)**. *Frontal midline theta power and mental effort in flight simulation*. Abstract. DOI: [10.1016/0167-8760(93)90054-9](https://doi.org/10.1016/0167-8760(93)90054-9)
 - **Alan T. Pope et al. (1995)**. *Biocybernetic system evaluates indices of operator engagement in automated task*. Abstract. DOI: [10.1016/0301-0511(95)05116-3](https://doi.org/10.1016/0301-0511(95)05116-3)

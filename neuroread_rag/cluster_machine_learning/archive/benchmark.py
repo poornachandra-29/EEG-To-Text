@@ -179,9 +179,20 @@ def evaluate_clustering(
     v_train = float(v_measure_score(y_train, labels_train))
     h_train = compute_hungarian_metrics(y_train, labels_train)
 
+    # BIC and AIC calculation (for parametric / mixture models)
+    bic_train, aic_train = np.nan, np.nan
+    if hasattr(model, "bic"):
+        try:
+            bic_train = float(model.bic(x_train))
+            aic_train = float(model.aic(x_train))
+        except Exception:
+            pass
+
     res = {
         "algorithm": name,
         "n_clusters": n_clusters_train,
+        "train_bic": round(bic_train, 1) if np.isfinite(bic_train) else np.nan,
+        "train_aic": round(aic_train, 1) if np.isfinite(aic_train) else np.nan,
         "fit_time_sec": round(fit_time, 4),
         "train_silhouette": round(sil_train, 4) if np.isfinite(sil_train) else np.nan,
         "train_davies_bouldin": round(dbi_train, 4) if np.isfinite(dbi_train) else np.nan,
@@ -214,7 +225,17 @@ def evaluate_clustering(
         v_test = float(v_measure_score(y_test, labels_test))
         h_test = compute_hungarian_metrics(y_test, labels_test)
 
+        bic_test, aic_test = np.nan, np.nan
+        if hasattr(model, "bic"):
+            try:
+                bic_test = float(model.bic(x_test))
+                aic_test = float(model.aic(x_test))
+            except Exception:
+                pass
+
         res.update({
+            "test_bic": round(bic_test, 1) if np.isfinite(bic_test) else np.nan,
+            "test_aic": round(aic_test, 1) if np.isfinite(aic_test) else np.nan,
             "test_pred_time_sec": round(pred_time, 4),
             "test_silhouette": round(sil_test, 4) if np.isfinite(sil_test) else np.nan,
             "test_davies_bouldin": round(dbi_test, 4) if np.isfinite(dbi_test) else np.nan,

@@ -1,0 +1,7 @@
+algorithm,n_clusters,silhouette_score,calinski_harabasz_index,davies_bouldin_index,bic,aic,inertia,fit_time_sec,model_file
+GMM (Full Covariance),5,0.1428,893.95,2.0858,35065.8,33064.0,,1.1538,gmm_full_covariance.joblib
+GMM (Tied Covariance),5,0.2434,1071.32,1.3777,57524.3,56861.2,,0.9026,gmm_tied_covariance.joblib
+GMM (Diag Covariance),5,0.1709,1044.81,1.6858,61570.1,60937.4,,0.1441,gmm_diag_covariance.joblib
+K-Means (k-means++),5,0.2187,1290.03,1.4187,,,13775.7,0.031,k_means_k_means.joblib
+Agglomerative (Ward),5,0.1966,1134.76,1.4973,,,,0.1068,agglomerative_ward.joblib
+BIRCH,5,0.1946,1138.02,1.4911,,,,0.0958,birch.joblib

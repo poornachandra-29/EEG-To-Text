@@ -148,6 +148,56 @@ class TestParticipantAnalysis(unittest.TestCase):
         self.assertIn("flow state", res["summary"].lower())
         self.assertIn("sentences", res["summary"].lower())
 
+    def test_leakage_guardrail(self):
+        """Verify strict leakage prevention guardrails."""
+        from neuroread_rag.participant_analysis.sentence_comparator import verify_no_leakage
+
+        # Valid feature set should not raise
+        verify_no_leakage("breakdown_behav", ["EEI", "theta_fm", "FMT", "BetaPower"])
+        
+        # Leaking features must raise ValueError
+        with self.assertRaises(ValueError):
+            verify_no_leakage("breakdown_behav", ["EEI", "TRT_rz", "theta_fm"])
+        with self.assertRaises(ValueError):
+            verify_no_leakage("breakdown_behav", ["FixationCount", "FMT"])
+        with self.assertRaises(ValueError):
+            verify_no_leakage("excess_processing", ["GD_rz", "EEI"])
+
+    def test_residualization_orthogonality(self):
+        """Verify Ridge residualizer strips lexical confounds to |r| < 0.05."""
+        from neuroread_rag.participant_analysis.residualize import ConfoundResidualizer, check_orthogonality, COVARIATE_COLUMNS
+        
+        df = pd.read_csv(DEFAULT_PROFILE_CSV)
+        res = ConfoundResidualizer()
+        df_trans = res.cross_fit_loso(df)
+        
+        self.assertIn("TRT_resid", df_trans.columns)
+        self.assertIn("TRT_rz", df_trans.columns)
+        
+        y_resid = df_trans["TRT_resid"].values
+        X_cov = df_trans[COVARIATE_COLUMNS].values
+        passed, r_vals = check_orthogonality(y_resid, X_cov, max_abs_r=0.05)
+        self.assertTrue(passed, f"Orthogonality failed with correlations: {r_vals}")
+
+    def test_breakdown_behav_and_comprehension_labels(self):
+        """Verify breakdown_behav flags and comprehension error mapping."""
+        from neuroread_rag.participant_analysis.sentence_comparator import SentenceComparator
+
+        df = pd.read_csv(DEFAULT_PROFILE_CSV)
+        comparator = SentenceComparator(df)
+        res = comparator.run()
+        out_df = res["df"]
+
+        self.assertIn("breakdown_behav", out_df.columns)
+        self.assertIn("excess_processing", out_df.columns)
+        self.assertIn("comprehension_error", out_df.columns)
+        self.assertIn("legacy_state", out_df.columns)
+
+        # Values must be binary or nan
+        self.assertTrue(set(out_df["breakdown_behav"].unique()).issubset({0, 1}))
+        comp_vals = set(out_df["comprehension_error"].dropna().unique())
+        self.assertTrue(comp_vals.issubset({0, 1}))
+
 
 if __name__ == "__main__":
     unittest.main()

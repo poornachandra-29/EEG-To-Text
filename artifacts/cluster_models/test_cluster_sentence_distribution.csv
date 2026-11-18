@@ -1,0 +1,7 @@
+algorithm,participant_id,n_test_samples,Total_Concentrated_Percentage,Total_Fatigued_Percentage,Total_Workload_Percentage,Total_Bottleneck_Percentage,Cognitive Fatigue,High Cognitive Workload,Comprehension Bottleneck,Deep Cognitive Processing,Concentrated Fluent Reading
+GMM,ZPH,250,1.2,85.2,0.0,13.6,85.2,0.0,13.6,1.2,0.0
+HDBSCAN,ZPH,250,0.4,97.2,0.0,2.4,97.2,0.0,2.4,0.0,0.4
+K-Means,ZPH,250,7.6,92.4,0.0,0.0,92.4,0.0,0.0,6.0,1.6
+Fuzzy C-Means,ZPH,250,5.2,94.8,0.0,0.0,94.8,0.0,0.0,5.2,0.0
+Agglomerative Clustering,ZPH,250,2.8,97.2,0.0,0.0,97.2,0.0,0.0,2.0,0.8
+BIRCH,ZPH,250,7.6,92.4,0.0,0.0,92.4,0.0,0.0,3.6,4.0
