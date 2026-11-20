@@ -1,4 +1,4 @@
-# 🧠 EEG-To-Text & NeuroRead RAG
+# 🧠 NeuroRead: Interpretable Reading Engagement Metrics from EEG and Eye-Tracking Data
 
 > Multi-modal Cognitive Reading Analytics, Physiological RAG Grounding, and EEG-to-Text Decoding System for the Zurich Cognitive Language Processing Corpus (ZuCo).
 
@@ -31,11 +31,7 @@ pip install -r requirements.txt
 ```
 *(Or specify the subfolder requirements: `pip install -r neuroread_rag/requirements.txt`)*
 
-#### Option B: Full Conda Environment (EEG-to-Text Deep Learning Models)
-```bash
-conda env create -f environment.yml
-conda activate EEGToText
-```
+
 
 ---
 
