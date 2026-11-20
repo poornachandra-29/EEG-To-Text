@@ -85,7 +85,7 @@ run `conda env create -f environment.yml` to create the conda environment (named
 ## Download ZuCo datasets
 - Download ZuCo v1.0 'Matlab files' for 'task1-SR','task2-NR','task3-TSR' from https://osf.io/q3zws/files/ under 'OSF Storage' root,  
 unzip and move all `.mat` files to `~/datasets/ZuCo/task1-SR/Matlab_files`,`~/datasets/ZuCo/task2-NR/Matlab_files`,`~/datasets/ZuCo/task3-TSR/Matlab_files` respectively.
-- Download ZuCo v2.0 'Matlab files' for 'task1-NR' from https://osf.io/2urht/files/ under 'OSF Storage' root, unzip and move all `.mat` files to `~/datasets/ZuCo/task2-NR-2.0/Matlab_files`.
+
 
 ## Preprocess datasets
 run `bash ./scripts/prepare_dataset.sh` to preprocess `.mat` files and prepare sentiment labels. 
